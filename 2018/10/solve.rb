@@ -2,34 +2,28 @@ require 'curses'
 
 MSG_HEIGHT = 9
 
-Star = Struct.new(:position, :velocity) do
-  def <=>(other)
-    position.last <=> other.position.last
-  end
-
+Star = Struct.new(:x, :y, :vx, :vy) do
   def tick
-    position[0] += velocity[0]
-    position[1] += velocity[1]
+    self.x += vx
+    self.y += vy
   end
 end
 
 stars = ARGF.readlines.map do |line|
-  pattern = /position=< *(-?[0-9]+), *(-?[0-9]+)> velocity=< *(-?[0-9]+), *(-?[0-9]+)>/
-  match = pattern.match(line)
-
-  Star.new([match[1].to_i, match[2].to_i], [match[3].to_i, match[4].to_i]) 
+  match = line.scan(/-?[0-9]+[>,]+/)
+  Star.new(*match.map(&:to_i))
 end
 
 1.step do |i|
   stars.each(&:tick)
-  stars.sort!
+  stars.sort_by!(&:y)
   
-  if (stars.first.position.last - stars.last.position.last).abs == MSG_HEIGHT
-    y_offset = stars.first.position.last
-    x_offset = stars.min_by { |s| s.position.first }.position.first
+  if (stars.first.y - stars.last.y).abs == MSG_HEIGHT
+    y_offset = stars.first.y
+    x_offset = stars.map(&:x).min
 
     stars.each do |star|
-      Curses.setpos(star.position.last - y_offset, star.position.first - x_offset)
+      Curses.setpos(star.y - y_offset, star.x - x_offset)
       Curses.addstr("#")
     end
 

@@ -1,14 +1,5 @@
-class Cart
+Cart = Struct.new(:x, :y, :direction, :turn) do
   DIRS = [:<, :^, :>, :v]
-
-  attr_accessor :x, :y, :direction, :turn
-
-  def initialize(x, y, direction)
-    self.x = x
-    self.y = y
-    self.direction = direction.to_sym
-    self.turn = [-1, 0, 1].cycle
-  end
 
   def go!(grid)
     case direction
@@ -34,10 +25,10 @@ end
 
 carts = []
 grid = ARGF.readlines.map.with_index do |line, y|
-  line.split("").map.with_index do |character, x|
+  line.chars.map.with_index do |character, x|
     case character
     when "^", "v", ">", "<"
-      carts << Cart.new(x, y, character)
+      carts << Cart.new(x, y, character.to_sym, [-1, 0, 1].cycle)
       ["v", "^"].include?(character) ? "|" : "-"
     when "|", "-", "/", "\\", "+"
       character

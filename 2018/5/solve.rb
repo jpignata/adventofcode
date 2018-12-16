@@ -1,24 +1,18 @@
 polymer = ARGF.readlines.first.chomp
-pairs = ("A".."Z").map { |char|
-  [char, char.downcase].permutation.map { |c1, c2| "(#{c1}#{c2})" }.join("|")
-}.join("|")
-pattern = Regexp.new(pairs)
-units = {}
 
-def react(polymer, pattern)
-  polymer.dup.tap do |polymer|
-    while polymer.match(pattern)
-      polymer.gsub!(pattern, "")
+def react(polymer)
+  units = [""]
+
+  polymer.chars.each do |char|
+    if char != units[-1] && char.downcase == units[-1].downcase
+      units.pop
+    else
+      units.append(char)
     end
   end
+
+  units.join.length
 end
 
-puts react(polymer, pattern).length
-
-("A".."Z").map do |char|
-  reacted = react(polymer, /#{char}/i)
-  reacted = react(reacted, pattern)
-  units[char] = reacted.length
-end
-
-puts units.sort_by(&:last).first
+puts react(polymer)
+puts ("a".."z").map { |t| polymer.gsub(/#{t}/i, "") }.map { |p| react(p) }.min

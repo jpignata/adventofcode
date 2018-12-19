@@ -8,18 +8,21 @@ class Device
     @registers = input.dup
   end
 
-  def run(program)
+  def run(program, halt_at: -1)
+    i = 0
     ip = registers[program.ip]
     instruction = program.instructions.first
 
     loop do
       break if ip >= program.instructions.length
+      break if halt_at > 0 && i > halt_at
 
       instruction = program.instructions[ip]
       registers[program.ip] = ip
       start = registers.dup
       send(instruction[0], instruction[1..-1])
       ip = registers[program.ip] + 1
+      i += 1
     end
   end
 
@@ -105,10 +108,16 @@ end
 device = Device.new
 program = Program.new(instructions, ip)
 device.run(program)
+
 puts device.registers[0]
 
-[994, 10551394].each do |num|
+[0, 1].each do |register|
+  device = Device.new([register, 0, 0, 0, 0, 0])
+  program = Program.new(instructions, ip)
+  device.run(program, halt_at: 20)
+  num = device.registers[4]
+
   puts 1 + num + (2..Math.sqrt(num)).
     select { |i| num % i == 0 }.
-    sum { |i| i == num/i ? i : i + num/i }
+    sum { |i| [i, num / i].uniq.sum }
 end

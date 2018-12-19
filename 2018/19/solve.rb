@@ -108,5 +108,7 @@ device.run(program)
 puts device.registers[0]
 
 [994, 10551394].each do |num|
-  puts (2..num).select { |i| num % i == 0 }.sum + 1
+  puts 1 + num + (2..Math.sqrt(num)).
+    select { |i| num % i == 0 }.
+    sum { |i| i == num/i ? i : i + num/i }
 end

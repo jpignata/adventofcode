@@ -1,7 +1,7 @@
 area = ARGF.readlines.map { |line| line.chomp.chars }
 values = []
 
-0.upto(1000) do |i|
+0.upto(1000) do
   next_area = area.map(&:dup)
 
   area.each.with_index do |row, y|
@@ -21,9 +21,7 @@ values = []
       when "." then next_area[y][x] = "|" if adjacent.count("|") >= 3
       when "|" then next_area[y][x] = "#" if adjacent.count("#") >= 3
       when "#"
-        if adjacent.include?("|") && adjacent.include?("#")
-          next_area[y][x] = "#"
-        else
+        unless adjacent.include?("|") && adjacent.include?("#")
           next_area[y][x] = "."
         end
       end
@@ -31,7 +29,7 @@ values = []
   end
 
   area = next_area
-  values[i] = area.sum { |r| r.count("#") } * area.sum { |r| r.count("|") }
+  values << area.sum { |r| r.count("#") } * area.sum { |r| r.count("|") }
 end
 
 puts values[9]

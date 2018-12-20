@@ -9,9 +9,9 @@ class Device
   end
 
   def run(program, halt_at: -1)
-    i = 0
     ip = registers[program.ip]
     instruction = program.instructions.first
+    i = 0
 
     loop do
       break if ip >= program.instructions.length
@@ -19,7 +19,6 @@ class Device
 
       instruction = program.instructions[ip]
       registers[program.ip] = ip
-      start = registers.dup
       send(instruction[0], instruction[1..-1])
       ip = registers[program.ip] + 1
       i += 1
@@ -106,8 +105,7 @@ ARGF.readlines.each do |line|
 end
 
 device = Device.new
-program = Program.new(instructions, ip)
-device.run(program)
+device.run(Program.new(instructions, ip))
 
 puts device.registers[0]
 
@@ -115,7 +113,7 @@ puts device.registers[0]
   device = Device.new([register, 0, 0, 0, 0, 0])
   program = Program.new(instructions, ip)
   device.run(program, halt_at: 20)
-  num = device.registers[4]
+  num = device.registers.max
 
   puts 1 + num + (2..Math.sqrt(num)).
     select { |i| num % i == 0 }.

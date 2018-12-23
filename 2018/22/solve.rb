@@ -1,10 +1,19 @@
 require 'pqueue' # gem install pqueue
 
-Region = Struct.new(:x, :y, :index, :erosion_level, :type)
 TYPES = [:rocky, :wet, :narrow]
 
+Region = Struct.new(:x, :y, :index, :erosion_level, :type) do
+  def allowed
+    {
+      rocky: [:climbing_gear, :torch],
+      wet: [:climbing_gear, :neither],
+      narrow: [:torch, :neither]
+    }[type]
+  end
+end
+
 depth, target = ARGV[0].to_i, ARGV[1].split(",").map(&:to_i)
-grid = Array.new(target[1] * 2) { Array.new(target[0] * 2) }
+grid = Array.new(target[1] + 20) { Array.new(target[0] + 20) }
 
 grid.each.with_index do |row, y|
   row.each.with_index do |cell, x|
@@ -33,60 +42,37 @@ end
 
 puts risk_level
 
-Edge = Struct.new(:from, :to, :cost, :start_equipment, :end_equipment)
-Visit = Struct.new(:region, :equipment, :minutes)
-EQUIPMENT = {
-  rocky: [:climbing_gear, :torch],
-  wet: [:climbing_gear, :neither],
-  narrow: [:torch, :neither]
-}
-
-edges = grid.map.with_index do |row, y|
-  row.map.with_index do |region, x|
-    adjacent = [[-1, 0], [1, 0], [0, -1], [0, 1]].map { |xdiff, ydiff|
-      coords = [x + xdiff, y + ydiff]
-
-      next if coords.any?(&:negative?)
-      next if coords[0] > grid[0].length - 1
-      next if coords[1] > grid.length - 1
-
-      grid[coords[1]][coords[0]]
-    }.compact
-
-    adjacent.map { |other|
-      EQUIPMENT[region.type].product(EQUIPMENT[other.type]).map do |eq1, eq2|
-        cost = 1
-        cost += 7 if eq1 != eq2
-        Edge.new(region, other, cost, eq1, eq2)
-      end
-    }.flatten
-  end
-end
-
-queue = PQueue.new { |a, b| a.minutes < b.minutes }
+queue = PQueue.new { |a, b| a.last < b.last }
 distance_to = Hash.new(Float::INFINITY)
+finish = [target[0], target[1], :torch]
 
-queue.push(Visit.new(grid[0][0], :torch, 0))
-distance_to[[0, 0, :torch]] = 0
+queue.push([0, 0, :torch, 0])
 
 until queue.empty?
-  visit = queue.pop
+  x, y, equipment, minutes = *queue.pop
+  current = grid[y][x]
+  key = [x, y, equipment]
 
-  if visit.region == grid[target[1]][target[0]] && visit.equipment == :torch
-    puts visit.minutes
+  next if distance_to[key] <= minutes
+
+  if key == finish
+    puts minutes
     break
   end
 
-  edges[visit.region.y][visit.region.x].each do |edge|
-    next unless edge.start_equipment == visit.equipment
-
-    key = [edge.to.x, edge.to.y, edge.end_equipment]
-    distance = visit.minutes + edge.cost
-
-    if distance_to[key] > distance
-      queue.push(Visit.new(edge.to, edge.end_equipment, distance))
-      distance_to[key] = distance
-    end
+  current.allowed.each do |allowed|
+    queue.push([x, y, allowed, minutes + 7]) if equipment != allowed
   end
-end
 
+  [[-1, 0], [1, 0], [0, -1], [0, 1]].each do |xdiff, ydiff|
+    nx, ny = x + xdiff, y + ydiff
+
+    next if [nx, ny].any?(&:negative?)
+    next if nx > grid[0].length - 1
+    next if ny > grid.length - 1
+
+    queue.push([nx, ny, equipment, minutes + 1]) if grid[ny][nx].allowed.include?(equipment)
+  end
+
+  distance_to[key] = minutes
+end

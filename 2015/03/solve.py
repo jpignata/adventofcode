@@ -19,6 +19,6 @@ def deliver(number_of_santas=1):
 
     return len(houses)
 
-print('Part 2:', deliver())
+print('Part 1:', deliver())
 print('Part 2:', deliver(2))
 

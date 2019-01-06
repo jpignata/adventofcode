@@ -1,6 +1,6 @@
 import sys
 import operator
-from collections import namedtuple 
+from collections import namedtuple
 from functools import reduce
 
 Box = namedtuple('Box', ['l', 'w', 'h'])

@@ -12,7 +12,7 @@ def parse(line):
                        tuple(map(int, stop.split(','))))
 
 
-def run(instructions, actions, start=False):
+def run(instructions, actions, *, start):
     grid = [[start] * 1000 for n in range(1000)]
 
     for instruction in instructions:
@@ -31,7 +31,7 @@ actions1 = {'turn on': lambda x: True, 'turn off': lambda x: False,
 actions2 = {'turn on': lambda x: x+1, 'turn off': lambda x: max(x-1, 0),
             'toggle': lambda x: x+2}
 
-grid1 = run(instructions, actions1)
+grid1 = run(instructions, actions1, start=False)
 grid2 = run(instructions, actions2, start=0)
 
 print('Part 1:', sum([row.count(True) for row in grid1]))

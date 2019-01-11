@@ -11,23 +11,19 @@ class Attendee:
     def add(self, guest, units):
         self.combinations[guest] = units
 
-    def happiness_units(self, left, right):
+    def units(self, left, right):
         return self.combinations.get(left, 0) + self.combinations.get(right, 0)
 
 
-class Table:
-    def __init__(self, attendees):
-        self.attendees = attendees
+def total_change(attendees):
+    total_change = 0
 
-    def total_change(self):
-        total_change = 0
+    for i, attendee in enumerate(attendees):
+        left = attendees[(i-1) % len(attendees)].name
+        right = attendees[(i+1) % len(attendees)].name
+        total_change += attendee.units(left, right)
 
-        for i, attendee in enumerate(self.attendees):
-            left = self.attendees[(i-1) % len(self.attendees)].name
-            right = self.attendees[(i+1) % len(self.attendees)].name
-            total_change += attendee.happiness_units(left, right)
-
-        return total_change
+    return total_change
 
 
 attendees = dict()
@@ -42,17 +38,16 @@ for line in sys.stdin.readlines():
         attendees[guest1] = Attendee(guest1)
 
     if change == 'lose':
-        units = units * -1
+        units *= -1
 
     attendees[guest1].add(guest2, units)
 
 attendees_with_me = attendees.copy()
 attendees_with_me['Me'] = Attendee('Me')
 
-changes = [Table(attendees).total_change()
-           for attendees in permutations(attendees.values())]
-changes_with_me = [Table(attendees).total_change()
-                   for attendees in permutations(attendees_with_me.values())]
+changes = [total_change(layout) for layout in permutations(attendees.values())]
+changes_with_me = [total_change(layout)
+                   for layout in permutations(attendees_with_me.values())]
 
 print('Part 1:', max(changes))
 print('Part 2:', max(changes_with_me))

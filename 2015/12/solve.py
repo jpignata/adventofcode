@@ -3,13 +3,15 @@ import re
 import sys
 
 
-def tally(element, total=0):
-    if isinstance(element, list):
-        for e in element:
-            total += tally(e)
-    elif isinstance(element, dict):
+def tally(element):
+    total = 0
+
+    if isinstance(element, dict):
         if 'red' not in element.keys() and 'red' not in element.values():
             total += tally(list(element.values()))
+    elif isinstance(element, list):
+        for e in element:
+            total += tally(e)
     elif isinstance(element, int):
         total += element
 

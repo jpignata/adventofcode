@@ -20,5 +20,5 @@ for turn, steps in directions:
             first_visited_twice = location
         visited.add(location)
 
-print('Print 1:', sum(map(abs, location)))
-print('Print 2:', sum(map(abs, first_visited_twice)))
+print('Part 1:', sum(map(abs, location)))
+print('Part 2:', sum(map(abs, first_visited_twice)))

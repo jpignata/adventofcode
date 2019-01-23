@@ -1,52 +1,28 @@
 import sys
-from collections import namedtuple, deque
+import numpy as np
 
+grid = np.zeros((6, 50))
 
-def parse(line):
-    tokens = line.split(' ')
+for tokens in [line.split(' ') for line in sys.stdin.readlines()]:
+    if tokens[0] == 'rect':
+        x, y = tuple(map(int, tokens[1].split('x')))
+        grid[:y, :x] = 1
+    elif tokens[0] == 'rotate':
+        axis, start, positions = tokens[1], int(tokens[2][2:]), int(tokens[4])
 
-    if len(tokens) == 2:
-        return Rect(tuple(map(int, tokens[1].split('x'))))
-    else:
-        return Rotate(tokens[1], int(tokens[2][2:]), int(tokens[-1]))
+        if axis == 'row':
+            grid[start] = np.roll(grid[start], positions)
+        elif axis == 'column':
+            grid[:,start] = np.roll(grid[:,start], positions)
 
-
-def rotate(row, positions):
-    vals = deque(row)
-    vals.rotate(positions)
-    return list(vals)
-
-
-def transpose(grid):
-    return [[row[i] for row in grid] for i in range(len(grid[0]))]
-
-
-def draw(grid):
-    for row in grid:
-        for char in row:
-            sys.stdout.write(char)
-
-        print()
-    print()
-
-
-Rect = namedtuple('rect', ['size'])
-Rotate = namedtuple('rotate', ['type', 'start', 'positions'])
-grid = [['.' for _ in range(50)] for _ in range(6)]
-
-for cmd in [parse(line) for line in sys.stdin.readlines()]:
-    if isinstance(cmd, Rect):
-        for x in range(cmd.size[0]):
-            for y in range(cmd.size[1]):
-                grid[y][x] = '#'
-    elif isinstance(cmd, Rotate):
-        if cmd.type == 'row':
-            grid[cmd.start] = rotate(grid[cmd.start], cmd.positions)
-        elif cmd.type == 'column':
-            xposed = transpose(grid)
-            xposed[cmd.start] = rotate(xposed[cmd.start], cmd.positions)
-            grid = transpose(xposed)
-
-print('Part 1:', sum([row.count('#') for row in grid]))
+print('Part 1:', int(sum(sum(grid))))
 print('Part 2:')
-draw(grid)
+
+for row in grid:
+    for char in row:
+        if char:
+            sys.stdout.write('█')
+        else:
+            sys.stdout.write(' ')
+
+    print()

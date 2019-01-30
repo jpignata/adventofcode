@@ -50,7 +50,7 @@ def search(floors):
     while q:
         _, floor, cost, floors = heapq.heappop(q)
 
-        if floor == 3 and len(floors[3]) == total:
+        if floor == len(floors) - 1 and len(floors[-1]) == total:
             return cost
 
         for next_floor, items in moves(floor, floors):
@@ -67,7 +67,7 @@ def search(floors):
 
             if key not in costs or costs[key] > next_cost:
                 costs[key] = next_cost
-                weight = (-len(next_floors[3]), cost)
+                weight = (-len(next_floors[-1]), cost)
                 heapq.heappush(q, (weight, next_floor, next_cost, next_floors))
 
         costs[hash(floor, floors)] = cost

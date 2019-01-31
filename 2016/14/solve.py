@@ -3,12 +3,12 @@ import re
 from itertools import count
 
 
-def search(salt, *, stretch=1):
+def search(salt, *, stretch=0):
     def gethash(i):
         for j in range(len(hashes), i+1):
             input = salt + str(j)
 
-            for _ in range(stretch):
+            for _ in range(stretch + 1):
                 md5 = hashlib.md5()
                 md5.update(bytearray(input, encoding='ASCII'))
                 input = md5.hexdigest()
@@ -39,4 +39,4 @@ def search(salt, *, stretch=1):
 
 
 print('Part 1:', search('zpqevtbw'))
-print('Part 2:', search('zpqevtbw', stretch=2017))
+print('Part 2:', search('zpqevtbw', stretch=2016))

@@ -2,16 +2,9 @@ import operator
 from collections import deque
 
 
-def isopen(location):
-    x, y = location
-    num = x*x + 3*x + 2*x*y + y + y*y + 1358
-
-    return x >= 0 and y >= 0 and bin(num).count('1') % 2 == 0
-
-
-def search(*, start=(1, 1), target=(5000, 5000), count=0):
-    q = deque([start])
-    costs = {start: 0}
+def search(*, target=None, count=0):
+    q = deque([(1, 1)])
+    costs = {(1, 1): 0}
 
     while q:
         location = q.popleft()
@@ -20,15 +13,21 @@ def search(*, start=(1, 1), target=(5000, 5000), count=0):
             neighbor = tuple(map(operator.add, location, delta))
             cost = costs[location] + 1
 
-            if isopen(neighbor):
-                if neighbor == target:
-                    return cost
+            if neighbor == target:
+                return cost
 
-                if neighbor not in costs or costs[neighbor] > cost:
-                    costs[neighbor] = cost
-                    q.append(neighbor)
+            if neighbor not in costs and isopen(neighbor):
+                costs[neighbor] = cost
+                q.append(neighbor)
 
     return len(list(filter(lambda c: c <= count, costs.values())))
+
+
+def isopen(location):
+    x, y = location
+    num = x*x + 3*x + 2*x*y + y + y*y + 1358
+
+    return x >= 0 and y >= 0 and bin(num).count('1') % 2 == 0
 
 
 print('Part 1:', search(target=(31, 39)))

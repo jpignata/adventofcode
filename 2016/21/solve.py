@@ -3,17 +3,12 @@ from collections import deque
 
 
 def swap_position(password, x, y):
-    new_password = ''
+    l = list(password)
 
-    for i, char in enumerate(password):
-        if i == x:
-            new_password += password[y]
-        elif i == y:
-            new_password += password[x]
-        else:
-            new_password += char
+    l[x] = password[y]
+    l[y] = password[x]
 
-    return new_password
+    return ''.join(l)
 
 
 def swap_letter(password, x, y):
@@ -30,15 +25,22 @@ def swap_letter(password, x, y):
     return new_password
 
 
-def rotate_position(password, dir, steps):
+def rotate_position(password, steps, direction='right'):
     d = deque(password)
 
-    if dir == 'left':
-        d.rotate(steps * -1)
-    else:
-        d.rotate(steps)
+    if direction == 'left':
+        steps *= -1
+
+    d.rotate(steps)
 
     return ''.join(d)
+
+
+def rotate_letter(password, letter):
+    index = password.index(letter)
+    steps = index + (index >= 4) + 1
+
+    return rotate_position(password, steps)
 
 
 def rotate_letter_backwards(password, letter):
@@ -51,15 +53,7 @@ def rotate_letter_backwards(password, letter):
     else:
         steps = position // 2 + 5
 
-    return rotate_position(password, 'left', steps)
-
-
-def rotate_letter(password, letter):
-    index = password.index(letter)
-    steps = index + 1
-    steps += index >= 4
-
-    return rotate_position(password, 'right', steps)
+    return rotate_position(password, steps, 'left')
 
 
 def reverse_positions(password, x, y):
@@ -67,12 +61,12 @@ def reverse_positions(password, x, y):
 
 
 def move_positions(password, x, y):
-    new_password = list(password)
-    del new_password[x]
+    l = list(password)
 
-    new_password.insert(y, password[x])
+    del l[x]
+    l.insert(y, password[x])
 
-    return ''.join(new_password)
+    return ''.join(l)
 
 
 def scramble(password, instructions):
@@ -84,7 +78,7 @@ def scramble(password, instructions):
         elif tokens[0] == 'swap' and tokens[1] == 'letter':
             password = swap_letter(password, tokens[2], tokens[5])
         elif tokens[0] == 'rotate' and tokens[1] in ('left', 'right'):
-            password = rotate_position(password, tokens[1], int(tokens[2]))
+            password = rotate_position(password, int(tokens[2]), tokens[1])
         elif tokens[0] == 'rotate' and tokens[3] == 'position':
             password = rotate_letter(password, tokens[6])
         elif tokens[0] == 'reverse':
@@ -106,7 +100,7 @@ def unscramble(password, instructions):
             password = swap_letter(password, tokens[2], tokens[5])
         elif tokens[0] == 'rotate' and tokens[1] in ('left', 'right'):
             direction = 'left' if tokens[1] == 'right' else 'right'
-            password = rotate_position(password, direction, int(tokens[2]))
+            password = rotate_position(password, int(tokens[2]), direction)
         elif tokens[0] == 'rotate' and tokens[3] == 'position':
             password = rotate_letter_backwards(password, tokens[6])
         elif tokens[0] == 'reverse':

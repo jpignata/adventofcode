@@ -14,11 +14,8 @@ for start, end in raw[1:]:
             disallowed.pop()
             disallowed.append((previous_start, end))
     else:
+        allowed_count += start - previous_end - 1
         disallowed.append((start, end))
-
-for i, (start, end) in enumerate(disallowed):
-    if start > 0:
-        allowed_count += start - disallowed[i - 1][1] - 1
 
 print('Part 1:', disallowed[0][-1] + 1)
 print('Part 2:', allowed_count)

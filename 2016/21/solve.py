@@ -3,12 +3,12 @@ from collections import deque
 
 
 def swap_position(password, x, y):
-    l = list(password)
+    new_password = list(password)
 
-    l[x] = password[y]
-    l[y] = password[x]
+    new_password[x] = password[y]
+    new_password[y] = password[x]
 
-    return ''.join(l)
+    return ''.join(new_password)
 
 
 def swap_letter(password, x, y):
@@ -61,12 +61,12 @@ def reverse_positions(password, x, y):
 
 
 def move_positions(password, x, y):
-    l = list(password)
+    new_password = list(password)
 
-    del l[x]
-    l.insert(y, password[x])
+    del new_password[x]
+    new_password.insert(y, password[x])
 
-    return ''.join(l)
+    return ''.join(new_password)
 
 
 def scramble(password, instructions):

@@ -13,7 +13,7 @@ for tokens in [line.split(' ') for line in sys.stdin.readlines()]:
         if axis == 'row':
             grid[start] = np.roll(grid[start], positions)
         elif axis == 'column':
-            grid[:,start] = np.roll(grid[:,start], positions)
+            grid[:, start] = np.roll(grid[:, start], positions)
 
 print('Part 1:', int(sum(sum(grid))))
 print('Part 2:')

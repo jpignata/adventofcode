@@ -63,6 +63,7 @@ class Computer:
 def bypass(eggs, offset1, offset2):
     return math.factorial(eggs) + (offset1 * offset2)
 
+
 program = [l.strip().split() for l in sys.stdin.readlines()]
 
 print('Part 1:', Computer(program, a=7).run().registers['a'])

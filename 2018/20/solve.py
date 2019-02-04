@@ -21,4 +21,4 @@ for char in sys.stdin.readline().strip():
         rooms[current] = min(rooms[current], cost + 1)
 
 print('Part 1:', max(rooms.values()))
-print('Part 2:', sum(1 for cost in rooms.values() if cost >= 1000) )
+print('Part 2:', sum(1 for cost in rooms.values() if cost >= 1000))

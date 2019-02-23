@@ -12,11 +12,7 @@ def count(grid, rules, iters):
 
             for j in range(0, len(grid), jump):
                 part = grid[i:i+jump, j:j+jump]
-
-                for rule, pattern in rules:
-                    if np.array_equal(rule, part):
-                        row.append(pattern)
-                        break
+                row.append(rules[part.tobytes()])
 
             rows.append(row)
 
@@ -25,8 +21,8 @@ def count(grid, rules, iters):
     return np.count_nonzero(grid)
 
 
-grid = np.array([[0, 1, 0], [0, 0, 1], [1, 1, 1]])
-rules = list()
+grid = np.mat([[0, 1, 0], [0, 0, 1], [1, 1, 1]])
+rules = dict()
 
 for line in sys.stdin:
     pattern_expr, result_expr = line.strip().split(' => ')
@@ -40,8 +36,8 @@ for line in sys.stdin:
 
     for _ in range(4):
         pattern = np.rot90(pattern)
-        rules.append((pattern, result))
-        rules.append((np.fliplr(pattern), result))
+        rules[pattern.tobytes()] = result
+        rules[np.fliplr(pattern).tobytes()] = result
 
 print('Part 1:', count(grid, rules, 5))
 print('Part 2:', count(grid, rules, 18))

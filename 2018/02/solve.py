@@ -21,7 +21,7 @@ def checksum(box_ids):
 def find_boxes(box_ids):
     for box_id in box_ids:
         for other_box_id in box_ids:
-            intersection = '' 
+            intersection = ''
             diffs = 0
 
             for i, char in enumerate(box_id):

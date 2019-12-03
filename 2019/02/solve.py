@@ -2,7 +2,7 @@ import sys
 import operator
 
 
-def run(program, noun, verb):
+def run(program, noun, verb=0):
     opcodes = {1: operator.add, 2: operator.mul}
     program = program.copy()
     program[1], program[2] = noun, verb
@@ -18,14 +18,20 @@ def run(program, noun, verb):
     return program[0]
 
 
-def find(program, target, search):
-    for x in range(search):
-        for y in range(search):
-            if run(program.copy(), x, y) == target:
-                return search * x + y
+def find(program, target, start=0, end=100):
+    while start <= end:
+        mid = (start + end) // 2
+        delta = target - run(program, mid)
+
+        if 0 < delta < 100:
+            return 100 * mid + delta
+        elif delta > 100:
+            start = mid + 1
+        else:
+            end = mid - 1
 
 
 program = [int(i) for i in sys.stdin.readline().split(',')]
 
 print(f'Part 1: {run(program, 12, 2)}')
-print(f'Part 2: {find(program, 19690720, 100)}')
+print(f'Part 2: {find(program, 19690720)}')

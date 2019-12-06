@@ -12,12 +12,10 @@ for line in sys.stdin.readlines():
     orbits[planets[1]] = planets[0]
 
 for planet, orbiting in orbits.items():
-    while True:
+    part1 += 1
+
+    while orbiting in orbits:
         part1 += 1
-
-        if orbiting == 'COM':
-            break
-
         orbiting = orbits[orbiting]
 
 q = deque([[orbits['YOU'], 0]])

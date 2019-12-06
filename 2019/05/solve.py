@@ -34,9 +34,8 @@ def get(program, pointer, *_):
     return pointer + 2
 
 
-def put(program, pointer, *_):
-    address = program[pointer + 1]
-    print(program[address])
+def put(program, pointer, param1, *_):
+    print(param1)
 
     return pointer + 2
 

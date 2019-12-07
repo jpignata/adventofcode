@@ -2,13 +2,21 @@ import sys
 import itertools
 from collections import deque
 
+
+class Output(Exception):
+    pass
+
+
+class Halt(Exception):
+    pass
+
+
 class Computer:
-    def __init__(self, program, inputs):
+    def __init__(self, program, phase):
         self.program = program
-        self.inputs = deque(inputs)
+        self.inputs = deque([phase])
         self.outputs = deque([])
         self.pointer = 0
-        self.halted = False
 
     def param(self, opcode, position):
         modes = list(reversed(opcode[1:3]))
@@ -24,25 +32,23 @@ class Computer:
     def add(self, param1, param2):
         address = self.program[self.pointer + 3]
         self.program[address] = param1 + param2
-
         self.pointer += 4
 
     def mul(self, param1, param2):
         address = self.program[self.pointer + 3]
         self.program[address] = param1 * param2
-
         self.pointer += 4
 
     def get(self, *_):
         address = self.program[self.pointer + 1]
         self.program[address] = self.inputs.popleft()
-
         self.pointer += 2
 
     def put(self, param1, *_):
         self.outputs.append(param1)
-
         self.pointer += 2
+
+        raise Output
 
     def jump_if_true(self, param1, param2):
         if param1 != 0:
@@ -77,7 +83,7 @@ class Computer:
         self.pointer += 4
 
     def halt(self, *_):
-        self.halted = True
+        raise Halt
 
     def operation(self, opcode):
         operations = {1: self.add, 2: self.mul, 3: self.get, 4: self.put,
@@ -86,8 +92,8 @@ class Computer:
 
         return operations[opcode]
 
-    def tick(self):
-        if not self.halted:
+    def run(self):
+        while True:
             opcode = str(program[self.pointer]).zfill(5)
             param1 = self.param(opcode, 1)
             param2 = self.param(opcode, 2)
@@ -96,50 +102,31 @@ class Computer:
             operation(param1, param2)
 
 
-def find(program, permutations, part=1):
+def find(program, start, end):
     results = []
 
-    for permutation in permutations:
-        computers = []
+    for permutation in itertools.permutations(range(start, end + 1)):
+        computers = [Computer(program.copy(), phase) for phase in permutation]
+        signal = 0
+        i = 0
 
-        for phase in permutation:
-            computer = Computer(program.copy(), [phase])
-            computers.append(computer)
+        while True:
+            computers[i].inputs.append(signal)
 
-        if part == 1:
-            for i, computer in enumerate(computers):
-                if computers[i - 1].outputs:
-                    output = computers[i - 1].outputs.popleft()
-                else:
-                    output = 0
+            try:
+                computers[i].run()
+            except Output:
+                signal = computers[i].outputs.popleft()
+            except Halt:
+                results.append(signal)
+                break
 
-                computer.inputs.append(output)
-
-                while not computer.halted:
-                    computer.tick()
-
-            results.append(computers[-1].outputs.popleft())
-
-        if part == 2:
-            while not computers[-1].halted:
-                for i, computer in enumerate(computers):
-                    if computers[i - 1].outputs:
-                        output = computers[i - 1].outputs.popleft()
-                    else:
-                        output = 0
-
-                    computer.inputs.append(output)
-
-                    while len(computer.outputs) == 0 and not computer.halted:
-                        computer.tick()
-
-            results.append(computers[0].inputs.popleft())
+            i = (i + 1) % len(computers)
 
     return max(results)
 
 
-with open(sys.argv[1]) as f:
-    program = [int(i) for i in f.readline().strip().split(',')]
+program = [int(i) for i in sys.stdin.readline().split(',')]
 
-    print(f'Part 1: {find(program, itertools.permutations(range(5)))}')
-    print(f'Part 2: {find(program, itertools.permutations(range(5, 10)), 2)}')
+print(f'Part 1: {find(program, 0, 4)}')
+print(f'Part 2: {find(program, 5, 9)}')

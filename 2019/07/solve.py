@@ -86,18 +86,19 @@ class Computer:
         raise Halt
 
     def operation(self, opcode):
-        operations = {1: self.add, 2: self.mul, 3: self.get, 4: self.put,
-                      5: self.jump_if_true, 6: self.jump_if_false,
-                      7: self.less_than, 8: self.equals, 99: self.halt}
 
         return operations[opcode]
 
     def run(self):
+        operations = {1: self.add, 2: self.mul, 3: self.get, 4: self.put,
+                      5: self.jump_if_true, 6: self.jump_if_false,
+                      7: self.less_than, 8: self.equals, 99: self.halt}
+
         while True:
             opcode = str(program[self.pointer]).zfill(5)
             param1 = self.param(opcode, 1)
             param2 = self.param(opcode, 2)
-            operation = self.operation(int(opcode[-2:]))
+            operation = operations[int(opcode[-2:])]
 
             operation(param1, param2)
 

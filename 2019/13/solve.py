@@ -1,3 +1,4 @@
+import curses
 import sys
 import itertools
 from collections import deque, defaultdict
@@ -9,22 +10,28 @@ class Input(Exception):
     pass
 
 
-def print_screen(screen):
-    system('clear')
-    for j in range(26):
-        for i in range(37):
-            if screen[(i, j)] == 0:
-                sys.stdout.write(' ')
-            elif screen[(i, j)] == 1:
-                sys.stdout.write('|')
-            elif screen[(i, j)] == 2:
-                sys.stdout.write('#')
-            elif screen[(i, j)] == 3:
-                sys.stdout.write('_')
-            elif screen[(i, j)] == 4:
-                sys.stdout.write('o')
+def draw(screen, score):
+    maxx = max(screen, key=itemgetter(0))[0]
+    maxy = max(screen, key=itemgetter(1))[1]
 
-        print()
+    for y in range(maxy + 1):
+        for x in range(maxx + 1):
+            if screen[(x, y)] == 0:
+                stdscr.addstr(y, x, ' ')
+            elif screen[(x, y)] == 1:
+                if y == 0:
+                    stdscr.addstr(y, x, '+' if x == 0 or x == maxx else '-')
+                else:
+                    stdscr.addstr(y, x, '|')
+            elif screen[(x, y)] == 2:
+                stdscr.addstr(y, x, '█')
+            elif screen[(x, y)] == 3:
+                stdscr.addstr(y, x, '▄')
+            elif screen[(x, y)] == 4:
+                stdscr.addstr(y, x, '◉')
+
+    stdscr.addstr(0, 2, f'SCORE {score}')
+    stdscr.refresh()
 
 
 class Computer:
@@ -119,7 +126,6 @@ class Computer:
 
 
 program = defaultdict(int)
-blocks = 0
 
 for i, digit in enumerate(sys.stdin.readline().split(',')):
     program[i] = int(digit)
@@ -129,17 +135,17 @@ computer = Computer(program.copy())
 while not computer.halted:
     computer.tick()
 
-for i, output in enumerate(computer.outputs):
-    if (i + 1) % 3 == 0:
-        if output == 2:
-            blocks += 1
-
-program[0] = 2
-computer = Computer(program)
+blocks = sum(1 for i, c in enumerate(computer.outputs)
+             if c == 2 and (i + 1) % 3 == 0)
+computer = Computer(program.copy())
+computer.program[0] = 2
 screen = dict()
 score = 0
 paddle = (0, 0)
 ball = (0, 0)
+stdscr = curses.initscr()
+
+curses.curs_set(False)
 
 while not computer.halted:
     try:
@@ -152,20 +158,22 @@ while not computer.halted:
         elif ball[0] == paddle[0]:
             computer.inputs.append(0)
 
+        draw(screen, score)
+
     if len(computer.outputs) == 3:
-        x = computer.outputs.popleft()
-        y = computer.outputs.popleft()
-        tile_id = computer.outputs.popleft()
+        x, y, tile_or_score = [computer.outputs.popleft() for _ in range(3)]
 
-        if x == -1 and y == 0:
-            score = tile_id
+        if x == -1:
+            score = tile_or_score
         else:
-            screen[(x, y)] = tile_id
+            screen[(x, y)] = tile_or_score
 
-            if tile_id == 3:
+            if tile_or_score == 3:
                 paddle = (x, y)
-            elif tile_id == 4:
+            elif tile_or_score == 4:
                 ball = (x, y)
+
+curses.endwin()
 
 print(f'Part 1: {blocks}')
 print(f'Part 2: {score}')

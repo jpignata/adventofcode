@@ -43,6 +43,9 @@ class Computer:
         self.program[key] = value
 
     def __getitem__(self, key):
+        if key < 0:
+            raise RuntimeError(f'Invalid address: {key}')
+
         return self.program[key]
 
     def execute(self, command):
@@ -71,53 +74,47 @@ class Computer:
         except IndexError:
             return None
 
-    def getval(self, address):
-        if address < 0:
-            raise RuntimeError(f'Invalid address: {address}')
-
-        return self.program[address]
-
     def add(self, param1, param2, param3):
-        self.program[param3] = self.getval(param1) + self.getval(param2)
+        self[param3] = self[param1] + self[param2]
         self.pointer += 4
 
     def mul(self, param1, param2, param3):
-        self.program[param3] = self.getval(param1) * self.getval(param2)
+        self[param3] = self[param1] * self[param2]
         self.pointer += 4
 
     def get(self, param1, *_):
         if len(self.inputs) == 0:
             raise Input
 
-        self.program[param1] = self.inputs.popleft()
+        self[param1] = self.inputs.popleft()
         self.pointer += 2
 
     def put(self, param1, *_):
-        self.outputs.append(self.getval(param1))
+        self.outputs.append(self[param1])
         self.pointer += 2
 
     def jump_if_true(self, param1, param2, *_):
-        if self.getval(param1) != 0:
-            self.pointer = self.getval(param2)
+        if self[param1] != 0:
+            self.pointer = self[param2]
         else:
             self.pointer += 3
 
     def jump_if_false(self, param1, param2, *_):
-        if self.getval(param1) == 0:
-            self.pointer = self.getval(param2)
+        if self[param1] == 0:
+            self.pointer = self[param2]
         else:
             self.pointer += 3
 
     def less_than(self, param1, param2, param3):
-        self.program[param3] = int(self.getval(param1) < self.getval(param2))
+        self[param3] = int(self[param1] < self[param2])
         self.pointer += 4
 
     def equals(self, param1, param2, param3):
-        self.program[param3] = int(self.getval(param1) == self.getval(param2))
+        self[param3] = int(self[param1] == self[param2])
         self.pointer += 4
 
     def set_base(self, param1, *_):
-        self.base += self.getval(param1)
+        self.base += self[param1]
         self.pointer += 2
 
     def halt(self, *_):
@@ -130,7 +127,7 @@ class Computer:
                       7: self.less_than, 8: self.equals, 9: self.set_base,
                       99: self.halt}
 
-        opcode = str(self.getval(self.pointer)).zfill(5)
+        opcode = str(self[self.pointer]).zfill(5)
         param1 = self.param(opcode, 1)
         param2 = self.param(opcode, 2)
         param3 = self.param(opcode, 3)

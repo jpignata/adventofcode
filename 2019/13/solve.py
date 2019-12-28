@@ -75,5 +75,5 @@ while not computer.halted:
 
 curses.endwin()
 
-print(f'Part 1: {blocks}')
-print(f'Part 2: {score}')
+print('Part 1:', blocks)
+print('Part 2:', score)

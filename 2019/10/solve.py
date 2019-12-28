@@ -16,5 +16,5 @@ destroyed = {b: sum(angle(station, b) == angle(station, c)
              for c in asteroids[:i]) for i, b in enumerate(asteroids)}
 x, y = sorted(asteroids, key=lambda b: (destroyed[b], angle(station, b)))[199]
 
-print(f'Part 1: {max(visible.values())}')
-print(f'Part 2: {x * 100 + y}')
+print('Part 1:', max(visible.values()))
+print('Part 2:', x * 100 + y)

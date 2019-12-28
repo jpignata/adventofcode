@@ -8,5 +8,5 @@ def run(user_id):
     return computer.outputs.pop()
 
 
-print(f'Part 1: {run(1)}')
-print(f'Part 2: {run(5)}')
+print('Part 1:', run(1))
+print('Part 2:', run(5))

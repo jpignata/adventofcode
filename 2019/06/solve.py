@@ -34,5 +34,5 @@ while q:
             for connection in connections[planet]:
                 q.append([connection, distance + 1])
 
-print(f'Part 1: {part1}')
-print(f'Part 2: {part2}')
+print('Part 1:', part1)
+print('Part 2:', part2)

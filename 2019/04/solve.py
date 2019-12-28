@@ -14,5 +14,5 @@ for password in range(278384, 824796):
         if any([c == 2 for c in counts]):
             part2 += 1
 
-print(f'Part 1: {part1}')
-print(f'Part 2: {part2}')
+print('Part 1:', part1)
+print('Part 2:', part2)

@@ -45,6 +45,6 @@ def draw():
         print()
 
 
-print(f'Part 1: {len(paint())}')
+print('Part 1:', len(paint()))
 print('Part 2:')
 draw()

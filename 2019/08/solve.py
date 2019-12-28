@@ -13,7 +13,7 @@ for i in range(1, len(layers)):
             if image[j][k] == 2:
                 image[j][k] = layers[i][j][k]
 
-print(f'Part 1: {min_layer.count(1) * min_layer.count(2)}')
+print('Part 1:', min_layer.count(1) * min_layer.count(2))
 print('Part 2:')
 
 for row in image:

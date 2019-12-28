@@ -38,5 +38,5 @@ while not all(cycles):
 
     step += 1
 
-print(f'Part 1: {total}')
-print(f'Part 2: {reduce(lambda a, b: abs(a*b) // math.gcd(a, b), cycles)}')
+print('Part 1:', total)
+print('Part 2:', reduce(lambda a, b: abs(a*b) // math.gcd(a, b), cycles))

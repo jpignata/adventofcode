@@ -23,5 +23,5 @@ def find(target, start=0, end=100):
             end = mid - 1
 
 
-print(f'Part 1: {run(12, 2)}')
-print(f'Part 2: {find(19690720)}')
+print('Part 1:', run(12, 2))
+print('Part 2:', find(19690720))

@@ -75,5 +75,5 @@ grid = dict({(0, 0): 0})
 directions = (((-1, 0), 1), ((0, 1), 4), ((1, 0), 2), ((0, -1), 3))
 oxygen = build(grid)
 
-print(f'Part 1: {find(grid)}')
-print(f'Part 2: {fill(grid, oxygen)}')
+print('Part 1:', find(grid))
+print('Part 2:', fill(grid, oxygen))

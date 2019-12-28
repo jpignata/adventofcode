@@ -10,7 +10,7 @@ def execute(commands):
     computer.run()
 
     for output in computer.outputs:
-        if output > 255:
+        if output > 127:
             return output
 
     print('Failed ---')

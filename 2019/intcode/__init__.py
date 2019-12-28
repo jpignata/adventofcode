@@ -32,12 +32,16 @@ class Computer:
         return Computer(program, inputs)
 
     def __init__(self, program, inputs=[]):
-        self.halted = False
         self.program = program
         self.inputs = deque(inputs)
         self.outputs = deque([])
+        self.halted = False
         self.pointer = 0
         self.base = 0
+        self.operations = {1: self.add, 2: self.mul, 3: self.get, 4: self.put,
+                           5: self.jump_if_true, 6: self.jump_if_false,
+                           7: self.less_than, 8: self.equals, 9: self.set_base,
+                           99: self.halt}
 
     def __setitem__(self, key, value):
         self.program[key] = value
@@ -49,7 +53,7 @@ class Computer:
         return self.program[key]
 
     def execute(self, command):
-        ords = [ord(c) for c in command] + [ord('\n')]
+        ords = [ord(c) for c in command.strip()] + [ord('\n')]
 
         for c in ords:
             self.inputs.append(c)
@@ -122,16 +126,11 @@ class Computer:
         raise Halt
 
     def tick(self):
-        operations = {1: self.add, 2: self.mul, 3: self.get, 4: self.put,
-                      5: self.jump_if_true, 6: self.jump_if_false,
-                      7: self.less_than, 8: self.equals, 9: self.set_base,
-                      99: self.halt}
-
         opcode = str(self[self.pointer]).zfill(5)
         param1 = self.param(opcode, 1)
         param2 = self.param(opcode, 2)
         param3 = self.param(opcode, 3)
-        operation = operations[int(opcode[-2:])]
+        operation = self.operations[int(opcode[-2:])]
 
         operation(param1, param2, param3)
 

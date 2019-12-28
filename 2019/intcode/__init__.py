@@ -39,6 +39,12 @@ class Computer:
         self.pointer = 0
         self.base = 0
 
+    def __setitem__(self, key, value):
+        self.program[key] = value
+
+    def __getitem__(self, key):
+        return self.program[key]
+
     def execute(self, command):
         ords = [ord(c) for c in command] + [ord('\n')]
 

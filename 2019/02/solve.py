@@ -1,27 +1,19 @@
-import sys
-import operator
+from intcode import Computer, Halt
 
 
-def run(program, noun, verb=0):
-    opcodes = {1: operator.add, 2: operator.mul}
-    program = program.copy()
-    program[1], program[2] = noun, verb
-    pointer = 0
+def run(noun, verb=0):
+    computer = Computer.load()
+    computer[1], computer[2] = noun, verb
 
-    while program[pointer] != 99:
-        opcode = program[pointer]
-        operands = [program[program[pointer + i]] for i in range(1, 3)]
-        address = program[pointer + 3]
-        program[address] = opcodes[opcode](operands[0], operands[1])
-        pointer += 4
+    computer.run()
 
-    return program[0]
+    return computer[0]
 
 
-def find(program, target, start=0, end=100):
+def find(target, start=0, end=100):
     while start <= end:
         mid = (start + end) // 2
-        delta = target - run(program, mid)
+        delta = target - run(mid)
 
         if 0 < delta < 100:
             return 100 * mid + delta
@@ -31,7 +23,5 @@ def find(program, target, start=0, end=100):
             end = mid - 1
 
 
-program = [int(i) for i in sys.stdin.readline().split(',')]
-
-print(f'Part 1: {run(program, 12, 2)}')
-print(f'Part 2: {find(program, 19690720)}')
+print(f'Part 1: {run(12, 2)}')
+print(f'Part 2: {find(19690720)}')

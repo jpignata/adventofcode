@@ -36,7 +36,7 @@ blocks = sum(1 for i, c in enumerate(computer.outputs)
 
 
 computer = Computer.load()
-computer.program[0] = 2
+computer[0] = 2
 screen = dict()
 score = 0
 paddle = (0, 0)

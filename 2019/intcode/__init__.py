@@ -12,19 +12,16 @@ class Halt(Exception):
 
 class Computer:
     @classmethod
-    def load_file(cls, filename):
-        return cls.load_program(open(filename).readline())
-
-    @classmethod
-    def load(cls, inputs=[]):
-        if not hasattr(cls, 'stdin'):
-            cls.stdin = sys.stdin.readline()
-
-        return cls.load_program(cls.stdin, inputs)
-
-    @classmethod
-    def load_program(cls, line, inputs=[]):
+    def load(cls, inputs=[], *, filename=None):
         program = defaultdict(int)
+
+        if filename:
+            line = open(filename).readline()
+        else:
+            if not hasattr(cls, 'stdin'):
+                cls.stdin = sys.stdin.readline()
+
+            line = cls.stdin
 
         for i, digit in enumerate(line.split(',')):
             program[i] = int(digit)
@@ -52,31 +49,50 @@ class Computer:
 
         return self.program[key]
 
-    def execute(self, command):
-        ords = [ord(c) for c in command.strip()] + [ord('\n')]
+    def tick(self):
+        opcode = str(self[self.pointer]).zfill(5)
+        operation = self.operations[int(opcode[-2:])]
+        params = self.params(opcode[2::-1])
 
-        for c in ords:
+        operation(*params)
+
+    def run(self):
+        while not self.halted:
+            try:
+                self.tick()
+            except Halt:
+                pass
+
+    def execute(self, command):
+        for c in [ord(c) for c in command.strip() + '\n']:
             self.inputs.append(c)
 
     def print_screen(self):
         while self.outputs:
             print(chr(self.outputs.popleft()), end='')
 
-    def param(self, opcode, position):
-        modes = list(reversed(opcode[:3]))
-        mode = modes[position - 1]
+    def params(self, modes):
+        params = list()
 
-        try:
-            if mode == '0':
-                return self.program[self.pointer + position]
-            elif mode == '1':
-                return self.pointer + position
-            elif mode == '2':
-                return self.program[self.pointer + position] + self.base
-            else:
-                raise RuntimeError(f'Unknown parameter mode: {mode}')
-        except IndexError:
-            return None
+        for i, mode in enumerate(modes):
+            position = i + 1
+            param = None
+
+            try:
+                if mode == '0':
+                    param = self.program[self.pointer + position]
+                elif mode == '1':
+                    param = self.pointer + position
+                elif mode == '2':
+                    param = self.program[self.pointer + position] + self.base
+                else:
+                    raise RuntimeError(f'Unknown parameter mode: {mode}')
+            except IndexError:
+                pass
+
+            params.append(param)
+
+        return params
 
     def add(self, param1, param2, param3):
         self[param3] = self[param1] + self[param2]
@@ -124,19 +140,3 @@ class Computer:
     def halt(self, *_):
         self.halted = True
         raise Halt
-
-    def tick(self):
-        opcode = str(self[self.pointer]).zfill(5)
-        param1 = self.param(opcode, 1)
-        param2 = self.param(opcode, 2)
-        param3 = self.param(opcode, 3)
-        operation = self.operations[int(opcode[-2:])]
-
-        operation(param1, param2, param3)
-
-    def run(self):
-        while not self.halted:
-            try:
-                self.tick()
-            except Halt:
-                pass

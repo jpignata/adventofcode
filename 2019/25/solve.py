@@ -1,6 +1,6 @@
 from intcode import Computer, Input
 
-computer = Computer.load_file('input.txt')
+computer = Computer.load(filename='input.txt')
 
 while not computer.halted:
     try:

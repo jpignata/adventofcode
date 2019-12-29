@@ -5,7 +5,7 @@ from operator import itemgetter
 from intcode import Computer, Input, Halt
 
 
-def draw(screen, score):
+def draw(screen, stdscr, score):
     maxx = max(screen, key=itemgetter(0))[0]
     maxy = max(screen, key=itemgetter(1))[1]
 
@@ -29,6 +29,7 @@ def draw(screen, score):
     stdscr.refresh()
 
 
+verbose = '-v' in sys.argv
 computer = Computer.load()
 computer.run()
 
@@ -43,7 +44,7 @@ score = 0
 paddle = (0, 0)
 ball = (0, 0)
 
-if len(sys.argv) > 1:
+if verbose:
     stdscr = curses.initscr()
     curses.curs_set(False)
 
@@ -58,8 +59,8 @@ while not computer.halted:
         elif ball[0] == paddle[0]:
             computer.inputs.append(0)
 
-        if len(sys.argv) > 1:
-            draw(screen, score)
+        if verbose:
+            draw(screen, stdscr, score)
     except Halt:
         pass
 
@@ -76,7 +77,7 @@ while not computer.halted:
             elif tile_or_score == 4:
                 ball = (x, y)
 
-if len(sys.argv) > 1:
+if verbose:
     curses.endwin()
 
 print('Part 1:', blocks)

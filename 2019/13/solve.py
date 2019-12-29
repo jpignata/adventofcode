@@ -1,4 +1,5 @@
 import curses
+import sys
 from operator import itemgetter
 
 from intcode import Computer, Input, Halt
@@ -41,9 +42,10 @@ screen = dict()
 score = 0
 paddle = (0, 0)
 ball = (0, 0)
-stdscr = curses.initscr()
 
-curses.curs_set(False)
+if len(sys.argv) > 1:
+    stdscr = curses.initscr()
+    curses.curs_set(False)
 
 while not computer.halted:
     try:
@@ -56,7 +58,8 @@ while not computer.halted:
         elif ball[0] == paddle[0]:
             computer.inputs.append(0)
 
-        draw(screen, score)
+        if len(sys.argv) > 1:
+            draw(screen, score)
     except Halt:
         pass
 
@@ -73,7 +76,8 @@ while not computer.halted:
             elif tile_or_score == 4:
                 ball = (x, y)
 
-curses.endwin()
+if len(sys.argv) > 1:
+    curses.endwin()
 
 print('Part 1:', blocks)
 print('Part 2:', score)

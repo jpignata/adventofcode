@@ -67,9 +67,16 @@ class Computer:
         for c in [ord(c) for c in command.strip() + '\n']:
             self.inputs.append(c)
 
-    def print_screen(self):
+    def screen(self):
+        screen = []
+
         while self.outputs:
-            print(chr(self.outputs.popleft()), end='')
+            screen.append(chr(self.outputs.popleft()))
+
+        return ''.join(screen)
+
+    def print_screen(self):
+        print(self.screen())
 
     def params(self, modes):
         params = list()

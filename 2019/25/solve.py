@@ -6,8 +6,7 @@ while not computer.halted:
     try:
         computer.tick()
     except Input:
+        computer.print_screen()
         computer.execute(input())
-
-    computer.print_screen()
 
 # Required items: hypercube, prime number, mouse, wreath

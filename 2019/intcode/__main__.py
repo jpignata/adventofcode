@@ -1,13 +1,15 @@
-import os
+import sys
+import intcode
 
-from intcode import Computer, Input, Halt
-
-computer = Computer.load(filename=f'./{os.path.dirname(__file__)}/input.txt')
+if len(sys.argv) > 1:
+    computer = intcode.Computer.load(filename=sys.argv[1])
+else:
+    computer = intcode.Computer.load()
 
 while not computer.halted:
     try:
         computer.tick()
-    except Input:
+    except intcode.Input:
         computer.print_screen()
 
         if (command := input()) == 'dump':
@@ -15,7 +17,9 @@ while not computer.halted:
                 f.write(','.join(str(d) for d in computer.program.values()))
 
             print('Wrote memory.out.', end='\n\n')
+        elif command == 'quit':
+            break
         else:
             computer.execute(command)
-    except Halt:
+    except intcode.Halt:
         computer.print_screen()

@@ -14,7 +14,7 @@ def run_until_input(computer):
 
 
 items = list()
-computer = Computer.load(filename=f'./{os.path.dirname(__file__)}/memory.out')
+computer = Computer.load(filename=f'{os.path.dirname(__file__)}/memory.out')
 
 for execute in ('west', 'north', 'west', 'west', 'west'):
     computer.execute(execute)

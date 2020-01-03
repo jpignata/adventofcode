@@ -37,22 +37,17 @@ def network():
                 computers[0].inputs.append(y)
 
 
-def first():
-    for destination, x, y in network():
-        if destination == 255:
-            return y
+for destination, x, y in network():
+    if destination == 255:
+        print('Part 1:', y)
+        break
 
+last = None
 
-def repeat():
-    last = None
+for destination, x, y in network():
+    if destination == 0:
+        if last == y:
+            print('Part 2:', y)
+            break
 
-    for destination, x, y in network():
-        if destination == 0:
-            if last == y:
-                return y
-
-            last = y
-
-
-print('Part 1:', first())
-print('Part 2:', repeat())
+        last = y

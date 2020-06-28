@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'digest'
 
 input = ARGF.read.chomp
@@ -5,7 +7,7 @@ input = ARGF.read.chomp
 def find(key, number_of_zeroes)
   zeroes = '0' * number_of_zeroes
 
-  ("1"..).each do |number|
+  ('1'..).each do |number|
     md5 = Digest::MD5.new
     md5 << key + number
 

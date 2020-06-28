@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 boxes = ARGF.each_line.map do |dimensions|
   dimensions.chomp.split('x').map(&:to_i)
 end
 
-paper, ribbon = 0, 0
+paper = 0
+ribbon = 0
 
 boxes.each do |dimensions|
   length, width, height = dimensions

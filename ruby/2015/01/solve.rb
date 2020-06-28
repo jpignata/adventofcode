@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 DIRECTIONS = ARGF.read.chomp
-MOVES = { '(' => 1, ')' => -1 }
+MOVES = { '(' => 1, ')' => -1 }.freeze
 
 def find(floor)
   current = 0

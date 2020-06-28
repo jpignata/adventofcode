@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 RULES = ARGF.each_line.map do |direction|
   tokens = direction.split(' ')
-  
+
   if tokens[0] == 'toggle'
     command = :toggle
     start_at_token = 1
@@ -35,7 +37,7 @@ def part1
     end
   end
 
-  return grid.sum { |row| row.count(1) }
+  grid.sum { |row| row.count(1) }
 end
 
 def part2
@@ -50,13 +52,13 @@ def part2
         when :on
           grid[y][x] += 1
         when :off
-          grid[y][x] -= 1 if grid[y][x] > 0
+          grid[y][x] -= 1 if grid[y][x].positive?
         end
       end
     end
   end
 
-  return grid.sum(&:sum)
+  grid.sum(&:sum)
 end
 
 puts "Part 1: #{part1}"

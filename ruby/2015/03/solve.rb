@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'set'
 
 DIRECTIONS = ARGF.read.chomp
-MOVES = { '^' => [0, -1], 'v' => [0, 1], '>' => [1, 0], '<' => [-1, 0] }
+MOVES = { '^' => [0, -1], 'v' => [0, 1], '>' => [1, 0], '<' => [-1, 0] }.freeze
 
 Santa = Struct.new(:x, :y) do
   def position
@@ -14,7 +16,7 @@ Santa = Struct.new(:x, :y) do
   end
 end
 
-def deliver(number_of_santas=1)
+def deliver(number_of_santas = 1)
   santas = number_of_santas.times.map { Santa.new(0, 0) }.cycle
   visited = Set.new([[0, 0]])
 

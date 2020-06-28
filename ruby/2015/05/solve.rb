@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 def rulebook1(string)
-  return unless %w(a e i o u).sum { |vowel| string.count(vowel) } >= 3
+  return unless %w[a e i o u].sum { |vowel| string.count(vowel) } >= 3
   return unless string =~ /.*([a-z])\1.*/
-  return unless %w(ab cd pq xy).none? { |item| string.include?(item) }
+  return unless %w[ab cd pq xy].none? { |item| string.include?(item) }
 
   true
 end
@@ -14,7 +16,8 @@ def rulebook2(string)
 end
 
 strings = ARGF.each_line.map(&:chomp)
-part1, part2 = 0, 0
+part1 = 0
+part2 = 0
 
 strings.each do |string|
   part1 += 1 if rulebook1(string)

@@ -19,41 +19,13 @@ RULES = ARGF.each_line.map do |direction|
   [command, start_at, end_at]
 end
 
-def part1
+def flip
   grid = Array.new(1000).map { Array.new(1000, 0) }
 
   RULES.each do |command, start_at, end_at|
     (start_at[1]..end_at[1]).each do |y|
       (start_at[0]..end_at[0]).each do |x|
-        case command
-        when :toggle
-          grid[y][x] ^= 1
-        when :on
-          grid[y][x] = 1
-        when :off
-          grid[y][x] = 0
-        end
-      end
-    end
-  end
-
-  grid.sum { |row| row.count(1) }
-end
-
-def part2
-  grid = Array.new(1000).map { Array.new(1000, 0) }
-
-  RULES.each do |command, start_at, end_at|
-    (start_at[1]..end_at[1]).each do |y|
-      (start_at[0]..end_at[0]).each do |x|
-        case command
-        when :toggle
-          grid[y][x] += 2
-        when :on
-          grid[y][x] += 1
-        when :off
-          grid[y][x] -= 1 if grid[y][x].positive?
-        end
+        yield command, grid, x, y
       end
     end
   end
@@ -61,5 +33,27 @@ def part2
   grid.sum(&:sum)
 end
 
+part1 = flip do |command, grid, x, y|
+  case command
+  when :toggle
+    grid[y][x] ^= 1
+  when :on
+    grid[y][x] = 1
+  when :off
+    grid[y][x] = 0
+  end
+end
+
+part2 = flip do |command, grid, x, y|
+  case command
+  when :toggle
+    grid[y][x] += 2
+  when :on
+    grid[y][x] += 1
+  when :off
+    grid[y][x] -= 1 if grid[y][x].positive?
+  end
+end
+
 puts "Part 1: #{part1}"
-puts "Part 1: #{part2}"
+puts "Part 2: #{part2}"

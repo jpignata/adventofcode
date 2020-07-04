@@ -13,9 +13,9 @@ def find(sues, attributes, *, comparisons=dict()):
             return i + 1
 
 
-sues = [dict(sue) for sue in
-        [map(lambda match: (match[0], int(match[1])), matches) for matches in
-        [re.findall(r'(\w+): (\d+)', line) for line in sys.stdin.readlines()]]]
+sues = [{attr[0]: int(attr[1]) for attr in re.findall(r'(\w+): (\d+)', line)}
+        for line in sys.stdin.readlines()]
+
 attributes = {'children': 3, 'cats': 7, 'samoyeds': 2, 'pomeranians': 3,
               'akitas': 0, 'vizslas': 0, 'goldfish': 5, 'trees': 3, 'cars': 2,
               'perfumes': 1}

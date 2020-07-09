@@ -1,39 +1,33 @@
 import sys
-from collections import deque
 
 
-def nodes(start, graph):
-    q = deque([start])
-    nodes = []
+def dfs(programs, program):
+    visited = set()
+    s = [program]
 
-    while q:
-        program = q.popleft()
+    while s:
+        if (program := s.pop()) not in visited:
+            visited.add(program)
+            s.extend(programs[program])
 
-        for other_program in graph[program]:
-            if other_program not in nodes:
-                nodes.append(other_program)
-                q.append(other_program)
-
-    return nodes
+    return visited
 
 
-def components(graph):
-    visited = {}
+def components(programs):
+    visited = set()
     components = 0
 
-    for program in graph:
+    for program in programs:
         if program not in visited:
+            visited.update(dfs(programs, program))
             components += 1
-
-            for node in nodes(program, graph):
-                visited[node] = True
 
     return components
 
 
-graph = {int(program): list(map(int, programs.split(', ')))
-         for program, programs in [line.strip().split(' <-> ')
-         for line in sys.stdin.readlines()]}
+programs = {int(program): [int(p) for p in programs.split(',')]
+            for program, programs in [line.strip().split(' <-> ')
+            for line in sys.stdin.readlines()]}
 
-print('Part 1:', len(nodes(0, graph)))
-print('Part 2:', components(graph))
+print('Part 1:', len(dfs(programs, 0)))
+print('Part 2:', components(programs))

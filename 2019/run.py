@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import timeit
@@ -8,9 +8,9 @@ for directory, _, files in sorted(os.walk('.')):
         print('---', f'Day {directory[2:]}')
 
         if 'input.txt' in files:
-            cmd = f'cat {directory}/input.txt | python {directory}/solve.py'
+            cmd = f'cat {directory}/input.txt | python3 {directory}/solve.py'
         else:
-            cmd = f'python {directory}/solve.py'
+            cmd = f'python3 {directory}/solve.py'
 
         start = timeit.default_timer()
         os.system(cmd)

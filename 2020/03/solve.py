@@ -1,11 +1,9 @@
 import sys
+from math import prod
 
-grid = [[c for c in line.strip()] for line in sys.stdin.readlines()]
 
-
-def ride(sx, sy):
-    x, y = 0, 0
-    trees = 0
+def ride(grid, sx, sy):
+    trees, x, y = 0, 0, 0
 
     while y < len(grid):
         trees += grid[y][x % len(grid[0])] == '#'
@@ -15,5 +13,8 @@ def ride(sx, sy):
     return trees
 
 
-print('Part 1:', ride(3, 1))
-print('Part 2:', ride(1, 1) * ride(3, 1) * ride(5, 1) * ride(7, 1) * ride(1, 2))
+grid = [[c for c in line.strip()] for line in sys.stdin.readlines()]
+slopes = (1, 1), (3, 1), (5, 1), (7, 1), (1, 2)
+
+print('Part 1:', ride(grid, 3, 1))
+print('Part 2:', prod(ride(grid, x, y) for (x, y) in slopes))

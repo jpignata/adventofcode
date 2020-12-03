@@ -1,23 +1,24 @@
 import sys
 
 
-def find2(values, target):
-    complements = set()
+def find2(values, target, lo=0):
+    hi = len(values) - 1
 
-    for value1 in values:
-        if (value2 := target - value1) in complements:
-            return value1 * value2
+    while (lo < hi):
+        total = values[lo] + values[hi]
 
-        complements.add(value1)
+        if total == target:
+            return values[lo] * values[hi]
+        elif total < target:
+            lo += 1
+        else:
+            hi -= 1
 
 
 def find3(values, target):
-    complements = set(values)
-
-    for value1 in values:
-        for value2 in values:
-            if (value3 := target - value1 - value2) in complements:
-                return value1 * value2 * value3
+    for i, value in enumerate(values):
+        if (match := find2(values, target - value, i + 1)):
+            return match * value
 
 
 values = sorted(int(value) for value in sys.stdin.readlines())

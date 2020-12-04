@@ -1,14 +1,13 @@
 import sys
+import re
 
-part1, part2 = 0, 0
+policy1, policy2 = 0, 0
 
 for line in sys.stdin.readlines():
-    policy, password = line.strip().split(': ')
-    freq, char = policy.split(' ')
-    minfreq, maxfreq = [int(f) for f in freq.split('-')]
-    index1, index2 = minfreq - 1, maxfreq - 1
-    part1 += minfreq <= password.count(char) <= maxfreq
-    part2 += (password[index1], password[index2]).count(char) == 1
+    lo, hi, char, password = re.split(r'[ -]|: ', line.strip())
+    lo, hi = int(lo), int(hi)
+    policy1 += lo <= password.count(char) <= hi
+    policy2 += (password[lo - 1], password[hi - 1]).count(char) == 1
 
-print('Part 1:', part1)
-print('Part 2:', part2)
+print('Part 1:', policy1)
+print('Part 2:', policy2)

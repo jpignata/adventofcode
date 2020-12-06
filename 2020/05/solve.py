@@ -6,24 +6,14 @@ def calculate(spec, lo, hi):
 
     if lo == hi:
         return lo
-    elif spec[0] in ('F', 'L'):
+    elif spec[0] in 'FL':
         return calculate(spec[1:], lo, lo + mid)
-    elif spec[0] in ('B', 'R'):
+    elif spec[0] in 'BR':
         return calculate(spec[1:], lo + mid + 1, hi)
 
 
-def find(seats):
-    prev = seats[0]
-
-    for seat in seats[1:]:
-        if seat - prev == 2:
-            return seat - 1
-
-        prev = seat
-
-
-seats = sorted(calculate(line[:-4], 0, 127) * 8 + calculate(line[-4:-1], 0, 7)
-               for line in sys.stdin.readlines())
+seats = {calculate(line[:-4], 0, 127) * 8 + calculate(line[-4:-1], 0, 7)
+         for line in sys.stdin.readlines()}
 
 print('Part 1:', max(seats))
-print('Part 2:', find(seats))
+print('Part 2:', (set(range(min(seats), max(seats))) - seats).pop())

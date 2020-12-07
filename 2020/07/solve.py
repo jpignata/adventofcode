@@ -18,12 +18,8 @@ def total(start):
 for line in sys.stdin.readlines():
     outer, inner = line[:-2].split(' contain ')
     outer = outer.rsplit(' ', 1)[0]
-    rules[outer] = {}
-
-    for bag in inner.split(', '):
-        if bag != 'no other bags':
-            parts = bag.split(' ')
-            rules[outer][' '.join(parts[1:3])] = int(parts[0])
+    rules[outer] = {' '.join(bag.split(' ')[1:-1]): int(bag.split(' ')[0])
+                    for bag in inner.split(', ') if inner[0:2] != 'no'}
 
 
 print('Part 1:', sum(reachable(bag, gold) for bag in rules if bag != gold))

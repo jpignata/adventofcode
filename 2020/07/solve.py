@@ -4,11 +4,8 @@ rules = {}
 gold = 'shiny gold'
 
 
-def reachable(start, target):
-    if start == target:
-        return True
-    else:
-        return any(reachable(bag, target) for bag in rules[start])
+def reachable(start):
+    return start == gold or any(reachable(bag) for bag in rules[start])
 
 
 def total(start):
@@ -22,5 +19,5 @@ for line in sys.stdin.readlines():
                     for bag in inner.split(', ') if inner[0:2] != 'no'}
 
 
-print('Part 1:', sum(reachable(bag, gold) for bag in rules if bag != gold))
+print('Part 1:', sum(reachable(bag) for bag in rules if bag != gold))
 print('Part 2:', total(gold) - 1)

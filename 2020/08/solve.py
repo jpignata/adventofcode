@@ -1,54 +1,44 @@
 import sys
 
 
-class Handheld:
-    pointer = 0
-    accumulator = 0
+def run(instructions):
+    pointer, accumulator = 0, 0
+    seen = set()
 
-    def nop(self, arg):
-        self.pointer += 1
+    while pointer < len(instructions):
+        cmd, arg = instructions[pointer]
 
-    def acc(self, arg):
-        self.accumulator += arg
-        self.pointer += 1
+        if cmd == 'acc':
+            accumulator += arg
+            pointer += 1
+        elif cmd == 'jmp':
+            pointer += arg
+        else:
+            pointer += 1
 
-    def jmp(self, arg):
-        self.pointer += arg
+        if pointer in seen:
+            return (False, accumulator)
 
-    def run_until_loop(self, instructions):
-        seen = set()
+        seen.add(pointer)
 
-        while self.pointer < len(instructions):
-            if self.pointer in seen:
-                return False
-
-            cmd, arg = instructions[self.pointer]
-
-            seen.add(self.pointer)
-            getattr(self, cmd)(arg)
-
-        return True
-
-    def run(self, instructions):
-        self.run_until_loop(instructions)
-        return self.accumulator
+    return (True, accumulator)
 
 
-instructions = [(cmd, int(arg)) for cmd, arg in
-                [tuple(line.strip().split(' '))
-                 for line in sys.stdin.readlines()]]
-part2 = None
+def find(instructions):
+    changes = {'jmp': 'nop', 'nop': 'jmp'}
 
-for i, instruction in enumerate(instructions):
-    if instruction[0] in ('jmp', 'nop'):
-        handheld = Handheld()
-        modified = instructions[:]
-        cmd = modified[i][0]
-        modified[i] = ('jmp' if cmd == 'nop' else 'nop', modified[i][1])
+    for i, (cmd, arg) in enumerate(instructions):
+        if cmd in changes:
+            modified = instructions[:]
+            modified[i] = (changes[cmd], arg)
+            terminated, accumulator = run(modified)
 
-        if handheld.run_until_loop(modified):
-            part2 = handheld.accumulator
-            break
+            if terminated:
+                return accumulator
 
-print('Part 1:', Handheld().run(instructions))
-print('Part 2:', part2)
+
+instructions = [(cmd, int(arg)) for cmd, arg in [tuple(line.strip().split(' '))
+                for line in sys.stdin.readlines()]]
+
+print('Part 1:', run(instructions)[1])
+print('Part 2:', find(instructions))

@@ -3,10 +3,12 @@ import sys
 
 def find_invalid(numbers, size=25):
     for i, number in enumerate(numbers[size:]):
-        sums = {numbers[i + j] + numbers[i + j + k] for k in range(size)
-                for j in range(size)}
+        complements = set(numbers[i:i+size])
 
-        if number not in sums:
+        for addend in complements:
+            if number - addend in complements:
+                break
+        else:
             return number
 
 
@@ -14,10 +16,10 @@ def find_range(numbers, target):
     lo, hi = 0, 1
 
     while lo < len(numbers):
-        total = sum(numbers[lo:hi])
+        seq = numbers[lo:hi]
 
-        if total == target:
-            return max(numbers[lo:hi]) + min(numbers[lo:hi])
+        if (total := sum(seq)) == target:
+            return min(seq) + max(seq)
         elif total > target:
             lo += 1
             hi = lo + 1

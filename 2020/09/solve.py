@@ -15,14 +15,13 @@ def find_invalid(numbers, size=25):
 def find_range(numbers, target):
     lo, hi = 0, 1
 
-    while lo < len(numbers):
+    while hi < len(numbers):
         seq = numbers[lo:hi]
 
         if (total := sum(seq)) == target:
             return min(seq) + max(seq)
         elif total > target:
             lo += 1
-            hi = lo + 1
         elif total < target:
             hi += 1
 

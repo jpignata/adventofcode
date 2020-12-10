@@ -13,7 +13,7 @@ def ride(grid, sx, sy):
     return trees
 
 
-grid = [[c for c in line.strip()] for line in sys.stdin.readlines()]
+grid = [line.strip() for line in sys.stdin.readlines()]
 slopes = (1, 1), (3, 1), (5, 1), (7, 1), (1, 2)
 
 print('Part 1:', ride(grid, 3, 1))

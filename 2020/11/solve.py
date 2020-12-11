@@ -2,66 +2,53 @@ import sys
 from copy import deepcopy
 from itertools import product
 
+adjacent = [c for c in tuple(product((-1, 0, 1), (-1, 0, 1))) if c != (0, 0)]
+
+
+def strategy_adjacent(x, y, rows):
+    return sum(1 for (dx, dy) in adjacent if 0 <= y+dy < len(rows)
+               and 0 <= x+dx < len(rows[0]) and rows[y+dy][x+dx] == '#')
+
+
+def strategy_visible(x, y, rows):
+    occupied = 0
+
+    for ax, ay in adjacent:
+        dx, dy = ax, ay
+
+        while 0 <= x+dx < len(rows[0]) and 0 <= y+dy < len(rows):
+            if rows[y+dy][x+dx] == '.':
+                dx += ax
+                dy += ay
+            elif rows[y+dy][x+dx] == '#':
+                occupied += 1
+                break
+            else:
+                break
+
+    return occupied
+
+
+def simulate(rows, strategy, tolerance):
+    next_rows = deepcopy(rows)
+
+    for y, row in enumerate(rows):
+        for x, seat in enumerate(row):
+            if seat != '.':
+                occupied = strategy(x, y, rows)
+
+                if seat == 'L' and occupied == 0:
+                    next_rows[y][x] = '#'
+                elif seat == '#' and occupied >= tolerance:
+                    next_rows[y][x] = 'L'
+
+    if next_rows == rows:
+        return sum(1 for row in rows for seat in row if seat == '#')
+    else:
+        return simulate(next_rows, strategy, tolerance)
+
+
 rows = [list(line.strip()) for line in sys.stdin.readlines()]
-maxx, maxy = len(rows[0]), len(rows)
-adjacent = tuple(pos for pos in tuple(product((-1, 0, 1), (-1, 0, 1)))
-                 if pos != (0, 0))
-generations = [rows]
 
-while True:
-    current_gen = generations[-1].copy()
-    next_gen = deepcopy(generations[-1])
-
-    for y, row in enumerate(current_gen):
-        for x, seat in enumerate(row):
-            if seat != '.':
-                neighbors = [current_gen[y+dy][x+dx] for (dx, dy) in adjacent
-                             if 0 <= y+dy < maxy and 0 <= x+dx < maxx]
-                occupied = neighbors.count('#')
-
-                if seat == 'L' and occupied == 0:
-                    next_gen[y][x] = '#'
-                elif seat == '#' and occupied >= 4:
-                    next_gen[y][x] = 'L'
-
-    if next_gen != current_gen:
-        generations.append(next_gen)
-    else:
-        break
-
-print('Part 1:', sum(1 for row in generations[-1] for seat in row if seat == '#'))
-
-generations = [rows]
-
-while True:
-    current_gen = generations[-1].copy()
-    next_gen = deepcopy(generations[-1])
-
-    for y, row in enumerate(current_gen):
-        for x, seat in enumerate(row):
-            if seat != '.':
-                occupied = 0
-
-                for ax, ay in adjacent:
-                    dx, dy = ax, ay
-                    while 0 <= x+dx < maxx and 0 <= y+dy < maxy:
-                        if current_gen[y+dy][x+dx] == '.':
-                            dx += ax
-                            dy += ay
-                        elif current_gen[y+dy][x+dx] == '#':
-                            occupied += 1
-                            break
-                        else:
-                            break
-
-                if seat == 'L' and occupied == 0:
-                    next_gen[y][x] = '#'
-                elif seat == '#' and occupied >= 5:
-                    next_gen[y][x] = 'L'
-
-    if next_gen != current_gen:
-        generations.append(next_gen)
-    else:
-        break
-
-print('Part 2:', sum(1 for row in generations[-1] for seat in row if seat == '#'))
+print('Part 1:', simulate(rows, strategy_adjacent, 4))
+print('Part 2:', simulate(rows, strategy_visible, 5))

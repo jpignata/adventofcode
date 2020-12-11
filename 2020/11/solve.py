@@ -1,36 +1,34 @@
 import sys
-from copy import deepcopy
 from itertools import product
 
-adjacent = [c for c in tuple(product((-1, 0, 1), (-1, 0, 1))) if c != (0, 0)]
+adjacent = [xy for xy in product((-1, 0, 1), (-1, 0, 1)) if xy != (0, 0)]
 
 
 def strategy_adjacent(x, y, rows):
-    return sum(1 for (dx, dy) in adjacent if 0 <= y+dy < len(rows)
-               and 0 <= x+dx < len(rows[0]) and rows[y+dy][x+dx] == '#')
+    return sum(1 for (dx, dy) in adjacent
+               if 0 <= y+dy < len(rows) and 0 <= x+dx < len(rows[0])
+               if rows[y+dy][x+dx] == '#')
 
 
 def strategy_visible(x, y, rows):
     occupied = 0
 
-    for ax, ay in adjacent:
-        dx, dy = ax, ay
+    for dx, dy in adjacent:
+        nx, ny = x + dx, y + dy
 
-        while 0 <= x+dx < len(rows[0]) and 0 <= y+dy < len(rows):
-            if rows[y+dy][x+dx] == '.':
-                dx += ax
-                dy += ay
-            elif rows[y+dy][x+dx] == '#':
-                occupied += 1
-                break
+        while 0 <= ny < len(rows) and 0 <= nx < len(rows[0]):
+            if rows[ny][nx] == '.':
+                nx += dx
+                ny += dy
             else:
+                occupied += rows[ny][nx] == '#'
                 break
 
     return occupied
 
 
 def simulate(rows, strategy, tolerance):
-    next_rows = deepcopy(rows)
+    next_rows = [row[:] for row in rows]
 
     for y, row in enumerate(rows):
         for x, seat in enumerate(row):
@@ -43,7 +41,7 @@ def simulate(rows, strategy, tolerance):
                     next_rows[y][x] = 'L'
 
     if next_rows == rows:
-        return sum(1 for row in rows for seat in row if seat == '#')
+        return sum(row.count('#') for row in rows)
     else:
         return simulate(next_rows, strategy, tolerance)
 

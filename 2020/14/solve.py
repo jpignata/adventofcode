@@ -2,29 +2,27 @@ import re
 import sys
 
 mask = None
-version1, version2 = {}, {}
+v1, v2 = {}, {}
 
 for line in sys.stdin.readlines():
-    if line.startswith('mask'):
-        mask = line.split(' ')[-1].strip()
+    if (match := re.search(r'mask = ([01X]*)', line)):
+        mask = match.group(1)
     elif (match := re.search(r'mem\[(\d*)\] = (\d*)', line)):
-        index = int(match.group(1))
-        value = int(match.group(2))
-        original_index = index
-        original_value = value
-        floating = []
+        index, value = [int(m) for m in match.group(1, 2)]
+        initial_index, initial_value = index, value
+        positions = []
         indexes = set()
 
-        for i, bit in enumerate(mask):
+        for position, bit in enumerate(mask):
             if bit == '1':
-                value |= 1 << 35-i
-                index |= 1 << 35-i
+                value |= 1 << 35-position
+                index |= 1 << 35-position
             elif bit == '0':
-                value &= ~(1 << 35-i)
+                value &= ~(1 << 35-position)
             elif bit == 'X':
-                floating.append(i)
+                positions.append(position)
 
-        for position in floating:
+        for position in positions:
             for idx in indexes.copy():
                 indexes.add(idx | 1 << 35-position)
                 indexes.add(idx & ~(1 << 35-position))
@@ -32,10 +30,10 @@ for line in sys.stdin.readlines():
             indexes.add(index | 1 << 35-position)
             indexes.add(index & ~(1 << 35-position))
 
-        version1[original_index] = value
+        v1[initial_index] = value
 
         for index in indexes:
-            version2[index] = original_value
+            v2[index] = initial_value
 
-print('Part 1:', sum(version1.values()))
-print('Part 2:', sum(version2.values()))
+print('Part 1:', sum(v1.values()))
+print('Part 2:', sum(v2.values()))

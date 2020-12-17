@@ -1,17 +1,17 @@
 import sys
 from itertools import product
-from functools import lru_cache
+from functools import cache
 
 
 def simulate(cubes, dims, cycles=6):
-    cubes = {tuple(0 if i >= len(pos) else pos[i] for i in range(dims)): cube
-            for pos, cube in cubes.items()}
-    adjacent = [pos for pos in product(*((-1, 0, 1) for _ in range(dims)))
-                if not all(p == 0 for p in pos)]
+    cubes = {tuple(pos[i] if i < len(pos) else 0 for i in range(dims)): active
+             for pos, active in cubes.items()}
+    deltas = [delta for delta in product(*((-1, 0, 1) for _ in range(dims)))
+              if any(delta)]
 
-    @lru_cache(maxsize=None)
+    @cache
     def neighbors(pos):
-        return [tuple(c + d for c, d in zip(pos, adj)) for adj in adjacent]
+        return [tuple(sum(p) for p in zip(pos, delta)) for delta in deltas]
 
     for _ in range(cycles):
         next_cubes = cubes.copy()
@@ -33,11 +33,9 @@ def simulate(cubes, dims, cycles=6):
     return sum(cubes.values())
 
 
-cubes = {}
-
-for y, line in enumerate(sys.stdin.readlines()):
-    for x, cell in enumerate(line.strip()):
-        cubes[(x, y)] = 1 if cell == '#' else 0
+cubes = {(x, y): int(cell == '#')
+         for y, line in enumerate(sys.stdin.readlines())
+         for x, cell in enumerate(line.strip())}
 
 print('Part 1:', simulate(cubes, 3))
 print('Part 2:', simulate(cubes, 4))

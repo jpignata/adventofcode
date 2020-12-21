@@ -42,18 +42,16 @@ def connect(tiles):
                     stack.append((cand + [other], ids + [other_id]))
 
 
-def hunt(tiles):
-    shape = ((0, 0), (1, 1), (4, 1), (5, 0), (6, 0), (7, 1), (10, 1), (11, 0),
-             (12, 0), (13, 1), (16, 1), (17, 0), (18, -1), (18, 0), (19, 0))
-    multiplier = int(sqrt(len(tiles)))
-    size = (len(tiles[0]) - 2)
-    grid = [[None] * (size * multiplier) for _ in range(size * multiplier)]
+def hunt(tiles, shape):
+    size = int(sqrt(len(tiles)))
+    tile_width = (len(tiles[0]) - 2)
+    grid = [[None] * (tile_width * size) for _ in range(tile_width * size)]
 
     for y in range(len(grid)):
         for x in range(len(grid[0])):
-            ctile = y // size * multiplier + x // size
-            cy = y % size + 1
-            cx = x % size + 1
+            ctile = y // tile_width * size + x // tile_width
+            cy = y % tile_width + 1
+            cx = x % tile_width + 1
             grid[y][x] = tiles[ctile][cy][cx]
 
     total = sum(1 for row in grid for c in row if c == '#')
@@ -70,6 +68,8 @@ def hunt(tiles):
             return total - len(shape) * found
 
 
+monster = ((0, 0), (1, 1), (4, 1), (5, 0), (6, 0), (7, 1), (10, 1), (11, 0),
+           (12, 0), (13, 1), (16, 1), (17, 0), (18, -1), (18, 0), (19, 0))
 tiles = {}
 
 while (line := sys.stdin.readline()):
@@ -85,4 +85,4 @@ while (line := sys.stdin.readline()):
 image, checksum = connect(tiles)
 
 print('Part 1:', checksum)
-print('Part 2:', hunt(image))
+print('Part 2:', hunt(image, monster))

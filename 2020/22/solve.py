@@ -17,10 +17,10 @@ def recursive(deck1, deck2):
     seen = set()
 
     while deck1 and deck2:
-        if ((decks := (tuple(deck1), tuple(deck2))) in seen):
+        if (sig := (tuple(deck1), tuple(deck2))) in seen:
             return (deck1, [])
-        else:
-            seen.add(decks)
+
+        seen.add(sig)
 
         card1, card2 = deck1.pop(0), deck2.pop(0)
 
@@ -37,18 +37,17 @@ def recursive(deck1, deck2):
     return deck1, deck2
 
 
-def score(decks):
-    return sum(card * (len(deck) - i)
-               for deck in decks for i, card in enumerate(deck))
+def score(result):
+    return sum(card * (len(deck) - i) for deck in result for i, card in enumerate(deck))
 
 
 decks = []
 
-while (line := sys.stdin.readline()):
+while line := sys.stdin.readline():
     if ':' in line:
         deck = []
 
-        while (line := sys.stdin.readline().strip()):
+        while line := sys.stdin.readline().strip():
             deck.append(int(line))
 
         decks.append(deck)

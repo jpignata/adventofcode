@@ -1,51 +1,45 @@
 import sys
-from collections import deque
 
 
-def combat(decks):
-    while all(decks):
-        cards = [decks[0].popleft(), decks[1].popleft()]
-        winner = cards.index(max(cards))
+def combat(deck1, deck2):
+    while deck1 and deck2:
+        card1, card2 = deck1.pop(0), deck2.pop(0)
 
-        for card in sorted(cards, reverse=True):
-            decks[winner].append(card)
+        if card1 > card2:
+            deck1 += [card1, card2]
+        else:
+            deck2 += [card2, card1]
 
-    return decks
+    return deck1, deck2
 
 
-def recursive(decks):
+def recursive(deck1, deck2):
     seen = set()
 
-    while all(decks):
-        if repr(decks) in seen:
-            return (decks[0], deque([]))
-
-        seen.add(repr(decks))
-
-        cards = [decks[0].popleft(), decks[1].popleft()]
-
-        if len(decks[0]) >= cards[0] and len(decks[1]) >= cards[1]:
-            sub = [deque((c) for j, c in enumerate(decks[i]) if j < cards[i])
-                   for i in (0, 1)]
-
-            winner = 0 if recursive(sub)[0] else 1
-
-            decks[winner].append(cards[winner])
-            decks[winner].append(cards[(1, 0)[winner]])
+    while deck1 and deck2:
+        if ((decks := (tuple(deck1), tuple(deck2))) in seen):
+            return (deck1, [])
         else:
-            winner = cards.index(max(cards))
+            seen.add(decks)
 
-            for card in sorted(cards, reverse=True):
-                decks[winner].append(card)
+        card1, card2 = deck1.pop(0), deck2.pop(0)
 
-    return decks
+        if len(deck1) >= card1 and len(deck2) >= card2:
+            player1_wins, _ = recursive(deck1[:card1], deck2[:card2])
+        else:
+            player1_wins = card1 > card2
+
+        if player1_wins:
+            deck1 += [card1, card2]
+        else:
+            deck2 += [card2, card1]
+
+    return deck1, deck2
 
 
 def score(decks):
     return sum(card * (len(deck) - i)
-               for deck in decks
-               for i, card in enumerate(deck)
-               if deck)
+               for deck in decks for i, card in enumerate(deck))
 
 
 decks = []
@@ -59,5 +53,5 @@ while (line := sys.stdin.readline()):
 
         decks.append(deck)
 
-print('Part 1:', score(combat([deque(deck) for deck in decks])))
-print('Part 2:', score(recursive([deque(deck) for deck in decks])))
+print('Part 1:', score(combat(decks[0][:], decks[1][:])))
+print('Part 2:', score(recursive(decks[0][:], decks[1][:])))

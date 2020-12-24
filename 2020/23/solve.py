@@ -1,58 +1,44 @@
 import sys
-from dataclasses import dataclass
-
-
-@dataclass
-class Node:
-    val: int
-    next: 'Node'
 
 
 def play(cups, rounds):
-    nodes = {}
-    node, prev, tail = None, None, None
+    nodes = [None] * (len(cups) + 1)
+    prev = None
 
-    for cup in reversed(cups):
-        node = Node(cup, prev)
+    for cup in cups[::-1]:
+        nodes[cup] = prev
+        prev = cup
 
-        if tail is None:
-            tail = node
-
-        nodes[cup] = node
-        prev = node
-
-    head = node
-    tail.next = head
-    current = head
+    nodes[cups[-1]] = prev
+    current = prev
 
     for _ in range(rounds):
-        pickup = [current.next.val, current.next.next.val, current.next.next.next.val]
-        destination = current.val - 1
+        pickup = (p1 := nodes[current], p2 := nodes[p1], p3 := nodes[p2])
+        dest = current - 1
 
-        while destination in pickup or destination < 1:
-            destination = destination - 1 if destination > 1 else max(cups)
+        while dest in pickup or dest < 1:
+            dest = dest - 1 if dest > 1 else max(cups)
 
-        head = nodes[destination].next
-        nodes[destination].next = nodes[pickup[0]]
-        current.next = nodes[pickup[2]].next
-        nodes[pickup[2]].next = head
-        current = current.next
+        nodes[current] = nodes[p3]
+        nodes[p3] = nodes[dest]
+        nodes[dest] = p1
+        current = nodes[current]
 
-    if len(nodes) > 10:
-        return nodes[1].next.val * nodes[1].next.next.val
+    if len(nodes) == 10:
+        final = ''
+        node = nodes[1]
 
-    final = []
-    node = nodes[1]
+        while node != 1:
+            final += str(node)
+            node = nodes[node]
 
-    while len(final) < len(cups) - 1:
-        final.append(node.next.val)
-        node = node.next
+        return final
 
-    return ''.join(str(cup) for cup in final)
+    return nodes[1] * nodes[nodes[1]]
 
 
-part1 = [int(cup) for cup in sys.stdin.readline().strip()]
-part2 = list(part1) + list(range(max(part1) + 1, 1_000_001))
+part1 = tuple(int(cup) for cup in sys.stdin.readline().strip())
+part2 = part1 + tuple(range(max(part1) + 1, 1_000_001))
 
 print('Part 1:', play(part1, 100))
 print('Part 2:', play(part2, 10_000_000))

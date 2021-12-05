@@ -1,33 +1,33 @@
+import math
 import sys
 
 boards = []
-part1, part2 = None, None
 
 for line in sys.stdin:
     if ',' in line:
-        balls = [int(number) for number in line.split(',')]
+        balls = {int(ball): i for i, ball in enumerate(line.split(','))}
     elif line == '\n':
         boards.append([])
     else:
         boards[-1].append([int(number) for number in line.split()])
 
-for ball in balls:
-    winners = set()
+first = (math.inf, None)
+last = (-math.inf, None)
 
-    for i, board in enumerate(boards):
-        for y, row in enumerate(board):
-            for x, num in enumerate(row):
-                if num == ball:
-                    board[y][x] = None
+for i, board in enumerate(boards):
+    ball = math.inf
 
-                    if not any(board[y]) or not any(list(zip(*board))[x]):
-                        score = sum(num for row in board
-                                    for num in row if num) * ball
-                        part1 = part1 or score
-                        part2 = score
-                        winners.add(i)
+    for row in board + list(zip(*board)):
+        ball = min(ball, max(balls[num] for num in row if num in balls))
 
-    boards = [board for i, board in enumerate(boards) if i not in winners]
+    first = min(first, (ball, i))
+    last = max(last, (ball, i))
 
-print('Part 1:', part1)
-print('Part 2:', part2)
+
+def score(ball, board):
+    return sum(num for row in boards[board] for num in row
+               if balls[num] > ball) * list(balls.keys())[ball]
+
+
+print('Part 1:', score(*first))
+print('Part 2:', score(*last))

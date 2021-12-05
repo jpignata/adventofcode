@@ -1,41 +1,33 @@
 import sys
 
-boards, marks = [], []
+boards = []
 part1, part2 = None, None
-winners = set()
 
 for line in sys.stdin:
     if ',' in line:
         balls = [int(number) for number in line.split(',')]
     elif line == '\n':
         boards.append([])
-        marks.append([])
     else:
-        row = [int(number) for number in line.split()]
-        boards[-1].append(row)
-        marks[-1].append([False] * len(row))
+        boards[-1].append([int(number) for number in line.split()])
 
 for ball in balls:
-    for bi, board in enumerate(boards):
-        if bi in winners:
-            continue
+    winners = set()
 
-        for ri, row in enumerate(board):
-            for ni, number in enumerate(row):
-                if number == ball:
-                    marks[bi][ri][ni] = True
-                    rotated = list(zip(*marks[bi][::-1]))
+    for i, board in enumerate(boards):
+        for y, row in enumerate(board):
+            for x, num in enumerate(row):
+                if num == ball:
+                    board[y][x] = None
 
-                    if all(marks[bi][ri]) or all(rotated[ni]):
-                        unmarked = sum(number for ri, row in enumerate(board)
-                                       for ni, number in enumerate(row)
-                                       if not marks[bi][ri][ni])
+                    if not any(board[y]) or not any(list(zip(*board))[x]):
+                        score = sum(num for row in board
+                                    for num in row if num) * ball
+                        part1 = part1 or score
+                        part2 = score
+                        winners.add(i)
 
-                        if part1 is None:
-                            part1 = unmarked * ball
-
-                        part2 = unmarked * ball
-                        winners.add(bi)
+    boards = [board for i, board in enumerate(boards) if i not in winners]
 
 print('Part 1:', part1)
 print('Part 2:', part2)

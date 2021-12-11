@@ -1,14 +1,11 @@
-from math import prod
-from heapq import heappush, heappop
 import sys
+from heapq import heappush, heappop
+from math import prod
 
-grid = []
+grid = [[int(point) for point in line.strip()] for line in sys.stdin]
 lowest = 0
 largest = []
 deltas = ((1, 0), (0, 1), (-1, 0), (0, -1))
-
-for line in sys.stdin:
-    grid.append([int(point) for point in line.strip()])
 
 
 def dfs(x, y, visited):

@@ -1,9 +1,9 @@
 import sys
-from collections import defaultdict, Counter
+from collections import defaultdict
 
 
 def search(max_visits=1):
-    s = [[['end'], Counter()]]
+    s = [[['end'], defaultdict(int)]]
     paths = 0
 
     while s:

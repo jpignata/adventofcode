@@ -6,20 +6,14 @@ class Reader(object):
     def __init__(self, s):
         self.s = s
         self.pointer = 0
-        self.max = len(s) - 1
 
-    def eof(self):
-        at_end = self.pointer >= self.max
-        no_data_left = all(c == '0' for c in self.s[self.pointer:])
-        return at_end or no_data_left
-
-    def read(self, number):
-        segment = self.s[self.pointer:self.pointer+number]
-        self.pointer += number
+    def read(self, size):
+        segment = self.s[self.pointer:self.pointer+size]
+        self.pointer += size
         return segment
 
-    def read_decimal(self, number):
-        return int(''.join(self.read(number)), 2)
+    def read_decimal(self, size):
+        return int(''.join(self.read(size)), 2)
 
 
 def parse(reader):
@@ -57,17 +51,15 @@ def parse(reader):
     return (versions, operations[type](literals))
 
 
-bits = [bin(int(char, 16)).replace('0b', '').zfill(4)
-        for char in sys.stdin.readline().strip()]
-operations = [
-    lambda literals: sum(literals),
-    lambda literals: prod(literals),
-    lambda literals: min(literals),
-    lambda literals: max(literals),
-    None,
-    lambda literals: int(literals[0] > literals[1]),
-    lambda literals: int(literals[0] < literals[1]),
-    lambda literals: int(literals[0] == literals[1])]
+bits = [bin(int(c, 16))[2:].zfill(4) for c in sys.stdin.readline().strip()]
+operations = {
+    0: lambda literals: sum(literals),
+    1: lambda literals: prod(literals),
+    2: lambda literals: min(literals),
+    3: lambda literals: max(literals),
+    5: lambda literals: int(literals[0] > literals[1]),
+    6: lambda literals: int(literals[0] < literals[1]),
+    7: lambda literals: int(literals[0] == literals[1])}
 versions, result = parse(Reader(''.join(bits)))
 
 print('Part 1:', versions)

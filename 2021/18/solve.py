@@ -8,44 +8,35 @@ def add(number1, number2):
     numbers = [(number, depth + 1) for number, depth in number1 + number2]
 
     while True:
-        explode = next((i for i, (_, depth) in enumerate(numbers)
-                        if depth >= 5), None)
+        to_explode = (i for i, (_, depth) in enumerate(numbers) if depth >= 5)
+        to_split = (i for i, (number, _) in enumerate(numbers) if number >= 10)
 
-        if explode is not None:
-            left, right = numbers[explode:explode+2]
+        if (i := next(to_explode, None)) is not None:
+            left, right = numbers[i:i+2]
 
-            if (next_left := explode - 1) >= 0:
-                numbers[next_left] = (numbers[next_left][0] + left[0],
-                                      numbers[next_left][1])
+            if (j := i - 1) >= 0:
+                numbers[j] = (left[0] + numbers[j][0], numbers[j][1])
 
-            if (next_right := explode + 2) < len(numbers):
-                numbers[next_right] = (numbers[next_right][0] + right[0],
-                                       numbers[next_right][1])
+            if (j := i + 2) < len(numbers):
+                numbers[j] = (right[0] + numbers[j][0], numbers[j][1])
 
-            numbers[explode] = (0, left[1] - 1)
-            del numbers[explode + 1]
+            numbers[i] = (0, left[1] - 1)
+            del numbers[i + 1]
             continue
 
-        split = next((i for i, (number, _) in enumerate(numbers)
-                      if number >= 10), None)
-
-        if split is not None:
-            halved = numbers[split][0] / 2
-            depth = numbers[split][1] + 1
-            numbers.insert(split + 1, (ceil(halved), depth))
-            numbers[split] = (floor(halved), depth)
+        if (i := next(to_split, None)) is not None:
+            numbers.insert(i + 1, (ceil(numbers[i][0] / 2), numbers[i][1] + 1))
+            numbers[i] = (floor(numbers[i][0] / 2), numbers[i][1] + 1)
             continue
 
-        break
-
-    return numbers
+        return numbers
 
 
 def magnitude(number):
     while len(number) != 1:
         maxdepth = max(depth for _, depth in number)
         i = next(i for i, (_, depth) in enumerate(number) if depth == maxdepth)
-        number[i] = (number[i][0] * 3 + number[i + 1][0] * 2, maxdepth - 1)
+        number[i] = (number[i][0] * 3 + number[i+1][0] * 2, maxdepth - 1)
         del number[i + 1]
 
     return number[0][0]
@@ -54,7 +45,7 @@ def magnitude(number):
 numbers = []
 
 for line in sys.stdin:
-    next_numbers = []
+    numbers.append([])
     depth = 0
 
     for char in line.strip():
@@ -63,9 +54,7 @@ for line in sys.stdin:
         elif char == ']':
             depth -= 1
         elif char.isdigit():
-            next_numbers.append((int(char), depth))
-
-    numbers.append(next_numbers)
+            numbers[-1].append((int(char), depth))
 
 total = magnitude(reduce(add, numbers))
 largest = max(magnitude(add(n1, n2)) for n1, n2 in permutations(numbers, 2))

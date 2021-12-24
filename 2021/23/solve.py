@@ -85,6 +85,7 @@ def search(grid):
     visited = defaultdict(lambda: inf)
     visited[freeze(grid)] = 0
     q = [(0, 0, grid)]
+    found = []
 
     while q:
         _, total, grid = heappop(q)
@@ -94,7 +95,10 @@ def search(grid):
             if grid[2][rooms[i]] != amphipod or grid[3][rooms[i]] != amphipod:
                 break
         else:
-            return total
+            found.append(total)
+
+            if len(found) == 5:
+                return min(found)
 
         for y, row in enumerate(grid):
             for x, space in enumerate(row):
@@ -103,6 +107,8 @@ def search(grid):
                         if total + cost < visited[freeze(next_grid)]:
                             score = heuristic(next_grid)
                             heappush(q, (score, total + cost, next_grid))
+
+    return min(found)
 
 
 grid = [[c for c in line.rstrip()] for line in sys.stdin]

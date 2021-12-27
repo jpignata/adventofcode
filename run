@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import timeit
 
-for directory, _, files in sorted(os.walk('.')):
+for directory, _, files in sorted(os.walk(sys.argv[1])):
     if 'solve.py' in files:
-        print('---', f'Day {directory[2:]}')
+        print('---', f'{directory}')
 
         if 'input.txt' in files:
             cmd = f'cat {directory}/input.txt | python3 {directory}/solve.py'
@@ -14,5 +15,5 @@ for directory, _, files in sorted(os.walk('.')):
 
         start = timeit.default_timer()
         os.system(cmd)
-        elapsed = timeit.default_timer() - start
+        elapsed = round(timeit.default_timer() - start, 3)
         print('---', 'Time:', elapsed, end='\n\n')

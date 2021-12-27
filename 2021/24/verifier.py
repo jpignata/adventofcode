@@ -38,7 +38,6 @@ class ALU(object):
         return registers['z'] == 0
 
 
-instructions = [line.strip() for line in sys.stdin]
-alu = ALU(instructions)
+instructions = [line.strip() for line in open('input.txt')] 
 
-print(alu.run(sys.argv[1]))
+print(ALU(instructions).run(sys.argv[1]))

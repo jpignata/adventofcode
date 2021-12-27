@@ -7,25 +7,28 @@ grid = {(x, y): char
 lenx, leny = [max(c) + 1 for c in zip(*grid.keys())]
 
 for step in count(1):
-    movements = 0
-    next_grid = grid.copy()
+    moved = False
 
-    for (x, y), char in grid.items():
-        if char == '>' and grid[((x + 1) % lenx, y)] == '.':
-            next_grid[(x, y)] = '.'
-            next_grid[((x + 1) % lenx, y)] = '>'
-            movements += 1
+    for (x, y) in grid:
+        adjacent = ((x + 1) % lenx, y)
 
-    grid = next_grid.copy()
+        if grid[(x, y)] == '>' and grid[adjacent] == '.':
+            grid[(x, y)] = '..'
+            grid[adjacent] = '>>'
+            moved = True
 
-    for (x, y), char in grid.items():
-        if char == 'v' and grid[(x, (y + 1) % leny)] == '.':
-            next_grid[(x, y)] = '.'
-            next_grid[(x, (y + 1) % leny)] = 'v'
-            movements += 1
+    for (x, y) in grid:
+        adjacent = (x, (y + 1) % leny)
 
-    grid = next_grid
+        if grid[(x, y)] == 'v' and grid[adjacent] in ('.', '..'):
+            grid[(x, y)] = '...'
+            grid[adjacent] = 'vv'
+            moved = True
 
-    if movements == 0:
+    if not moved:
         print('Part 1:', step)
         break
+
+    for (x, y), char in grid.items():
+        if len(char) > 1:
+            grid[(x, y)] = char[0]

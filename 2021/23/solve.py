@@ -64,10 +64,10 @@ def moves(grid, x, y):
 def search(grid):
     visited = defaultdict(lambda: inf)
     visited[freeze(grid)] = 0
-    q = [(0, 0, grid)]
+    q = [(0, grid)]
 
     while q:
-        _, total, grid = heappop(q)
+        total, grid = heappop(q)
 
         for i, amphipod in enumerate(amphipods):
             if grid[2][rooms[i]] != amphipod or grid[3][rooms[i]] != amphipod:
@@ -85,7 +85,7 @@ def search(grid):
 
                     if (next_cost := total + cost) < visited[grid_key]:
                         visited[grid_key] = next_cost
-                        heappush(q, (next_cost, next_cost, next_grid))
+                        heappush(q, (next_cost, next_grid))
 
 
 amphipods = ('A', 'B', 'C', 'D')

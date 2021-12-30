@@ -1,8 +1,11 @@
 import sys
+from itertools import pairwise
 from collections import Counter
 
 
 def generate(counts, steps):
+    elements = Counter()
+
     for _ in range(steps):
         next_counts = Counter()
 
@@ -12,8 +15,6 @@ def generate(counts, steps):
 
         counts = next_counts
 
-    elements = Counter()
-
     for pair, count in counts.items():
         elements[pair[1]] += count
 
@@ -21,17 +22,12 @@ def generate(counts, steps):
 
 
 rules = {}
-counts = Counter()
+counts = Counter(''.join(pair)
+                 for pair in pairwise(sys.stdin.readline().strip()))
 
-for line in sys.stdin:
-    line = line.strip()
-    
-    if ' -> ' in line:
-        pair, result = line.strip().split(' -> ')
-        rules[pair] = [pair[0] + result, result + pair[1]]
-    elif len(line):
-        for j in range(len(line) - 1):
-            counts[line[j:j+2]] += 1
+for line in sys.stdin.readlines()[1:]:
+    pair, result = line.strip().split(' -> ')
+    rules[pair] = (pair[0] + result, result + pair[1])
 
 print('Part 1:', generate(counts, 10))
 print('Part 2:', generate(counts, 40))

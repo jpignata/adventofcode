@@ -6,19 +6,19 @@ score = 0
 garbage = 0
 
 for char in chars:
-    if char == '{':
+    if char == "{":
         depth += 1
-    elif char == '}':
+    elif char == "}":
         score += depth
         depth -= 1
-    elif char == '<':
-        while char != '>':
+    elif char == "<":
+        while char != ">":
             char = next(chars)
 
-            if char == '!':
+            if char == "!":
                 next(chars)
-            elif char != '>':
+            elif char != ">":
                 garbage += 1
 
-print('Part 1:', score)
-print('Part 2:', garbage)
+print("Part 1:", score)
+print("Part 2:", garbage)

@@ -7,8 +7,8 @@ full, initialization = 0, 0
 
 for line in sys.stdin:
     toggle, coords = line.split()
-    sign = 1 if toggle == 'on' else -1
-    x1, x2, y1, y2, z1, z2 = [int(c) for c in re.findall(r'[-\d]+', coords)]
+    sign = 1 if toggle == "on" else -1
+    x1, x2, y1, y2, z1, z2 = [int(c) for c in re.findall(r"[-\d]+", coords)]
     next_cubes = Counter()
 
     for (ox1, ox2, oy1, oy2, oz1, oz2), count in cubes.items():
@@ -34,5 +34,5 @@ for (x1, x2, y1, y2, z1, z2), count in cubes.items():
     if all(-50 <= c <= 50 for c in (x1, x2, y1, y2, z1, z2)):
         initialization += cubes
 
-print('Part 1:', initialization)
-print('Part 2:', full)
+print("Part 1:", initialization)
+print("Part 2:", full)

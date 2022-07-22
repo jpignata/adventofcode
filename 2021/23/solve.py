@@ -6,7 +6,7 @@ from math import inf
 
 
 def freeze(grid):
-    return ''.join(''.join(row) for row in grid)
+    return "".join("".join(row) for row in grid)
 
 
 def distance(p1, p2):
@@ -26,16 +26,19 @@ def moves(grid, x, y):
         for dx in (1, -1):
             nx = x
 
-            while grid[y][nx + dx] == '.':
+            while grid[y][nx + dx] == ".":
                 if nx + dx == destx:
-                    room = [grid[ny][nx + dx] for ny in range(y, len(grid))
-                            if grid[ny][nx + dx] in amphipods]
+                    room = [
+                        grid[ny][nx + dx]
+                        for ny in range(y, len(grid))
+                        if grid[ny][nx + dx] in amphipods
+                    ]
 
                     if all(space == grid[y][x] for space in room) or not room:
                         ny = len(grid) - len(room) - 2
                         next_grid = deepcopy(grid)
                         next_grid[ny][nx + dx] = grid[y][x]
-                        next_grid[y][x] = '.'
+                        next_grid[y][x] = "."
 
                         yield distance((x, y), (nx + dx, ny)) * cost, next_grid
 
@@ -43,18 +46,18 @@ def moves(grid, x, y):
     else:
         ny = y
 
-        while grid[ny - 1][x] == '.':
+        while grid[ny - 1][x] == ".":
             ny -= 1
 
         if ny == 1:
             nx = x
 
             for dx in (1, -1):
-                while grid[ny][nx + dx] == '.':
+                while grid[ny][nx + dx] == ".":
                     if nx + dx in valid:
                         next_grid = deepcopy(grid)
                         next_grid[ny][nx + dx] = grid[y][x]
-                        next_grid[y][x] = '.'
+                        next_grid[y][x] = "."
 
                         yield distance((x, y), (nx + dx, ny)) * cost, next_grid
 
@@ -88,13 +91,13 @@ def search(grid):
                         heappush(q, (next_cost, next_grid))
 
 
-amphipods = ('A', 'B', 'C', 'D')
+amphipods = ("A", "B", "C", "D")
 energy = (1, 10, 100, 1000)
 rooms = (3, 5, 7, 9)
 grid = [[c for c in line.rstrip()] for line in sys.stdin]
 grid2 = deepcopy(grid)
-grid2.insert(3, list('  #D#B#A#C#'))
-grid2.insert(3, list('  #D#C#B#A#'))
+grid2.insert(3, list("  #D#B#A#C#"))
+grid2.insert(3, list("  #D#C#B#A#"))
 
-print('Part 1:', search(grid))
-print('Part 2:', search(grid2))
+print("Part 1:", search(grid))
+print("Part 2:", search(grid2))

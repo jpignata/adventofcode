@@ -22,5 +22,5 @@ for i in count(1):
 
     seen.append(str(banks))
 
-print('Part 1:', first)
-print('Part 2:', second - first)
+print("Part 1:", first)
+print("Part 2:", second - first)

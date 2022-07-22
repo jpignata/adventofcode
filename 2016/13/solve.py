@@ -25,10 +25,10 @@ def search(*, target=None, count=0):
 
 def isopen(location):
     x, y = location
-    num = x*x + 3*x + 2*x*y + y + y*y + 1358
+    num = x * x + 3 * x + 2 * x * y + y + y * y + 1358
 
-    return x >= 0 and y >= 0 and bin(num).count('1') % 2 == 0
+    return x >= 0 and y >= 0 and bin(num).count("1") % 2 == 0
 
 
-print('Part 1:', search(target=(31, 39)))
-print('Part 2:', search(count=50))
+print("Part 1:", search(target=(31, 39)))
+print("Part 2:", search(count=50))

@@ -7,7 +7,7 @@ from functools import reduce
 moons = list()
 
 for line in sys.stdin.readlines():
-    x, y, z = [int(c.split('=')[1]) for c in line[1:-2].split(', ')]
+    x, y, z = [int(c.split("=")[1]) for c in line[1:-2].split(", ")]
     moons.append(SimpleNamespace(pos=[x, y, z], vel=[0, 0, 0]))
 
 seen = [{str([m.pos[i], m.vel[i]]) for m in moons} for i in range(3)]
@@ -38,5 +38,5 @@ while not all(cycles):
 
     step += 1
 
-print('Part 1:', total)
-print('Part 2:', reduce(lambda a, b: abs(a*b) // math.gcd(a, b), cycles))
+print("Part 1:", total)
+print("Part 2:", reduce(lambda a, b: abs(a * b) // math.gcd(a, b), cycles))

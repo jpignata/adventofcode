@@ -21,7 +21,7 @@ def checksum(box_ids):
 def find_boxes(box_ids):
     for box_id in box_ids:
         for other_box_id in box_ids:
-            intersection = ''
+            intersection = ""
             diffs = 0
 
             for i, char in enumerate(box_id):
@@ -39,5 +39,5 @@ def find_boxes(box_ids):
 
 box_ids = [line.strip() for line in sys.stdin.readlines()]
 
-print('Part 1:', checksum(box_ids))
-print('Part 2:', find_boxes(box_ids))
+print("Part 1:", checksum(box_ids))
+print("Part 2:", find_boxes(box_ids))

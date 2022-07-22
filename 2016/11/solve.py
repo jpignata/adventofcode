@@ -9,19 +9,19 @@ def hash(floor, floors):
     for floor, items in enumerate(floors):
         types = [item.type for item in items]
         types.sort()
-        key += str(floor) + ''.join(types)
+        key += str(floor) + "".join(types)
 
     return key
 
 
 def safe(items):
-    generators = filter(lambda i: i.type == 'generator', items)
+    generators = filter(lambda i: i.type == "generator", items)
     generator_elements = set(map(lambda i: i.element, generators))
 
     if len(generator_elements) == 0:
         return True
 
-    for microchip in filter(lambda i: i.type == 'microchip', items):
+    for microchip in filter(lambda i: i.type == "microchip", items):
         if microchip.element not in generator_elements:
             return False
 
@@ -55,14 +55,12 @@ def search(floors):
 
         for next_floor, items in moves(floor, floors):
             next_floors = floors.copy()
-            next_floors[floor] = [i for i in next_floors[floor]
-                                  if i not in items]
+            next_floors[floor] = [i for i in next_floors[floor] if i not in items]
             next_floors[next_floor] = next_floors[next_floor].copy() + items
             key = hash(next_floor, next_floors)
             next_cost = cost + 1
 
-            if not safe(next_floors[floor]) or \
-               not safe(next_floors[next_floor]):
+            if not safe(next_floors[floor]) or not safe(next_floors[next_floor]):
                 continue
 
             if key not in costs or costs[key] > next_cost:
@@ -73,21 +71,43 @@ def search(floors):
         costs[hash(floor, floors)] = cost
 
 
-item = namedtuple('item', ['type', 'element'])
-floors1 = [[item('generator', 'thulium'), item('microchip', 'thulium'),
-            item('generator', 'plutonium'), item('generator', 'strontium')],
-           [item('microchip', 'plutonium'), item('microchip', 'strontium')],
-           [item('generator', 'promethium'), item('microchip', 'promethium'),
-            item('generator', 'ruthenium'), item('microchip', 'ruthenium')],
-           []]
-floors2 = [[item('generator', 'thulium'), item('microchip', 'thulium'),
-            item('generator', 'plutonium'), item('generator', 'strontium'),
-            item('generator', 'elerium'), item('microchip', 'elerium'),
-            item('generator', 'dilithium'), item('microchip', 'dilithium')],
-           [item('microchip', 'plutonium'), item('microchip', 'strontium')],
-           [item('generator', 'promethium'), item('microchip', 'promethium'),
-            item('generator', 'ruthenium'), item('microchip', 'ruthenium')],
-           []]
+item = namedtuple("item", ["type", "element"])
+floors1 = [
+    [
+        item("generator", "thulium"),
+        item("microchip", "thulium"),
+        item("generator", "plutonium"),
+        item("generator", "strontium"),
+    ],
+    [item("microchip", "plutonium"), item("microchip", "strontium")],
+    [
+        item("generator", "promethium"),
+        item("microchip", "promethium"),
+        item("generator", "ruthenium"),
+        item("microchip", "ruthenium"),
+    ],
+    [],
+]
+floors2 = [
+    [
+        item("generator", "thulium"),
+        item("microchip", "thulium"),
+        item("generator", "plutonium"),
+        item("generator", "strontium"),
+        item("generator", "elerium"),
+        item("microchip", "elerium"),
+        item("generator", "dilithium"),
+        item("microchip", "dilithium"),
+    ],
+    [item("microchip", "plutonium"), item("microchip", "strontium")],
+    [
+        item("generator", "promethium"),
+        item("microchip", "promethium"),
+        item("generator", "ruthenium"),
+        item("microchip", "ruthenium"),
+    ],
+    [],
+]
 
-print('Part 1:', search(floors1))
-print('Part 2:', search(floors2))
+print("Part 1:", search(floors1))
+print("Part 2:", search(floors2))

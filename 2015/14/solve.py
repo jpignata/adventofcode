@@ -7,8 +7,8 @@ from collections import defaultdict
 class Reindeer:
     def __init__(self, speed, fly_duration, rest_duration):
         self.speed = speed
-        self.durations = {'fly': fly_duration, 'rest': rest_duration}
-        self.states = cycle(('fly', 'rest'))
+        self.durations = {"fly": fly_duration, "rest": rest_duration}
+        self.states = cycle(("fly", "rest"))
         self.distance = 0
         self.duration = 0
 
@@ -17,15 +17,17 @@ class Reindeer:
             self.state = next(self.states)
             self.duration = self.durations[self.state]
 
-        if self.state == 'fly':
+        if self.state == "fly":
             self.distance += self.speed
 
         self.duration -= 1
 
 
 def parse(line):
-    pattern = re.compile(r'\w+ can fly (\d+) km/s for (\d+) seconds, '
-                         r'but then must rest for (\d+) seconds.')
+    pattern = re.compile(
+        r"\w+ can fly (\d+) km/s for (\d+) seconds, "
+        r"but then must rest for (\d+) seconds."
+    )
     speed, fly_duration, rest_duration = map(int, pattern.match(line).groups())
 
     return Reindeer(speed, fly_duration, rest_duration)
@@ -53,5 +55,5 @@ def run(reindeer, stop):
 reindeer = [parse(line) for line in sys.stdin.readlines()]
 distance, points = run(reindeer, 2503)
 
-print('Part 1:', distance)
-print('Part 2:', points)
+print("Part 1:", distance)
+print("Part 2:", points)

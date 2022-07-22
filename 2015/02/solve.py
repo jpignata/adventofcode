@@ -3,7 +3,7 @@ import operator
 from collections import namedtuple
 from functools import reduce
 
-Box = namedtuple('Box', ['l', 'w', 'h'])
+Box = namedtuple("Box", ["l", "w", "h"])
 
 
 def sides(box):
@@ -23,7 +23,7 @@ def perimeter(box):
 
 
 lines = sys.stdin.readlines()
-boxes = [Box(*map(int, line.strip().split('x'))) for line in lines]
+boxes = [Box(*map(int, line.strip().split("x"))) for line in lines]
 
-print('Part 1:', sum([area(box) + min(sides((box))) for box in boxes]))
-print('Part 2:', sum([volume(box) + perimeter(box) for box in boxes]))
+print("Part 1:", sum([area(box) + min(sides((box))) for box in boxes]))
+print("Part 2:", sum([volume(box) + perimeter(box) for box in boxes]))

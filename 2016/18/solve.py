@@ -27,7 +27,7 @@ def generate(row, rows):
         row = next_row
 
 
-row = [c == '.' for c in sys.stdin.readline().strip()]
+row = [c == "." for c in sys.stdin.readline().strip()]
 
-print('Part 1:', count(row))
-print('Part 2:', count(row, rows=400000))
+print("Part 1:", count(row))
+print("Part 2:", count(row, rows=400000))

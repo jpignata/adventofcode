@@ -30,12 +30,12 @@ def grouper(iterable, n):
     return zip_longest(*args)
 
 
-numbers = '18,1,0,161,255,137,254,252,14,95,165,33,181,168,2,188'
-sequence1 = list(map(int, numbers.split(',')))
+numbers = "18,1,0,161,255,137,254,252,14,95,165,33,181,168,2,188"
+sequence1 = list(map(int, numbers.split(",")))
 sequence2 = [ord(char) for char in numbers] + [17, 31, 73, 47, 23]
 part1 = hash(sequence1)
 sparse_hash = hash(sequence2, rounds=64)
 dense_hash = [reduce(operator.xor, g) for g in grouper(sparse_hash, 16)]
 
-print('Part 1:', part1[0] * part1[1])
-print('Part 2:', ''.join(f'{c:02x}' for c in dense_hash))
+print("Part 1:", part1[0] * part1[1])
+print("Part 2:", "".join(f"{c:02x}" for c in dense_hash))

@@ -25,7 +25,7 @@ def play(cups, rounds):
         current = nodes[current]
 
     if len(nodes) == 10:
-        final = ''
+        final = ""
         node = nodes[1]
 
         while node != 1:
@@ -40,5 +40,5 @@ def play(cups, rounds):
 part1 = tuple(int(cup) for cup in sys.stdin.readline().strip())
 part2 = part1 + tuple(range(max(part1) + 1, 1_000_001))
 
-print('Part 1:', play(part1, 100))
-print('Part 2:', play(part2, 10_000_000))
+print("Part 1:", play(part1, 100))
+print("Part 2:", play(part2, 10_000_000))

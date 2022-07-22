@@ -15,11 +15,13 @@ def search(grid):
         if (x, y) == target:
             return cost
 
-        neighbors = [(next_cost, (nx, ny))
-                    for dx, dy in ((1, 0), (0, 1), (-1, 0), (0, -1))
-                    if 0 <= (ny := y+dy) < size
-                    if 0 <= (nx := x+dx) < size
-                    if (next_cost := cost + grid[ny][nx]) < costs[ny][nx]]
+        neighbors = [
+            (next_cost, (nx, ny))
+            for dx, dy in ((1, 0), (0, 1), (-1, 0), (0, -1))
+            if 0 <= (ny := y + dy) < size
+            if 0 <= (nx := x + dx) < size
+            if (next_cost := cost + grid[ny][nx]) < costs[ny][nx]
+        ]
 
         for next_cost, (nx, ny) in neighbors:
             costs[ny][nx] = next_cost
@@ -39,5 +41,5 @@ for y in range(full_size):
         else:
             full_grid[y][x] = full_grid[y][x - size] % 9 + 1
 
-print('Part 1:', search(grid))
-print('Part 2:', search(full_grid))
+print("Part 1:", search(grid))
+print("Part 2:", search(full_grid))

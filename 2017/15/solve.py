@@ -22,5 +22,5 @@ def count(start, pairs, multiples=(0, 0)):
     return total
 
 
-print('Part 1:', count((679, 771), 40_000_000))
-print('Part 2:', count((679, 771), 5_000_000, (4, 8)))
+print("Part 1:", count((679, 771), 40_000_000))
+print("Part 2:", count((679, 771), 5_000_000, (4, 8)))

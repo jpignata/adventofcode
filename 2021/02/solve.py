@@ -7,13 +7,13 @@ depth = 0
 for direction, units in [line.split() for line in sys.stdin]:
     units = int(units)
 
-    if direction == 'down':
+    if direction == "down":
         aim += units
-    elif direction == 'up':
+    elif direction == "up":
         aim -= units
-    elif direction == 'forward':
+    elif direction == "forward":
         depth += aim * units
         position += units
 
-print('Part 1:', aim * position)
-print('Part 2:', depth * position)
+print("Part 1:", aim * position)
+print("Part 2:", depth * position)

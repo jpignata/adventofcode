@@ -3,7 +3,7 @@ import sys
 
 def find_invalid(numbers, size=25):
     for i, number in enumerate(numbers[size:]):
-        complements = set(numbers[i:i+size])
+        complements = set(numbers[i : i + size])
 
         for addend in complements:
             if number - addend in complements:
@@ -29,5 +29,5 @@ def find_range(numbers, target):
 numbers = [int(line) for line in sys.stdin.readlines()]
 invalid = find_invalid(numbers)
 
-print('Part 1:', invalid)
-print('Part 2:', find_range(numbers, invalid))
+print("Part 1:", invalid)
+print("Part 2:", find_range(numbers, invalid))

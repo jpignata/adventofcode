@@ -11,7 +11,7 @@ def play(numbers, rounds):
     return spoken
 
 
-numbers = [int(line) for line in sys.stdin.readline().split(',')]
+numbers = [int(line) for line in sys.stdin.readline().split(",")]
 
-print('Part 1:', play(numbers, 2020))
-print('Part 2:', play(numbers, 30000000))
+print("Part 1:", play(numbers, 2020))
+print("Part 2:", play(numbers, 30000000))

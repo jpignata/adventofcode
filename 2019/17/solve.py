@@ -19,17 +19,17 @@ while computer.outputs:
 
 for y, row in enumerate(grid):
     for x, cell in enumerate(row):
-        if cell == '#':
+        if cell == "#":
             for move in ((0, -1), (0, 1), (-1, 0), (1, 0)):
                 dx, dy = tuple(map(add, move, (x, y)))
 
                 if 0 <= dy < len(grid) and 0 <= dx < len(grid[dy]):
-                    if grid[dy][dx] == '.':
+                    if grid[dy][dx] == ".":
                         break
             else:
                 intersections.append((x, y))
 
-print('Part 1:', sum(x * y for x, y in intersections))
+print("Part 1:", sum(x * y for x, y in intersections))
 
 program = """
 A,B,A,A,B,C,B,C,C,B
@@ -42,9 +42,9 @@ n
 computer = computer.load()
 computer[0] = 2
 
-for line in program.strip().split('\n'):
+for line in program.strip().split("\n"):
     computer.execute(line)
 
 computer.run()
 
-print('Part 2:', computer.outputs.pop())
+print("Part 2:", computer.outputs.pop())

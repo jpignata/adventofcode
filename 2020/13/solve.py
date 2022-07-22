@@ -23,9 +23,9 @@ def find_pattern(buses):
 
 
 start = int(sys.stdin.readline())
-buses = [(i, int(bus)) for i, bus
-         in enumerate(sys.stdin.readline().split(','))
-         if bus != 'x']
+buses = [
+    (i, int(bus)) for i, bus in enumerate(sys.stdin.readline().split(",")) if bus != "x"
+]
 
-print('Part 1:', find_bus(start, buses))
-print('Part 2:', find_pattern(buses))
+print("Part 1:", find_bus(start, buses))
+print("Part 2:", find_pattern(buses))

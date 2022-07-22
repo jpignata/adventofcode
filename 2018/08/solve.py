@@ -11,8 +11,11 @@ class Node:
 
     def value(self):
         if self.children:
-            return sum(self.children[i - 1].value() for i in self.metadata
-                       if i - 1 < len(self.children))
+            return sum(
+                self.children[i - 1].value()
+                for i in self.metadata
+                if i - 1 < len(self.children)
+            )
         else:
             return self.sum()
 
@@ -27,7 +30,7 @@ def build(digits):
     return Node(children, metadata)
 
 
-tree = build(map(int, sys.stdin.readline().strip().split(' ')))
+tree = build(map(int, sys.stdin.readline().strip().split(" ")))
 
-print('Part 1:', tree.sum())
-print('Part 2:', tree.value())
+print("Part 1:", tree.sum())
+print("Part 2:", tree.value())

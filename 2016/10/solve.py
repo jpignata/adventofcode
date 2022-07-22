@@ -32,24 +32,25 @@ outputs = defaultdict(list)
 moves = -1
 
 for line in sys.stdin.readlines():
-    tokens = line.split(' ')
+    tokens = line.split(" ")
 
-    if tokens[0] == 'value':
+    if tokens[0] == "value":
         bots[int(tokens[5])].append(int(tokens[1]))
-    elif tokens[0] == 'bot':
-        lo_dest = outputs if tokens[5] == 'output' else bots
-        hi_dest = outputs if tokens[10] == 'output' else bots
+    elif tokens[0] == "bot":
+        lo_dest = outputs if tokens[5] == "output" else bots
+        hi_dest = outputs if tokens[10] == "output" else bots
 
-        bots[int(tokens[1])].instructions(lo_dest, int(tokens[6]), hi_dest,
-                                          int(tokens[11]))
+        bots[int(tokens[1])].instructions(
+            lo_dest, int(tokens[6]), hi_dest, int(tokens[11])
+        )
 
 while moves != 0:
     moves = 0
 
     for num, bot in bots.items():
         if bot.values == [17, 61]:
-            print('Part 1:', num)
+            print("Part 1:", num)
 
         moves += bot.run()
 
-print('Part 2:', outputs[0][0] * outputs[1][0] * outputs[2][0])
+print("Part 2:", outputs[0][0] * outputs[1][0] * outputs[2][0])

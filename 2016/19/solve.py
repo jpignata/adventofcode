@@ -47,5 +47,5 @@ def steal_across(players):
             middle = middle.next
 
 
-print('Part 1:', steal_left(3014603))
-print('Part 2:', steal_across(3014603))
+print("Part 1:", steal_left(3014603))
+print("Part 2:", steal_across(3014603))

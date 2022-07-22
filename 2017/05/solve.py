@@ -21,5 +21,5 @@ def escape(instructions, *, strange_mode=False):
 
 instructions = [int(line) for line in sys.stdin.readlines()]
 
-print('Part 1', escape(instructions.copy()))
-print('Part 2', escape(instructions.copy(), strange_mode=True))
+print("Part 1", escape(instructions.copy()))
+print("Part 2", escape(instructions.copy(), strange_mode=True))

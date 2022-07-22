@@ -17,7 +17,7 @@ def find2(values, target, lo=0):
 
 def find3(values, target):
     for i, value in enumerate(values):
-        if (match := find2(values, target - value, i + 1)):
+        if match := find2(values, target - value, i + 1):
             return match * value
 
     return None
@@ -25,5 +25,5 @@ def find3(values, target):
 
 expenses = sorted(int(value) for value in sys.stdin.readlines())
 
-print('Part 1:', find2(expenses, 2020))
-print('Part 2:', find3(expenses, 2020))
+print("Part 1:", find2(expenses, 2020))
+print("Part 2:", find3(expenses, 2020))

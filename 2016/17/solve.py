@@ -3,13 +3,13 @@ import operator
 from string import ascii_lowercase
 
 
-def paths_for(passcode, position=(0, 0), route=''):
+def paths_for(passcode, position=(0, 0), route=""):
     def open_doors():
         md5 = hashlib.md5()
-        md5.update(bytearray(passcode + route, encoding='ASCII'))
+        md5.update(bytearray(passcode + route, encoding="ASCII"))
 
         deltas = ((-1, 0), (1, 0), (0, -1), (0, 1))
-        directions = ('U', 'D', 'L', 'R')
+        directions = ("U", "D", "L", "R")
         doors = tuple([c in ascii_lowercase[1:6] for c in md5.hexdigest()[:4]])
 
         for delta, direction, open in zip(deltas, directions, doors):
@@ -25,7 +25,7 @@ def paths_for(passcode, position=(0, 0), route=''):
             yield from paths_for(passcode, next_postion, next_route)
 
 
-paths = sorted(paths_for('yjjvjgan'), key=len)
+paths = sorted(paths_for("yjjvjgan"), key=len)
 
-print('Part 1:', paths[0])
-print('Part 2:', len(paths[-1]))
+print("Part 1:", paths[0])
+print("Part 2:", len(paths[-1]))

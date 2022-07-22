@@ -25,9 +25,9 @@ def find_largest(index, size):
                 continue
 
             a = index[y, x]
-            b = index[y, x+size]
-            c = index[y+size, x]
-            d = index[y+size, x+size]
+            b = index[y, x + size]
+            c = index[y + size, x]
+            d = index[y + size, x + size]
             area = d - b - c + a
             largest = max(largest, area)
 
@@ -50,11 +50,11 @@ def find_largest_square(index):
             largest_size = size
             largest_coords = coords
 
-    return ','.join(map(str, largest_coords + (largest_size,)))
+    return ",".join(map(str, largest_coords + (largest_size,)))
 
 
 grid = np.fromfunction(builder(7347), shape=(300, 300))
 index = grid.cumsum(axis=0).cumsum(axis=1)
 
-print('Part 1:', ','.join(map(str, find_largest(index, 3)[0])))
-print('Part 2:', find_largest_square(index))
+print("Part 1:", ",".join(map(str, find_largest(index, 3)[0])))
+print("Part 2:", find_largest_square(index))

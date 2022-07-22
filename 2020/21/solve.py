@@ -6,13 +6,13 @@ allergens = defaultdict(list)
 suspects = defaultdict(set)
 
 for line in sys.stdin.readlines():
-    parts = line.strip()[:-1].split(' (contains ')
+    parts = line.strip()[:-1].split(" (contains ")
     ingredients = set(parts[0].split())
 
     for ingredient in ingredients:
         counter[ingredient] += 1
 
-    for allergen in tuple(parts[1].split(', ')):
+    for allergen in tuple(parts[1].split(", ")):
         allergens[allergen].append(ingredients)
 
 for ingredient in counter:
@@ -29,5 +29,5 @@ while len(identified) < len(allergens):
             identified.append(((group - seen).pop(), ingredient))
             seen.add((group - seen).pop())
 
-print('Part 1:', sum(c for name, c in counter.items() if name not in suspects))
-print('Part 2:', ','.join(ingredient for _, ingredient in sorted(identified)))
+print("Part 1:", sum(c for name, c in counter.items() if name not in suspects))
+print("Part 2:", ",".join(ingredient for _, ingredient in sorted(identified)))

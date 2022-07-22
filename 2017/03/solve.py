@@ -1,10 +1,10 @@
 import operator
 from itertools import count, product
 
-dirs = 'ruld'
-deltas = {'r': (1, 0), 'u': (0, -1), 'l': (-1, 0), 'd': (0, 1)}
+dirs = "ruld"
+deltas = {"r": (1, 0), "u": (0, -1), "l": (-1, 0), "d": (0, 1)}
 location = (0, 0)
-direction = 'r'
+direction = "r"
 seen = {(0, 0): 1}
 total = 0
 distance = 0
@@ -45,5 +45,5 @@ for i in count(2):
         break
 
 
-print('Part 1:', distance)
-print('Part 2:', total)
+print("Part 1:", distance)
+print("Part 2:", total)

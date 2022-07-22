@@ -1,7 +1,7 @@
 import re
 import sys
 
-x1, x2, y1, y2 = [int(c) for c in re.findall(r'[-\d]+', sys.stdin.readline())]
+x1, x2, y1, y2 = [int(c) for c in re.findall(r"[-\d]+", sys.stdin.readline())]
 target = {(x, y) for y in range(y1, y2 + 1) for x in range(x1, x2 + 1)}
 maxes = []
 
@@ -16,7 +16,7 @@ for y in range(-abs(y1), abs(y1) + 1):
             py += vy
             maxy = max(maxy, py)
             vy -= 1
-            
+
             if vx != 0:
                 vx += 1 if vx < 0 else -1
 
@@ -24,5 +24,5 @@ for y in range(-abs(y1), abs(y1) + 1):
                 maxes.append(maxy)
                 break
 
-print('Part 1:', max(maxes))
-print('Part 2:', len(maxes))
+print("Part 1:", max(maxes))
+print("Part 2:", len(maxes))

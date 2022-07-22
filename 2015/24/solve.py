@@ -13,5 +13,5 @@ def find_smallest(nums, target):
 
 weights = [int(weight.strip()) for weight in sys.stdin.readlines()]
 
-print('Part 1:', find_smallest(weights, sum(weights) / 3))
-print('Part 2:', find_smallest(weights, sum(weights) / 4))
+print("Part 1:", find_smallest(weights, sum(weights) / 3))
+print("Part 2:", find_smallest(weights, sum(weights) / 4))

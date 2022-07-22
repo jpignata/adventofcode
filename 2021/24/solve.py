@@ -22,10 +22,10 @@ def solve(search, instructions):
                 search[j] += 1 - search[i]
                 search[i] = 1
 
-    return ''.join(str(char) for char in search)
+    return "".join(str(char) for char in search)
 
 
 instructions = [instruction.strip().split() for instruction in sys.stdin]
 
-print('Part 1:', solve([9] * 14, instructions))
-print('Part 2:', solve([1] * 14, instructions))
+print("Part 1:", solve([9] * 14, instructions))
+print("Part 2:", solve([1] * 14, instructions))

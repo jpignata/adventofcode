@@ -14,7 +14,7 @@ class Coprocessor:
     def __init__(self, *, a=0):
         self.counts = defaultdict(int)
         self.registers = defaultdict(int)
-        self.registers['a'] = a
+        self.registers["a"] = a
         self.ip = 0
 
     def run(self, instructions):
@@ -71,7 +71,7 @@ def emulate():
     return h
 
 
-instructions = [line.strip().split(' ') for line in sys.stdin]
+instructions = [line.strip().split(" ") for line in sys.stdin]
 
-print('Part 1:', Coprocessor().run(instructions).counts['mul'])
-print('Part 2:', emulate())
+print("Part 1:", Coprocessor().run(instructions).counts["mul"])
+print("Part 2:", emulate())

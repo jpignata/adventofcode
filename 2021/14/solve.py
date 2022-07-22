@@ -22,12 +22,11 @@ def generate(counts, steps):
 
 
 rules = {}
-counts = Counter(''.join(pair)
-                 for pair in pairwise(sys.stdin.readline().strip()))
+counts = Counter("".join(pair) for pair in pairwise(sys.stdin.readline().strip()))
 
 for line in sys.stdin.readlines()[1:]:
-    pair, result = line.strip().split(' -> ')
+    pair, result = line.strip().split(" -> ")
     rules[pair] = (pair[0] + result, result + pair[1])
 
-print('Part 1:', generate(counts, 10))
-print('Part 2:', generate(counts, 40))
+print("Part 1:", generate(counts, 10))
+print("Part 2:", generate(counts, 40))

@@ -10,4 +10,4 @@ def value_at(target, previous):
                 return previous
 
 
-print('Part 1:', value_at((3083, 2978), 20151125))
+print("Part 1:", value_at((3083, 2978), 20151125))

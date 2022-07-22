@@ -12,7 +12,7 @@ def add(number1, number2):
         to_split = (i for i, (number, _) in enumerate(numbers) if number >= 10)
 
         if (i := next(to_explode, None)) is not None:
-            left, right = numbers[i:i+2]
+            left, right = numbers[i : i + 2]
 
             if (j := i - 1) >= 0:
                 numbers[j] = (left[0] + numbers[j][0], numbers[j][1])
@@ -36,7 +36,7 @@ def magnitude(number):
     while len(number) != 1:
         maxdepth = max(depth for _, depth in number)
         i = next(i for i, (_, depth) in enumerate(number) if depth == maxdepth)
-        number[i] = (number[i][0] * 3 + number[i+1][0] * 2, maxdepth - 1)
+        number[i] = (number[i][0] * 3 + number[i + 1][0] * 2, maxdepth - 1)
         del number[i + 1]
 
     return number[0][0]
@@ -49,9 +49,9 @@ for line in sys.stdin:
     depth = 0
 
     for char in line.strip():
-        if char == '[':
+        if char == "[":
             depth += 1
-        elif char == ']':
+        elif char == "]":
             depth -= 1
         elif char.isdigit():
             numbers[-1].append((int(char), depth))
@@ -59,5 +59,5 @@ for line in sys.stdin:
 total = magnitude(reduce(add, numbers))
 largest = max(magnitude(add(n1, n2)) for n1, n2 in permutations(numbers, 2))
 
-print('Part 1:', total)
-print('Part 2:', largest)
+print("Part 1:", total)
+print("Part 2:", largest)

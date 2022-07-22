@@ -1,7 +1,7 @@
 import sys
 
-opening = ['(', '[', '{', '<']
-closing = [')', ']', '}', '>']
+opening = ["(", "[", "{", "<"]
+closing = [")", "]", "}", ">"]
 points = [3, 57, 1197, 25137]
 score = 0
 scores = []
@@ -25,5 +25,5 @@ for line in sys.stdin:
             scores[-1] *= 5
             scores[-1] += opening.index(s.pop()) + 1
 
-print('Part 1:', score)
-print('Part 2:', sorted(scores)[len(scores) // 2])
+print("Part 1:", score)
+print("Part 2:", sorted(scores)[len(scores) // 2])

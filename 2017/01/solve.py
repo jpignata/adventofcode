@@ -11,5 +11,5 @@ for i, digit in enumerate(digits):
     if digit == digits[(i + len(digits) // 2) % len(digits)]:
         total_middle += digit
 
-print('Part 1:', total_next)
-print('Part 2:', total_middle)
+print("Part 1:", total_next)
+print("Part 2:", total_middle)

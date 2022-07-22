@@ -13,13 +13,13 @@ def look_and_say(numbers, times):
             numbers.popleft()
             count += 1
 
-        output.append(f'{count}{number}')
+        output.append(f"{count}{number}")
 
     if times - 1 == 0:
-        return ''.join(output)
+        return "".join(output)
     else:
-        return look_and_say(''.join(output), times - 1)
+        return look_and_say("".join(output), times - 1)
 
 
-print('Part 1:', len(look_and_say('1113122113', 40)))
-print('Part 2:', len(look_and_say('1113122113', 50)))
+print("Part 1:", len(look_and_say("1113122113", 40)))
+print("Part 2:", len(look_and_say("1113122113", 50)))

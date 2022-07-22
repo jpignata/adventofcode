@@ -19,5 +19,5 @@ def cook(scores=[3, 7], elf1=0, elf2=1):
 
 scores = cook()
 
-print('Part 1:', ''.join(map(str, scores[556061:556061+10])))
-print('Part 2:', len(scores) - 6)
+print("Part 1:", "".join(map(str, scores[556061 : 556061 + 10])))
+print("Part 2:", len(scores) - 6)

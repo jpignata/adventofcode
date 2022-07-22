@@ -20,5 +20,5 @@ def play(number_of_players, last_marble):
             marbles.appendleft(next_marble)
 
 
-print('Part 1:', play(424, 71482))
-print('Part 2:', play(424, 7148200))
+print("Part 1:", play(424, 71482))
+print("Part 2:", play(424, 7148200))

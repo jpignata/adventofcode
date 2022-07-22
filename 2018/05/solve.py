@@ -4,7 +4,7 @@ from string import ascii_lowercase as ascii
 
 
 def react(polymer):
-    reacted = ['']
+    reacted = [""]
 
     for char in polymer:
         if reacted[-1].upper() == char.upper() and reacted[-1] != char:
@@ -12,11 +12,11 @@ def react(polymer):
         else:
             reacted.append(char)
 
-    return ''.join(reacted)
+    return "".join(reacted)
 
 
 polymer = sys.stdin.readline().strip()
-lengths = [len(react(re.sub(c, '', polymer, flags=re.I))) for c in ascii]
+lengths = [len(react(re.sub(c, "", polymer, flags=re.I))) for c in ascii]
 
-print('Part 1:', len(react(polymer)))
-print('Part 2:', min(lengths))
+print("Part 1:", len(react(polymer)))
+print("Part 2:", min(lengths))

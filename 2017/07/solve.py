@@ -21,12 +21,14 @@ class Node:
         totals = [child.total() for child in self.children]
 
         if totals and min(totals) != max(totals):
-            return (max(self.children, key=methodcaller('total')),
-                    max(totals) - min(totals))
+            return (
+                max(self.children, key=methodcaller("total")),
+                max(totals) - min(totals),
+            )
 
 
 def build(lines):
-    expr = re.compile(r'(\w+) \((\d+)\) ?(?:-> ([\w, ]*))?')
+    expr = re.compile(r"(\w+) \((\d+)\) ?(?:-> ([\w, ]*))?")
     nodes = dict()
 
     for line in lines:
@@ -38,7 +40,7 @@ def build(lines):
             nodes[name] = Node(name, int(weight))
 
         if children:
-            for child in children.split(', '):
+            for child in children.split(", "):
                 if child not in nodes:
                     nodes[child] = Node(child)
 
@@ -60,5 +62,5 @@ def fix(tree, delta=0):
 
 tree = build(sys.stdin.readlines())
 
-print('Part 1:', tree.name)
-print('Part 2:', fix(tree))
+print("Part 1:", tree.name)
+print("Part 2:", fix(tree))

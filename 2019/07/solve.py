@@ -25,5 +25,5 @@ def find(start, end):
     return max(results)
 
 
-print('Part 1:', find(0, 4))
-print('Part 2:', find(5, 9))
+print("Part 1:", find(0, 4))
+print("Part 2:", find(5, 9))

@@ -8,5 +8,5 @@ for message in messages:
     for i, char in enumerate(message):
         counts[i][char] += 1
 
-print('Part 1:', ''.join(list(map(lambda c: c.most_common()[0][0], counts))))
-print('Part 2:', ''.join(list(map(lambda c: c.most_common()[-1][0], counts))))
+print("Part 1:", "".join(list(map(lambda c: c.most_common()[0][0], counts))))
+print("Part 2:", "".join(list(map(lambda c: c.most_common()[-1][0], counts))))

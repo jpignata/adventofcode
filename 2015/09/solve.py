@@ -5,7 +5,7 @@ from itertools import permutations
 locations = set()
 distances = dict()
 routes = dict()
-pattern = r'([\w]+) to ([\w]+) = ([\d]+)'
+pattern = r"([\w]+) to ([\w]+) = ([\d]+)"
 
 for line in [line.strip() for line in sys.stdin.readlines()]:
     start, end, distance = re.match(pattern, line).groups()
@@ -17,13 +17,13 @@ for route in permutations(locations):
     routes[route] = 0
 
     for i, location in enumerate(route):
-        if i == len(route)-1:
+        if i == len(route) - 1:
             break
 
-        routes[route] += distances[(location, route[i+1])]
+        routes[route] += distances[(location, route[i + 1])]
 
 minimum = min(routes, key=routes.get)
 maximum = max(routes, key=routes.get)
 
-print('Part 1:', ' -> '.join(minimum), '=', routes[minimum])
-print('Part 2:', ' -> '.join(maximum), '=', routes[maximum])
+print("Part 1:", " -> ".join(minimum), "=", routes[minimum])
+print("Part 2:", " -> ".join(maximum), "=", routes[maximum])

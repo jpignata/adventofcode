@@ -30,18 +30,25 @@ def quantum(position1, position2, score1=0, score2=0, new_round=True):
     next_positions = [((position + roll - 1) % 10) + 1 for roll in rolls]
 
     if new_round:
-        turns = [quantum(position, position2, score1 + position, score2, False)
-                 for position in next_positions]
+        turns = [
+            quantum(position, position2, score1 + position, score2, False)
+            for position in next_positions
+        ]
     else:
-        turns = [quantum(position1, position, score1, score2 + position)
-                 for position in next_positions]
+        turns = [
+            quantum(position1, position, score1, score2 + position)
+            for position in next_positions
+        ]
 
     return tuple(sum(wins) for wins in list(zip(*turns)))
 
 
-start1, start2 = [int(position) for line in sys.stdin.readlines()
-                  for position in re.findall(r'\d$', line)]
+start1, start2 = [
+    int(position)
+    for line in sys.stdin.readlines()
+    for position in re.findall(r"\d$", line)
+]
 rolls = [sum(roll) for roll in product(range(1, 4), repeat=3)]
 
-print('Part 1:', deterministic(start1, start2))
-print('Part 2:', max(quantum(start1, start2)))
+print("Part 1:", deterministic(start1, start2))
+print("Part 2:", max(quantum(start1, start2)))

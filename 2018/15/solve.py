@@ -10,7 +10,7 @@ class Unit:
         self.location = location
         self.attack_power = 3 + power_boost
         self.hit_points = 200
-        self.enemy = 'E' if self.kind == 'G' else 'G'
+        self.enemy = "E" if self.kind == "G" else "G"
 
     def isdead(self):
         return self.hit_points <= 0
@@ -29,12 +29,12 @@ class Game:
         for y, line in enumerate(survey):
             row = list()
             for x, char in enumerate(line.strip()):
-                if char in ('G'):
+                if char in ("G"):
                     self.units.append(Unit(char, (x, y)))
-                    row.append('.')
-                elif char in ('E'):
+                    row.append(".")
+                elif char in ("E"):
                     self.units.append(Unit(char, (x, y), power_boost))
-                    row.append('.')
+                    row.append(".")
                     self.start_elves += 1
                 else:
                     row.append(char)
@@ -49,13 +49,15 @@ class Game:
                 continue
 
             targets = list(filter(lambda u: u.kind == unit.enemy, self.units))
-            adjacent = [tuple(map(add, d, unit.location))
-                        for d in ((0, -1), (-1, 0), (1, 0), (0, 1))]
+            adjacent = [
+                tuple(map(add, d, unit.location))
+                for d in ((0, -1), (-1, 0), (1, 0), (0, 1))
+            ]
 
             if len(targets) == 0:
                 return
 
-            if not set(adjacent) & set(map(attrgetter('location'), targets)):
+            if not set(adjacent) & set(map(attrgetter("location"), targets)):
                 locations = list()
 
                 for target in targets:
@@ -69,12 +71,13 @@ class Game:
 
                 if path:
                     unit.location = path
-                    adjacent = [tuple(map(add, d, unit.location))
-                                for d in ((0, -1), (-1, 0), (1, 0), (0, 1))]
+                    adjacent = [
+                        tuple(map(add, d, unit.location))
+                        for d in ((0, -1), (-1, 0), (1, 0), (0, 1))
+                    ]
 
             enemies = list(filter(lambda t: t.location in adjacent, targets))
-            enemies.sort(key=lambda e: (e.hit_points, e.location[1],
-                                        e.location[0]))
+            enemies.sort(key=lambda e: (e.hit_points, e.location[1], e.location[0]))
 
             if enemies:
                 enemies[0].hit(unit.attack_power)
@@ -105,18 +108,18 @@ class Game:
 
     def isopen(self, location):
         x, y = location
-        occupied = map(attrgetter('location'), self.units)
+        occupied = map(attrgetter("location"), self.units)
 
-        return self.map[y][x] == '.' and location not in occupied
+        return self.map[y][x] == "." and location not in occupied
 
     def finished(self):
-        return len(set(map(attrgetter('kind'), self.units))) == 1
+        return len(set(map(attrgetter("kind"), self.units))) == 1
 
     def outcome(self):
-        return sum(map(attrgetter('hit_points'), self.units)) * self.rounds
+        return sum(map(attrgetter("hit_points"), self.units)) * self.rounds
 
     def all_elves_alive(self):
-        elves = list(filter(lambda u: u.kind == 'E', self.units))
+        elves = list(filter(lambda u: u.kind == "E", self.units))
         return self.start_elves == len(elves)
 
 
@@ -135,5 +138,5 @@ for power_boost in count(1):
     if part2.all_elves_alive():
         break
 
-print('Part 1:', part1.outcome())
-print('Part 2:', part2.outcome())
+print("Part 1:", part1.outcome())
+print("Part 2:", part2.outcome())

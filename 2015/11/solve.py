@@ -3,7 +3,7 @@ from itertools import groupby
 
 
 def valid(password):
-    for b in ('i', 'o', 'l'):
+    for b in ("i", "o", "l"):
         if b in password:
             return False
 
@@ -34,7 +34,7 @@ def increment(password):
         if index < 26:
             break
 
-    return ''.join(chars)
+    return "".join(chars)
 
 
 def find(current):
@@ -46,5 +46,5 @@ def find(current):
     return password
 
 
-print('Part 1:', find('hxbxwxba'))
-print('Part 2:', find('hxbxxyzz'))
+print("Part 1:", find("hxbxwxba"))
+print("Part 2:", find("hxbxxyzz"))

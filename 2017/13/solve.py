@@ -23,8 +23,12 @@ def escape(firewall):
             return i
 
 
-firewall = {int(depth): int(scanner_range) for depth, scanner_range in
-            [line.strip().split(': ') for line in sys.stdin.readlines()]}
+firewall = {
+    int(depth): int(scanner_range)
+    for depth, scanner_range in [
+        line.strip().split(": ") for line in sys.stdin.readlines()
+    ]
+}
 
-print('Part 1:', severity(firewall))
-print('Part 2:', escape(firewall))
+print("Part 1:", severity(firewall))
+print("Part 2:", escape(firewall))

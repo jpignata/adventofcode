@@ -13,5 +13,5 @@ for change in cycle(changes):
 
     frequencies[frequency] = True
 
-print('Part 1:', sum(changes))
-print('Part 2:', frequency)
+print("Part 1:", sum(changes))
+print("Part 2:", frequency)

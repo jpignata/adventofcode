@@ -25,9 +25,12 @@ def components(programs):
     return components
 
 
-programs = {int(program): [int(p) for p in programs.split(',')]
-            for program, programs in [line.strip().split(' <-> ')
-            for line in sys.stdin.readlines()]}
+programs = {
+    int(program): [int(p) for p in programs.split(",")]
+    for program, programs in [
+        line.strip().split(" <-> ") for line in sys.stdin.readlines()
+    ]
+}
 
-print('Part 1:', len(dfs(programs, 0)))
-print('Part 2:', components(programs))
+print("Part 1:", len(dfs(programs, 0)))
+print("Part 2:", components(programs))

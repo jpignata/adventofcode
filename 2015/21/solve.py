@@ -16,17 +16,17 @@ class Player:
 
 
 def equipment(shop):
-    for weapon in shop['weapons']:
+    for weapon in shop["weapons"]:
         yield [weapon]
 
-        for armor in shop['armor']:
+        for armor in shop["armor"]:
             yield [weapon, armor]
 
-            for ring in shop['rings']:
+            for ring in shop["rings"]:
                 yield [weapon, ring]
                 yield [weapon, armor, ring]
 
-            for rings in combinations(shop['rings'], 2):
+            for rings in combinations(shop["rings"], 2):
                 yield [weapon, *rings]
                 yield [weapon, armor, *rings]
 
@@ -41,15 +41,31 @@ def fight(player, boss):
     return player.hit_points > boss.hit_points
 
 
-item = namedtuple('Item', ['cost', 'damage', 'armor'])
+item = namedtuple("Item", ["cost", "damage", "armor"])
 shop = dict()
-shop['weapons'] = [item(8, 4, 0), item(10, 5, 0), item(25, 6, 0),
-                   item(40, 7, 0), item(74, 8, 0)]
-shop['armor'] = [item(13, 0, 1), item(31, 0, 2), item(53, 0, 3),
-                 item(75, 0, 4), item(102, 0, 5)]
-shop['rings'] = [item(25, 1, 0), item(50, 2, 0), item(100, 3, 0),
-                 item(20, 0, 1), item(40, 0, 2), item(80, 0, 3)]
-min_cost = float('inf')
+shop["weapons"] = [
+    item(8, 4, 0),
+    item(10, 5, 0),
+    item(25, 6, 0),
+    item(40, 7, 0),
+    item(74, 8, 0),
+]
+shop["armor"] = [
+    item(13, 0, 1),
+    item(31, 0, 2),
+    item(53, 0, 3),
+    item(75, 0, 4),
+    item(102, 0, 5),
+]
+shop["rings"] = [
+    item(25, 1, 0),
+    item(50, 2, 0),
+    item(100, 3, 0),
+    item(20, 0, 1),
+    item(40, 0, 2),
+    item(80, 0, 3),
+]
+min_cost = float("inf")
 max_cost = 0
 
 for equipment in equipment(shop):
@@ -62,5 +78,5 @@ for equipment in equipment(shop):
     else:
         max_cost = max(cost, max_cost)
 
-print('Part 1:', min_cost)
-print('Part 2:', max_cost)
+print("Part 1:", min_cost)
+print("Part 2:", max_cost)

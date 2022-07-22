@@ -3,18 +3,19 @@ import sys
 
 class ALU(object):
     def __init__(self, instructions):
-        self.instructions = [instruction.strip() .split()
-                             for instruction in instructions]
+        self.instructions = [
+            instruction.strip().split() for instruction in instructions
+        ]
 
     def run(self, model):
-        registers = {'w': 0, 'x': 0, 'y': 0, 'z': 0}
+        registers = {"w": 0, "x": 0, "y": 0, "z": 0}
         model = (int(d) for d in list(str(model)))
 
         for instruction in instructions:
             if len(instruction.split()) == 3:
                 operation, a, b = instruction.split()
 
-                if b in ('w', 'x', 'y', 'z'):
+                if b in ("w", "x", "y", "z"):
                     b = registers[b]
                 else:
                     b = int(b)
@@ -22,22 +23,22 @@ class ALU(object):
                 operation, a = instruction.split()
 
             match operation:
-                case 'inp':
+                case "inp":
                     registers[a] = next(model)
-                case 'add':
+                case "add":
                     registers[a] += b
-                case 'mul':
+                case "mul":
                     registers[a] *= b
-                case 'div':
-                    registers[a] //= b 
-                case 'mod':
+                case "div":
+                    registers[a] //= b
+                case "mod":
                     registers[a] %= b
-                case 'eql':
+                case "eql":
                     registers[a] = 1 if registers[a] == b else 0
 
-        return registers['z'] == 0
+        return registers["z"] == 0
 
 
-instructions = [line.strip() for line in open('input.txt')] 
+instructions = [line.strip() for line in open("input.txt")]
 
 print(ALU(instructions).run(sys.argv[1]))

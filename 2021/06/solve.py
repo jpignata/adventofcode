@@ -18,7 +18,7 @@ def solve(fish, days):
     return sum(fish.values())
 
 
-fish = Counter(int(fish) for fish in sys.stdin.readline().split(','))
+fish = Counter(int(fish) for fish in sys.stdin.readline().split(","))
 
-print('Part 1:', solve(fish, 80))
-print('Part 2:', solve(fish, 256))
+print("Part 1:", solve(fish, 80))
+print("Part 2:", solve(fish, 256))

@@ -4,16 +4,20 @@ from math import prod
 rules, valid = [], []
 error_rate = 0
 
-while (line := sys.stdin.readline()):
-    if 'or' in line:
-        parts = line.strip().split(' ')
-        rules.append([range(int(begin), int(end) + 1) for begin, end in
-                      [r.split('-') for r in [parts[-3], parts[-1]]]])
-    elif 'your ticket' in line:
-        mine = [int(field) for field in sys.stdin.readline().split(',')]
-    elif 'nearby tickets' in line:
+while line := sys.stdin.readline():
+    if "or" in line:
+        parts = line.strip().split(" ")
+        rules.append(
+            [
+                range(int(begin), int(end) + 1)
+                for begin, end in [r.split("-") for r in [parts[-3], parts[-1]]]
+            ]
+        )
+    elif "your ticket" in line:
+        mine = [int(field) for field in sys.stdin.readline().split(",")]
+    elif "nearby tickets" in line:
         for line in sys.stdin.readlines():
-            ticket = [int(field) for field in line.split(',')]
+            ticket = [int(field) for field in line.split(",")]
 
             for field in ticket:
                 if not any(field in part for rule in rules for part in rule):
@@ -41,5 +45,5 @@ while len(found) != len(mine):
             positions[i] = (match - found).pop()
             found.update(match - found)
 
-print('Part 1:', error_rate)
-print('Part 2:', prod(mine[pos] for pos in positions[:6]))
+print("Part 1:", error_rate)
+print("Part 2:", prod(mine[pos] for pos in positions[:6]))

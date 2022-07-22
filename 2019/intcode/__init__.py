@@ -18,12 +18,12 @@ class Computer:
         if filename:
             line = open(filename).readline()
         else:
-            if not hasattr(cls, 'stdin'):
+            if not hasattr(cls, "stdin"):
                 cls.stdin = sys.stdin.readline()
 
             line = cls.stdin
 
-        for i, digit in enumerate(line.split(',')):
+        for i, digit in enumerate(line.split(",")):
             program[i] = int(digit)
 
         return Computer(program, inputs)
@@ -35,17 +35,25 @@ class Computer:
         self.halted = False
         self.pointer = 0
         self.base = 0
-        self.operations = {1: self.add, 2: self.mul, 3: self.get, 4: self.put,
-                           5: self.jump_if_true, 6: self.jump_if_false,
-                           7: self.less_than, 8: self.equals, 9: self.set_base,
-                           99: self.halt}
+        self.operations = {
+            1: self.add,
+            2: self.mul,
+            3: self.get,
+            4: self.put,
+            5: self.jump_if_true,
+            6: self.jump_if_false,
+            7: self.less_than,
+            8: self.equals,
+            9: self.set_base,
+            99: self.halt,
+        }
 
     def __setitem__(self, key, value):
         self.program[key] = value
 
     def __getitem__(self, key):
         if key < 0:
-            raise RuntimeError(f'Invalid address: {key}')
+            raise RuntimeError(f"Invalid address: {key}")
 
         return self.program[key]
 
@@ -64,7 +72,7 @@ class Computer:
                 pass
 
     def execute(self, command):
-        for c in [ord(c) for c in command.strip() + '\n']:
+        for c in [ord(c) for c in command.strip() + "\n"]:
             self.inputs.append(c)
 
     def screen(self):
@@ -73,7 +81,7 @@ class Computer:
         while self.outputs:
             screen.append(chr(self.outputs.popleft()))
 
-        return ''.join(screen)
+        return "".join(screen)
 
     def print_screen(self):
         print(self.screen())
@@ -86,14 +94,14 @@ class Computer:
             param = None
 
             try:
-                if mode == '0':
+                if mode == "0":
                     param = self.program[self.pointer + position]
-                elif mode == '1':
+                elif mode == "1":
                     param = self.pointer + position
-                elif mode == '2':
+                elif mode == "2":
                     param = self.program[self.pointer + position] + self.base
                 else:
-                    raise RuntimeError(f'Unknown parameter mode: {mode}')
+                    raise RuntimeError(f"Unknown parameter mode: {mode}")
             except IndexError:
                 pass
 

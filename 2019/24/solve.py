@@ -5,8 +5,12 @@ from copy import deepcopy
 
 def part1(gen):
     def biodiversity(grid):
-        return sum(2**((y * len(r)) + x) for y, r in enumerate(grid)
-                   for x, c in enumerate(r) if c == '#')
+        return sum(
+            2 ** ((y * len(r)) + x)
+            for y, r in enumerate(grid)
+            for x, c in enumerate(r)
+            if c == "#"
+        )
 
     seen = set()
     current = biodiversity(gen)
@@ -25,12 +29,12 @@ def part1(gen):
                     if 0 <= nx < len(gen[0]) and 0 <= ny < len(gen):
                         adjacent.append(gen[ny][nx])
 
-                if cell == '#':
-                    if adjacent.count('#') != 1:
-                        next_gen[y][x] = '.'
-                elif cell == '.':
-                    if 0 < adjacent.count('#') <= 2:
-                        next_gen[y][x] = '#'
+                if cell == "#":
+                    if adjacent.count("#") != 1:
+                        next_gen[y][x] = "."
+                elif cell == ".":
+                    if 0 < adjacent.count("#") <= 2:
+                        next_gen[y][x] = "#"
 
         gen = next_gen
         current = biodiversity(gen)
@@ -40,7 +44,7 @@ def part1(gen):
 
 def part2(grid):
     def empty():
-        return [['.'] * 5 for _ in range(5)]
+        return [["."] * 5 for _ in range(5)]
 
     maxx = len(grid[0])
     maxy = len(grid)
@@ -68,8 +72,8 @@ def part2(grid):
                             if (nx, ny) != (2, 2):
                                 adjacent.append(grids[level][ny][nx])
 
-                    above = grids[level-1]
-                    below = grids[level+1]
+                    above = grids[level - 1]
+                    below = grids[level + 1]
 
                     if y == 0:
                         adjacent.append(above[1][2])
@@ -92,12 +96,12 @@ def part2(grid):
 
                     cell = grids[level][y][x]
 
-                    if cell == '#':
-                        if adjacent.count('#') != 1:
-                            next_level[y][x] = '.'
-                    elif cell == '.':
-                        if 0 < adjacent.count('#') <= 2:
-                            next_level[y][x] = '#'
+                    if cell == "#":
+                        if adjacent.count("#") != 1:
+                            next_level[y][x] = "."
+                    elif cell == ".":
+                        if 0 < adjacent.count("#") <= 2:
+                            next_level[y][x] = "#"
 
             next_grids[level] = next_level
 
@@ -108,5 +112,5 @@ def part2(grid):
 
 grid = [[c for c in line.strip()] for line in sys.stdin]
 
-print('Part 1:', part1(grid))
-print('Part 2:', part2(grid))
+print("Part 1:", part1(grid))
+print("Part 2:", part2(grid))

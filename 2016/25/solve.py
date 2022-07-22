@@ -4,7 +4,7 @@ from itertools import count
 
 class Computer:
     def __init__(self, *, a=0):
-        self.registers = {'a': a, 'b': 0, 'c': 0, 'd': 0}
+        self.registers = {"a": a, "b": 0, "c": 0, "d": 0}
 
     def run(self, program):
         ip = 0
@@ -12,7 +12,7 @@ class Computer:
         while ip < len(program):
             instruction = program[ip]
 
-            if instruction[0] == 'out':
+            if instruction[0] == "out":
                 yield self.registers[instruction[1]]
                 ip += 1
             else:
@@ -48,9 +48,11 @@ def find():
         sequence = []
 
         for out in computer.run(program):
-            if ((out in (0, 1) and len(sequence) == 0) or
-                    (out == 0 and sequence[-1] == 1) or
-                    (out == 1 and sequence[-1] == 0)):
+            if (
+                (out in (0, 1) and len(sequence) == 0)
+                or (out == 0 and sequence[-1] == 1)
+                or (out == 1 and sequence[-1] == 0)
+            ):
                 sequence.append(out)
 
                 if len(sequence) == 10:
@@ -61,4 +63,4 @@ def find():
 
 program = [l.strip().split() for l in sys.stdin.readlines()]
 
-print('Part 1:', find())
+print("Part 1:", find())

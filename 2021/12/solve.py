@@ -3,16 +3,16 @@ from collections import defaultdict
 
 
 def search(max_visits=1):
-    s = [[['end'], defaultdict(int)]]
+    s = [[["end"], defaultdict(int)]]
     paths = 0
 
     while s:
         path, counts = s.pop()
 
         for cave in edges[path[-1]]:
-            if cave == 'start':
+            if cave == "start":
                 paths += 1
-            elif cave != 'end':
+            elif cave != "end":
                 if cave[0].islower():
                     if any(count == max_visits for count in counts.values()):
                         allowed = 1
@@ -32,9 +32,9 @@ def search(max_visits=1):
 edges = defaultdict(list)
 
 for line in sys.stdin:
-    cave1, cave2 = line.strip().split('-')
+    cave1, cave2 = line.strip().split("-")
     edges[cave1].append(cave2)
     edges[cave2].append(cave1)
 
-print('Part 1:', search())
-print('Part 2:', search(2))
+print("Part 1:", search())
+print("Part 2:", search(2))

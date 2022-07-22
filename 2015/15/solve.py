@@ -16,12 +16,15 @@ def amount_generator(to, size):
 
 high_score = 0
 high_score_500_cals = 0
-ingredients = [tuple(map(int, re.findall(r'-?\d+', line)))
-               for line in sys.stdin.readlines()]
+ingredients = [
+    tuple(map(int, re.findall(r"-?\d+", line))) for line in sys.stdin.readlines()
+]
 
 for amounts in amount_generator(100, len(ingredients)):
-    attributes = [tuple(map(lambda attr: attr * amount, attrs))
-                  for attrs, amount in zip(ingredients, amounts)]
+    attributes = [
+        tuple(map(lambda attr: attr * amount, attrs))
+        for attrs, amount in zip(ingredients, amounts)
+    ]
     properties = tuple(map(sum, zip(*attributes)))
 
     if min(properties[0:4]) > 0:
@@ -31,5 +34,5 @@ for amounts in amount_generator(100, len(ingredients)):
         if properties[-1] == 500:
             high_score_500_cals = max(score, high_score_500_cals)
 
-print('Part 1:', high_score)
-print('Part 2:', high_score_500_cals)
+print("Part 1:", high_score)
+print("Part 2:", high_score_500_cals)

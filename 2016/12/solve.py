@@ -3,7 +3,7 @@ import sys
 
 class Computer:
     def __init__(self, *, a=0, b=0, c=0, d=0):
-        self.registers = {'a': a, 'b': b, 'c': c, 'd': d}
+        self.registers = {"a": a, "b": b, "c": c, "d": d}
 
     def run(self, program):
         ip = 0
@@ -38,5 +38,5 @@ class Computer:
 
 program = [l.strip().split() for l in sys.stdin.readlines()]
 
-print('Part 1:', Computer().run(program).registers['a'])
-print('Part 2:', Computer(c=1).run(program).registers['a'])
+print("Part 1:", Computer().run(program).registers["a"])
+print("Part 2:", Computer(c=1).run(program).registers["a"])

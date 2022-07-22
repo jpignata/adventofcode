@@ -20,19 +20,19 @@ def fewest_steps(grid, *, return_home=False):
             distances[start][target] = cost
             distances[target][start] = cost
 
-    min_distance = float('inf')
-    locations.remove('0')
+    min_distance = float("inf")
+    locations.remove("0")
 
     for path in permutations(locations, len(locations)):
         distance = 0
-        prev = '0'
+        prev = "0"
 
         for location in path:
             distance += distances[prev][location]
             prev = location
 
         if return_home:
-            distance += distances[prev]['0']
+            distance += distances[prev]["0"]
 
         min_distance = min(min_distance, distance)
 
@@ -53,7 +53,7 @@ def bfs(grid, start, target):
             if (nx, ny) == target:
                 return new_cost
 
-            if grid[ny][nx] != '#':
+            if grid[ny][nx] != "#":
                 if (nx, ny) not in costs or costs[(nx, ny)] > new_cost:
                     q.append((nx, ny))
                     costs[(nx, ny)] = new_cost
@@ -61,5 +61,5 @@ def bfs(grid, start, target):
 
 grid = [list(line.strip()) for line in sys.stdin.readlines()]
 
-print('Part 1:', fewest_steps(grid))
-print('Part 2:', fewest_steps(grid, return_home=True))
+print("Part 1:", fewest_steps(grid))
+print("Part 2:", fewest_steps(grid, return_home=True))

@@ -28,10 +28,15 @@ class Instruction:
         self.signal = None
 
 
-pattern = re.compile(r'([a-z0-9]+)? ?([A-Z]+)? ?([a-z0-9]+)? ?-> ([a-z]+)')
-operations = {'AND': operator.and_, 'OR': operator.or_,
-              'LSHIFT': operator.lshift, 'RSHIFT': operator.rshift,
-              'NOT': operator.inv, None: lambda x: x}
+pattern = re.compile(r"([a-z0-9]+)? ?([A-Z]+)? ?([a-z0-9]+)? ?-> ([a-z]+)")
+operations = {
+    "AND": operator.and_,
+    "OR": operator.or_,
+    "LSHIFT": operator.lshift,
+    "RSHIFT": operator.rshift,
+    "NOT": operator.inv,
+    None: lambda x: x,
+}
 wires = dict()
 
 for line in [line.strip() for line in sys.stdin.readlines()]:
@@ -41,12 +46,12 @@ for line in [line.strip() for line in sys.stdin.readlines()]:
     wire = matches.group(4)
     wires[wire] = Instruction(operands, operation, wires)
 
-a = wires['a']()
+a = wires["a"]()
 
 for _, wire in wires.items():
     wire.reset()
 
-wires['b'].signal = a
+wires["b"].signal = a
 
-print('Part 1:', a)
-print('Part 2:', wires['a']())
+print("Part 1:", a)
+print("Part 2:", wires["a"]())

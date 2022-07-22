@@ -23,23 +23,23 @@ def fft(digits, pattern, phases=100):
 
         digits = out
 
-    return ''.join(str(d) for d in digits[:8])
+    return "".join(str(d) for d in digits[:8])
 
 
 def find(digits, phases=100):
-    offset = int(''.join(map(str, digits[:7])))
+    offset = int("".join(map(str, digits[:7])))
     digits = digits[offset:]
 
     for _ in range(phases):
         total = 0
 
-        for i in range(len(digits)-1, -1, -1):
+        for i in range(len(digits) - 1, -1, -1):
             digits[i] = total = (total + digits[i]) % 10
 
-    return ''.join(str(d) for d in digits[:8])
+    return "".join(str(d) for d in digits[:8])
 
 
 digits = [int(c) for c in sys.stdin.readline().strip()]
 
-print('Part 1:', fft(digits, [0, 1, 0, -1]))
-print('Part 2:', find(digits * 10000))
+print("Part 1:", fft(digits, [0, 1, 0, -1]))
+print("Part 2:", find(digits * 10000))

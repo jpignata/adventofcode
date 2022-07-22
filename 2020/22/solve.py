@@ -44,7 +44,7 @@ def score(result):
 decks = []
 
 while line := sys.stdin.readline():
-    if ':' in line:
+    if ":" in line:
         deck = []
 
         while line := sys.stdin.readline().strip():
@@ -52,5 +52,5 @@ while line := sys.stdin.readline():
 
         decks.append(deck)
 
-print('Part 1:', score(combat(decks[0][:], decks[1][:])))
-print('Part 2:', score(recursive(decks[0][:], decks[1][:])))
+print("Part 1:", score(combat(decks[0][:], decks[1][:])))
+print("Part 2:", score(recursive(decks[0][:], decks[1][:])))

@@ -42,7 +42,7 @@ def find(nodes, width):
                     q.append((nx, ny))
 
 
-pattern = r'x(\d+)-y(\d+)\s+(\d+)T\s+(\d+)T\s+(\d+)T'
+pattern = r"x(\d+)-y(\d+)\s+(\d+)T\s+(\d+)T\s+(\d+)T"
 nodes = dict()
 width = 0
 
@@ -54,5 +54,5 @@ for line in sys.stdin.readlines():
         nodes[(x, y)] = (used, avail)
         width = max(width, x + 1)
 
-print('Part 1:', len(viable(nodes)))
-print('Part 2:', find(nodes, width))
+print("Part 1:", len(viable(nodes)))
+print("Part 2:", find(nodes, width))

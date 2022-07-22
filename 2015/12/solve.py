@@ -7,7 +7,7 @@ def tally(element):
     total = 0
 
     if isinstance(element, dict):
-        if 'red' not in element.keys() and 'red' not in element.values():
+        if "red" not in element.keys() and "red" not in element.values():
             total += tally(list(element.values()))
     elif isinstance(element, list):
         for e in element:
@@ -20,5 +20,5 @@ def tally(element):
 
 doc = sys.stdin.readline().strip()
 
-print('Part 1:', sum(map(int, re.findall(r'-?[\d]+', doc))))
-print('Part 2:', tally(json.loads(doc)))
+print("Part 1:", sum(map(int, re.findall(r"-?[\d]+", doc))))
+print("Part 2:", tally(json.loads(doc)))

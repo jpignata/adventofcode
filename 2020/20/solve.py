@@ -23,8 +23,11 @@ def variations(grid):
 
 def connect(tiles):
     size = int(sqrt(len(tiles)))
-    stack = [([variant], [tile_id]) for tile_id, variants in tiles.items()
-             for variant in variants]
+    stack = [
+        ([variant], [tile_id])
+        for tile_id, variants in tiles.items()
+        for variant in variants
+    ]
 
     while stack:
         cand, ids = stack.pop()
@@ -37,8 +40,9 @@ def connect(tiles):
         for other_id, others in tiles.items():
             if other_id not in ids:
                 for other in others:
-                    if x > 0 and ([r[0] for r in other] !=
-                                  [r[-1] for r in cand[found - 1]]):
+                    if x > 0 and (
+                        [r[0] for r in other] != [r[-1] for r in cand[found - 1]]
+                    ):
                         continue
 
                     if y > 0 and other[0] != cand[found - size][-1]:
@@ -49,7 +53,7 @@ def connect(tiles):
 
 def find(pieces, shape):
     size = int(sqrt(len(pieces)))
-    tile_width = (len(pieces[0]) - 2)
+    tile_width = len(pieces[0]) - 2
     grid = [[None] * (tile_width * size) for _ in range(tile_width * size)]
 
     for y, row in enumerate(grid):
@@ -59,15 +63,18 @@ def find(pieces, shape):
             cx = x % tile_width + 1
             grid[y][x] = pieces[ctile][cy][cx]
 
-    total = sum(1 for row in grid for c in row if c == '#')
+    total = sum(1 for row in grid for c in row if c == "#")
     found = 0
 
     for image in variations(grid):
         for y, row in enumerate(image):
             for x in range(len(row)):
-                found += all(0 <= y+dy < len(image) and
-                             0 <= x+dx < len(image[0]) and
-                             image[y+dy][x+dx] == '#' for dx, dy in shape)
+                found += all(
+                    0 <= y + dy < len(image)
+                    and 0 <= x + dx < len(image[0])
+                    and image[y + dy][x + dx] == "#"
+                    for dx, dy in shape
+                )
 
         if found:
             return total - len(shape) * found
@@ -76,12 +83,27 @@ def find(pieces, shape):
 
 
 def solve():
-    monster = ((0, 0), (1, 1), (4, 1), (5, 0), (6, 0), (7, 1), (10, 1), (11, 0),
-               (12, 0), (13, 1), (16, 1), (17, 0), (18, -1), (18, 0), (19, 0))
+    monster = (
+        (0, 0),
+        (1, 1),
+        (4, 1),
+        (5, 0),
+        (6, 0),
+        (7, 1),
+        (10, 1),
+        (11, 0),
+        (12, 0),
+        (13, 1),
+        (16, 1),
+        (17, 0),
+        (18, -1),
+        (18, 0),
+        (19, 0),
+    )
     tiles = {}
 
     while line := sys.stdin.readline():
-        if ':' in line:
+        if ":" in line:
             tile_id = int(line.strip()[-5:-1])
             tile = []
 
@@ -96,8 +118,8 @@ def solve():
     return checksum, roughness
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     part1, part2 = solve()
 
-    print('Part 1:', part1)
-    print('Part 2:', part2)
+    print("Part 1:", part1)
+    print("Part 2:", part2)

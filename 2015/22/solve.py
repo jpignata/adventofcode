@@ -34,9 +34,15 @@ class Player:
 
 
 class Spell:
-    def __init__(self, cost, *, on_cast=[lambda p, b: None],
-                 on_apply=lambda p, b: None,
-                 on_end=lambda p, b: None, turns=0):
+    def __init__(
+        self,
+        cost,
+        *,
+        on_cast=[lambda p, b: None],
+        on_apply=lambda p, b: None,
+        on_end=lambda p, b: None,
+        turns=0
+    ):
         self.cost = cost
         self.on_cast = on_cast
         self.on_apply = on_apply
@@ -104,7 +110,7 @@ def fight(player, boss, spells, difficulty=0):
                 if spell:
                     spent += spell.cast(player, boss)
                 else:
-                    return float('inf')
+                    return float("inf")
 
             if boss.alive():
                 spells.apply()
@@ -113,19 +119,20 @@ def fight(player, boss, spells, difficulty=0):
                 player.deal(boss.damage)
 
     if not player.alive():
-        return float('inf')
+        return float("inf")
 
     return spent
 
 
 magic_missle = Spell(53, on_cast=[lambda p, b: b.deal(4)])
 drain = Spell(73, on_cast=[lambda p, b: b.deal(2), lambda p, b: p.heal(2)])
-shield = Spell(113, on_cast=[lambda p, b: p.fortify(7)],
-               on_end=lambda p, b: p.weaken(7), turns=6)
+shield = Spell(
+    113, on_cast=[lambda p, b: p.fortify(7)], on_end=lambda p, b: p.weaken(7), turns=6
+)
 poison = Spell(173, on_apply=lambda p, b: b.deal(3), turns=6)
 recharge = Spell(229, on_apply=lambda p, b: p.recharge(101), turns=5)
-lowest_cost = float('inf')
-lowest_cost_on_hard = float('inf')
+lowest_cost = float("inf")
+lowest_cost_on_hard = float("inf")
 
 for i in range(10000):
     player = Player(50, 0, 0, 500)
@@ -141,5 +148,5 @@ for i in range(100000):
     cost = fight(player, boss, spells, difficulty=1)
     lowest_cost_on_hard = min(cost, lowest_cost_on_hard)
 
-print('Part 1:', lowest_cost)
-print('Part 2:', lowest_cost_on_hard)
+print("Part 1:", lowest_cost)
+print("Part 2:", lowest_cost_on_hard)

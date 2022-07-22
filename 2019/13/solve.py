@@ -12,29 +12,28 @@ def draw(screen, stdscr, score):
     for y in range(maxy + 1):
         for x in range(maxx + 1):
             if screen[(x, y)] == 0:
-                stdscr.addstr(y, x, ' ')
+                stdscr.addstr(y, x, " ")
             elif screen[(x, y)] == 1:
                 if y == 0:
-                    stdscr.addstr(y, x, '+' if x == 0 or x == maxx else '-')
+                    stdscr.addstr(y, x, "+" if x == 0 or x == maxx else "-")
                 else:
-                    stdscr.addstr(y, x, '|')
+                    stdscr.addstr(y, x, "|")
             elif screen[(x, y)] == 2:
-                stdscr.addstr(y, x, '█')
+                stdscr.addstr(y, x, "█")
             elif screen[(x, y)] == 3:
-                stdscr.addstr(y, x, '▄')
+                stdscr.addstr(y, x, "▄")
             elif screen[(x, y)] == 4:
-                stdscr.addstr(y, x, '◉')
+                stdscr.addstr(y, x, "◉")
 
-    stdscr.addstr(0, 2, f'SCORE {score}')
+    stdscr.addstr(0, 2, f"SCORE {score}")
     stdscr.refresh()
 
 
-verbose = '-v' in sys.argv
+verbose = "-v" in sys.argv
 computer = Computer.load()
 computer.run()
 
-blocks = sum(1 for i, c in enumerate(computer.outputs)
-             if c == 2 and (i + 1) % 3 == 0)
+blocks = sum(1 for i, c in enumerate(computer.outputs) if c == 2 and (i + 1) % 3 == 0)
 
 
 computer = Computer.load()
@@ -80,5 +79,5 @@ while not computer.halted:
 if verbose:
     curses.endwin()
 
-print('Part 1:', blocks)
-print('Part 2:', score)
+print("Part 1:", blocks)
+print("Part 2:", score)

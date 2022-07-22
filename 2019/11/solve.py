@@ -38,13 +38,13 @@ def draw():
     for y in range(maxy + 1):
         for x in range(maxx + 1):
             if panels[(x, y)] == 1:
-                sys.stdout.write('█')
+                sys.stdout.write("█")
             else:
-                sys.stdout.write(' ')
+                sys.stdout.write(" ")
 
         print()
 
 
-print('Part 1:', len(paint()))
-print('Part 2:')
+print("Part 1:", len(paint()))
+print("Part 2:")
 draw()

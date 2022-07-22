@@ -12,12 +12,12 @@ while not computer.halted:
     except intcode.Input:
         computer.print_screen()
 
-        if (command := input()) == 'dump':
-            with open('memory.out', 'w') as f:
-                f.write(','.join(str(d) for d in computer.program.values()))
+        if (command := input()) == "dump":
+            with open("memory.out", "w") as f:
+                f.write(",".join(str(d) for d in computer.program.values()))
 
-            print('Wrote memory.out.', end='\n\n')
-        elif command == 'quit':
+            print("Wrote memory.out.", end="\n\n")
+        elif command == "quit":
             break
         else:
             computer.execute(command)

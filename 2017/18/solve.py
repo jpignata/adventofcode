@@ -12,18 +12,18 @@ class Tablet:
         self.sound = None
         self.inq = queue.Queue()
         self.registers = defaultdict(int)
-        self.registers['p'] = id
+        self.registers["p"] = id
 
     def solo(self):
         while 0 <= self.ip < len(instructions):
             instruction, *args = instructions[self.ip]
 
-            if instruction == 'rcv':
+            if instruction == "rcv":
                 if self.registers[args[0]]:
                     return self.sound
 
                 self.ip += 1
-            elif instruction == 'snd':
+            elif instruction == "snd":
                 self.sound = self.registers[args[0]]
                 self.ip += 1
             else:
@@ -34,14 +34,14 @@ class Tablet:
             ip = 0
             instruction, *args = instructions[self.ip]
 
-            if instruction == 'rcv':
+            if instruction == "rcv":
                 try:
                     self.registers[args[0]] = self.inq.get(timeout=0.001)
                 except queue.Empty:
                     break
 
                 self.ip += 1
-            elif instruction == 'snd':
+            elif instruction == "snd":
                 outq.put(self.registers[args[0]])
 
                 self.sent += 1
@@ -86,7 +86,7 @@ def isdigit(token):
         return False
 
 
-instructions = [line.strip().split(' ') for line in sys.stdin]
+instructions = [line.strip().split(" ") for line in sys.stdin]
 p0 = Tablet(instructions, id=0)
 p1 = Tablet(instructions, id=1)
 t0 = Thread(target=p0.duet, args=[p1.inq])
@@ -97,5 +97,5 @@ t1.start()
 t0.join()
 t1.join()
 
-print('Part 1:', Tablet(instructions).solo())
-print('Part 2:', p1.sent)
+print("Part 1:", Tablet(instructions).solo())
+print("Part 2:", p1.sent)

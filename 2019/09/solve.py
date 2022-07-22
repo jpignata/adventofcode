@@ -8,5 +8,5 @@ def run(value):
     return computer.outputs.pop()
 
 
-print('Part 1:', run(1))
-print('Part 2:', run(2))
+print("Part 1:", run(1))
+print("Part 2:", run(2))

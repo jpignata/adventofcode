@@ -8,10 +8,10 @@ def run(instructions):
     while pointer < len(instructions):
         cmd, arg = instructions[pointer]
 
-        if cmd == 'acc':
+        if cmd == "acc":
             accumulator += arg
             pointer += 1
-        elif cmd == 'jmp':
+        elif cmd == "jmp":
             pointer += arg
         else:
             pointer += 1
@@ -25,7 +25,7 @@ def run(instructions):
 
 
 def find(instructions):
-    changes = {'jmp': 'nop', 'nop': 'jmp'}
+    changes = {"jmp": "nop", "nop": "jmp"}
 
     for i, (cmd, arg) in enumerate(instructions):
         if cmd in changes:
@@ -37,8 +37,10 @@ def find(instructions):
                 return accumulator
 
 
-instructions = [(cmd, int(arg)) for cmd, arg in [tuple(line.strip().split(' '))
-                for line in sys.stdin.readlines()]]
+instructions = [
+    (cmd, int(arg))
+    for cmd, arg in [tuple(line.strip().split(" ")) for line in sys.stdin.readlines()]
+]
 
-print('Part 1:', run(instructions)[1])
-print('Part 2:', find(instructions))
+print("Part 1:", run(instructions)[1])
+print("Part 2:", find(instructions))

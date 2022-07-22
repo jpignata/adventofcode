@@ -39,7 +39,7 @@ def network():
 
 for destination, x, y in network():
     if destination == 255:
-        print('Part 1:', y)
+        print("Part 1:", y)
         break
 
 last = None
@@ -47,7 +47,7 @@ last = None
 for destination, x, y in network():
     if destination == 0:
         if last == y:
-            print('Part 2:', y)
+            print("Part 2:", y)
             break
 
         last = y

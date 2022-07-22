@@ -6,11 +6,16 @@ from math import prod
 def dfs(x, y, visited):
     visited.add((x, y))
 
-    return 1 + sum([dfs(nx, ny, visited) for dx, dy in deltas
-                    if 0 <= (nx := x+dx) < length
-                    if 0 <= (ny := y+dy) < length
-                    if (nx, ny) not in visited
-                    if grid[ny][nx] != 9])
+    return 1 + sum(
+        [
+            dfs(nx, ny, visited)
+            for dx, dy in deltas
+            if 0 <= (nx := x + dx) < length
+            if 0 <= (ny := y + dy) < length
+            if (nx, ny) not in visited
+            if grid[ny][nx] != 9
+        ]
+    )
 
 
 deltas = ((1, 0), (0, 1), (-1, 0), (0, -1))
@@ -21,9 +26,12 @@ largest = []
 
 for y, row in enumerate(grid):
     for x, cell in enumerate(row):
-        neighbors = [grid[ny][nx] for dx, dy in deltas
-                     if 0 <= (nx := x+dx) < length
-                     if 0 <= (ny := y+dy) < length]
+        neighbors = [
+            grid[ny][nx]
+            for dx, dy in deltas
+            if 0 <= (nx := x + dx) < length
+            if 0 <= (ny := y + dy) < length
+        ]
 
         if cell < min(neighbors):
             risk += cell + 1
@@ -34,5 +42,5 @@ for y, row in enumerate(grid):
             else:
                 heappushpop(largest, size)
 
-print('Part 1:', risk)
-print('Part 2:', prod(largest))
+print("Part 1:", risk)
+print("Part 2:", prod(largest))

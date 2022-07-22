@@ -20,7 +20,7 @@ class Particle:
 
 
 def closest():
-    return min(particles, key=methodcaller('speed')).id
+    return min(particles, key=methodcaller("speed")).id
 
 
 def survivors():
@@ -39,8 +39,10 @@ def survivors():
     return len(particles)
 
 
-particles = [Particle(i, *map(int, re.findall(r'(-?\d+)', line)))
-             for i, line in enumerate(sys.stdin)]
+particles = [
+    Particle(i, *map(int, re.findall(r"(-?\d+)", line)))
+    for i, line in enumerate(sys.stdin)
+]
 
-print('Part 1:', closest())
-print('Part 2:', survivors())
+print("Part 1:", closest())
+print("Part 2:", survivors())

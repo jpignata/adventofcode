@@ -15,10 +15,10 @@ def test(x, y):
 def search(size):
     x = y = 0
 
-    while not test(x+size-1, y):
+    while not test(x + size - 1, y):
         y += 1
 
-        while not test(x, y+size-1):
+        while not test(x, y + size - 1):
             x += 1
 
     return x * 10000 + y
@@ -33,5 +33,5 @@ for y in range(50):
         total += output
         grid[(x, y)] = output
 
-print('Part 1:', total)
-print('Part 2:', search(100))
+print("Part 1:", total)
+print("Part 2:", search(100))

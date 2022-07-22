@@ -10,9 +10,9 @@ for y, line in enumerate(sys.stdin):
     for x, char in enumerate(line.strip()):
         lenx = max(lenx, x + 1)
 
-        if char == '>':
+        if char == ">":
             east.add((x, y))
-        elif char == 'v':
+        elif char == "v":
             south.add((x, y))
 
 for step in count(1):
@@ -35,7 +35,7 @@ for step in count(1):
             next_south.add((x, y))
 
     if next_east == east and next_south == south:
-        print('Part 1:', step)
+        print("Part 1:", step)
         break
 
     east, south = next_east, next_south

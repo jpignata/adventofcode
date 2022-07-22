@@ -4,7 +4,7 @@ from intcode import Computer
 def execute(commands):
     computer = Computer.load()
 
-    for command in commands.lstrip().split('\n'):
+    for command in commands.lstrip().split("\n"):
         computer.execute(command)
 
     computer.run()
@@ -13,10 +13,10 @@ def execute(commands):
         if output > 127:
             return output
 
-    print('Failed ---')
+    print("Failed ---")
 
     for character in computer.outputs:
-        print(chr(character), end='')
+        print(chr(character), end="")
 
 
 walk = """
@@ -43,5 +43,5 @@ AND T J
 RUN
 """
 
-print('Part 1:', execute(walk))
-print('Part 2:', execute(run))
+print("Part 1:", execute(walk))
+print("Part 2:", execute(run))

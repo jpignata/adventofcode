@@ -25,4 +25,4 @@ def calculate(size, number):
 
 public_keys = [int(line) for line in sys.stdin.readlines()]
 
-print('Part 1:', calculate(find(public_keys[0]), public_keys[1]))
+print("Part 1:", calculate(find(public_keys[0]), public_keys[1]))

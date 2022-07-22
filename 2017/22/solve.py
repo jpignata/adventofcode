@@ -12,25 +12,25 @@ def run(grid, evolved=False):
 
     for _ in range(10000000 if evolved else 10000):
         if evolved:
-            if grid[location] == '#':
+            if grid[location] == "#":
                 current = dirs[(dirs.index(current) + 1) % len(dirs)]
-                grid[location] = 'F'
-            elif grid[location] == '.':
+                grid[location] = "F"
+            elif grid[location] == ".":
                 current = dirs[(dirs.index(current) - 1) % len(dirs)]
-                grid[location] = 'W'
-            elif grid[location] == 'F':
+                grid[location] = "W"
+            elif grid[location] == "F":
                 current = dirs[(dirs.index(current) + 2) % len(dirs)]
-                grid[location] = '.'
-            elif grid[location] == 'W':
-                grid[location] = '#'
+                grid[location] = "."
+            elif grid[location] == "W":
+                grid[location] = "#"
                 infected += 1
         else:
-            if grid[location] == '#':
+            if grid[location] == "#":
                 current = dirs[(dirs.index(current) + 1) % len(dirs)]
-                grid[location] = '.'
+                grid[location] = "."
             else:
                 current = dirs[(dirs.index(current) - 1) % len(dirs)]
-                grid[location] = '#'
+                grid[location] = "#"
                 infected += 1
 
         location = tuple(map(add, location, current))
@@ -38,11 +38,11 @@ def run(grid, evolved=False):
     return infected
 
 
-grid = defaultdict(lambda: '.')
+grid = defaultdict(lambda: ".")
 
 for y, line in enumerate(sys.stdin):
     for x, char in enumerate(line.strip()):
         grid[(x, y)] = char
 
-print('Part 1:', run(grid.copy()))
-print('Part 2:', run(grid.copy(), evolved=True))
+print("Part 1:", run(grid.copy()))
+print("Part 2:", run(grid.copy(), evolved=True))

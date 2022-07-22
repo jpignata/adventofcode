@@ -1,8 +1,15 @@
 import re
 import sys
 
-dirs = {'nw': (0, -1), 'ne': (1, -1), 'sw': (-1, 1), 'se': (0, 1), 'w': (-1, 0), 'e': (1, 0)}
-tokens = re.compile('|'.join(dirs))
+dirs = {
+    "nw": (0, -1),
+    "ne": (1, -1),
+    "sw": (-1, 1),
+    "se": (0, 1),
+    "w": (-1, 0),
+    "e": (1, 0),
+}
+tokens = re.compile("|".join(dirs))
 start = set()
 
 for flip in sys.stdin.readlines():
@@ -33,5 +40,5 @@ for i in range(100):
 
     tiles = next_tiles
 
-print('Part 1:', len(start))
-print('Part 2:', len(tiles))
+print("Part 1:", len(start))
+print("Part 2:", len(tiles))

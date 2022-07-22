@@ -1,7 +1,7 @@
 import sys
 from collections import deque
 
-components = [tuple(map(int, line.split('/'))) for line in sys.stdin]
+components = [tuple(map(int, line.split("/"))) for line in sys.stdin]
 q = deque([[[], 0, components]])
 strongest = 0
 longest = (0, 0)
@@ -22,5 +22,5 @@ while q:
         strongest = max(strongest, strength)
         longest = max(longest, (len(bridge), strength))
 
-print('Part 1:', strongest)
-print('Part 2:', longest[1])
+print("Part 1:", strongest)
+print("Part 2:", longest[1])

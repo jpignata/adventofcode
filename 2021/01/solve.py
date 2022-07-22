@@ -7,5 +7,5 @@ def find(measurements, offset):
 
 measurements = [int(line) for line in sys.stdin]
 
-print('Part 1:', find(measurements, 1))
-print('Part 2:', find(measurements, 3))
+print("Part 1:", find(measurements, 1))
+print("Part 2:", find(measurements, 3))

@@ -18,5 +18,5 @@ for i in range(1, 50_000_000):
 
     index += 1
 
-print('Part 1:', buffer[1])
-print('Part 2:', num)
+print("Part 1:", buffer[1])
+print("Part 2:", num)

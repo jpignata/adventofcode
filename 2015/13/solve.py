@@ -19,15 +19,15 @@ def total_change(attendees):
     total_change = 0
 
     for i, attendee in enumerate(attendees):
-        left = attendees[(i-1) % len(attendees)].name
-        right = attendees[(i+1) % len(attendees)].name
+        left = attendees[(i - 1) % len(attendees)].name
+        right = attendees[(i + 1) % len(attendees)].name
         total_change += attendee.units(left, right)
 
     return total_change
 
 
 attendees = dict()
-pattern = r'(\w+) would (\w+) (\d+) happiness units by sitting next to (\w+).'
+pattern = r"(\w+) would (\w+) (\d+) happiness units by sitting next to (\w+)."
 
 for line in sys.stdin.readlines():
     matches = re.match(pattern, line)
@@ -37,17 +37,18 @@ for line in sys.stdin.readlines():
     if guest1 not in attendees:
         attendees[guest1] = Attendee(guest1)
 
-    if change == 'lose':
+    if change == "lose":
         units *= -1
 
     attendees[guest1].add(guest2, units)
 
 attendees_with_me = attendees.copy()
-attendees_with_me['Me'] = Attendee('Me')
+attendees_with_me["Me"] = Attendee("Me")
 
 changes = [total_change(layout) for layout in permutations(attendees.values())]
-changes_with_me = [total_change(layout)
-                   for layout in permutations(attendees_with_me.values())]
+changes_with_me = [
+    total_change(layout) for layout in permutations(attendees_with_me.values())
+]
 
-print('Part 1:', max(changes))
-print('Part 2:', max(changes_with_me))
+print("Part 1:", max(changes))
+print("Part 2:", max(changes_with_me))

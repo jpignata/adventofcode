@@ -15,7 +15,7 @@ def solve():
     root = build(Directory())
 
     print("Part 1:", part1(root))
-    print("Part 2:", part2(root, root.size - 40000000))
+    print("Part 2:", part2(root, root.size - 40_000_000))
 
 
 def build(root):
@@ -49,7 +49,7 @@ def part1(root):
     for node in root.children.values():
         total += part1(node)
 
-        if node.size <= 100000:
+        if node.size <= 100_000:
             total += node.size
 
     return total

@@ -15,29 +15,25 @@ def solve():
     root = build(Directory())
 
     print("Part 1:", part1(root))
-    print("Part 2:", part2(root, 30000000 - (70000000 - root.size)))
+    print("Part 2:", part2(root, root.size - 40000000))
 
 
 def build(root):
     current = root
 
     for line in sys.stdin:
-        if line.startswith("$"):
-            _, command, *args = line.strip().split()
-
-            if command == "cd":
-                if args[0] == "/":
-                    current = root
-                elif args[0] == "..":
-                    current = current.parent
-                else:
-                    current = current.children[args[0]]
-        else:
-            size, name = line.strip().split()
-
-            if size == "dir":
+        match line.strip().split():
+            case ["$", "cd", "/"]:
+                current = root
+            case ["$", "cd", ".."]:
+                current = current.parent
+            case ["$", "cd", name]:
+                current = current.children[name]
+            case ["$", "ls"]:
+                continue
+            case ["dir", name]:
                 current.children[name] = Directory(parent=current)
-            else:
+            case [size, _]:
                 node = current
 
                 while node:

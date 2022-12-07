@@ -13,7 +13,7 @@ def solve():
             moves.append(tuple(int(number) for number in re.findall(r"[0-9]+", line)))
         else:
             for match in re.finditer(r"[A-Z]", line):
-                stack = (match.start() - 1) // 4 + 1
+                stack = match.start() // 4 + 1
                 stacks[stack].insert(0, match[0])
 
     print("Part 1:", rearrange(stacks, moves, single))

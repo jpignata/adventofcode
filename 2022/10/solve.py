@@ -1,28 +1,24 @@
 import sys
 
 register = 1
-states = [1]
-rows = []
+states = []
 
 for line in sys.stdin:
     match line.strip().split():
         case ["noop"]:
             states.append(register)
         case ["addx", value]:
-            states.extend([register] * 2)
+            states.extend([register, register])
             register += int(value)
 
-for cycle, register in enumerate(states[1:]):
-    pos = cycle % 40
-
-    if pos == 0:
-        rows.append(["."] * 40)
-
-    if pos in range(register - 1, register + 2):
-        rows[-1][pos] = "█"
-
-print("Part 1:", sum(states[i] * i for i in (20, 60, 100, 140, 180, 220)))
+print("Part 1:", sum(states[i - 1] * i for i in range(20, len(states), 40)))
 print("Part 2:")
 
-for row in rows:
-    print("".join(row))
+for y in range(len(states) // 40):
+    for x in range(40):
+        if x in range(states[(cycle := y * 40 + x)] - 1, states[cycle] + 2):
+            print("█", end="")
+        else:
+            print(".", end="")
+
+    print()

@@ -12,9 +12,9 @@ Operation = Tuple[Callable[[int, int], int], int]
 @dataclass
 class Monkey:
     items: Deque[int] = field(default_factory=deque)
-    outcomes: Dict[bool, int] = field(default_factory=dict)
+    destinations: Dict[bool, int] = field(default_factory=dict)
     operation: Operation = lambda x, y: 0, 0
-    divisible_by: int = 0
+    divisor: int = 0
     inspections: int = 0
 
     def inspect(self, reducer: Operation) -> Tuple[int, int]:
@@ -23,7 +23,7 @@ class Monkey:
         item = self.items.popleft()
         item = self.operation[0](item, self.operation[1] or item)
         item = reducer[0](item, reducer[1])
-        destination = self.outcomes[item % self.divisible_by == 0]
+        destination = self.destinations[item % self.divisor == 0]
 
         return item, destination
 
@@ -50,24 +50,21 @@ def solve() -> None:
                         operation = mul if operator == "*" else add
                         operand = int(argument) if argument.isdigit() else 0
                         monkey.operation = operation, operand
-                    case ["Test", divisible_by]:
-                        monkey.divisible_by = int(divisible_by.split()[-1])
-                    case ["If true", outcome]:
-                        monkey.outcomes[True] = int(outcome.split()[-1])
-                    case ["If false", outcome]:
-                        monkey.outcomes[False] = int(outcome.split()[-1])
+                    case ["Test", condition]:
+                        monkey.divisor = int(condition.split()[-1])
+                    case ["If true", action]:
+                        monkey.destinations[True] = int(action.split()[-1])
+                    case ["If false", action]:
+                        monkey.destinations[False] = int(action.split()[-1])
 
             monkeys.append(monkey)
 
-    print("Part 1:", simulate(deepcopy(monkeys)))
-    print("Part 2:", simulate(deepcopy(monkeys), 10_000))
+    print("Part 1:", play(monkeys, 20, (floordiv, 3)))
+    print("Part 2:", play(monkeys, 10000, (mod, prod(m.divisor for m in monkeys))))
 
 
-def simulate(monkeys: List[Monkey], rounds: int = 20) -> int:
-    if rounds <= 20:
-        reducer = floordiv, 3
-    else:
-        reducer = mod, prod(monkey.divisible_by for monkey in monkeys)
+def play(monkeys: List[Monkey], rounds: int, reducer: Operation) -> int:
+    monkeys = deepcopy(monkeys)
 
     for _ in range(rounds):
         for monkey in monkeys:

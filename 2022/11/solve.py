@@ -6,16 +6,18 @@ from math import prod
 from operator import add, floordiv, mod, mul
 from typing import Callable, Deque, Dict, List, Tuple
 
+Operation = Tuple[Callable[[int, int], int], int]
+
 
 @dataclass
 class Monkey:
-    items: Deque[int] = None
-    operation: Callable[[int, int], int] = None
-    divisible_by: int = None
+    items: Deque[int] = field(default_factory=deque)
     outcomes: Dict[bool, int] = field(default_factory=dict)
+    operation: Operation = lambda x, y: 0, 0
+    divisible_by: int = 0
     inspections: int = 0
 
-    def inspect(self, reducer: Tuple[Callable[[int], int], int]) -> Tuple[int, int]:
+    def inspect(self, reducer: Operation) -> Tuple[int, int]:
         self.inspections += 1
 
         item = self.items.popleft()
@@ -46,8 +48,8 @@ def solve() -> None:
                     case ["Operation", expression]:
                         _, operator, argument = expression.split(" = ")[-1].split()
                         operation = mul if operator == "*" else add
-                        argument = int(argument) if argument.isdigit() else None
-                        monkey.operation = operation, argument
+                        operand = int(argument) if argument.isdigit() else 0
+                        monkey.operation = operation, operand
                     case ["Test", divisible_by]:
                         monkey.divisible_by = int(divisible_by.split()[-1])
                     case ["If true", outcome]:
@@ -73,7 +75,7 @@ def simulate(monkeys: List[Monkey], rounds: int = 20) -> int:
                 item, destination = monkey.inspect(reducer)
                 monkeys[destination].add(item)
 
-    return mul(*sorted(monkey.inspections for monkey in monkeys)[-2:])
+    return prod(sorted(monkey.inspections for monkey in monkeys)[-2:])
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from math import prod
 from operator import add, floordiv, mod, mul
-from typing import Callable, Deque, Dict, List, Tuple
+from typing import Callable, Deque, Dict, Iterable, List, Tuple
 
 Operation = Tuple[Callable[[int, int], int], int]
 
@@ -17,21 +17,19 @@ class Monkey:
     divisor: int = 0
     inspections: int = 0
 
-    def inspect(self, reducer: Operation) -> Tuple[int, int]:
-        self.inspections += 1
+    def inspect(self, reducer: Operation) -> Iterable[Tuple[int, int]]:
+        while self.items:
+            self.inspections += 1
 
-        item = self.items.popleft()
-        item = self.operation[0](item, self.operation[1] or item)
-        item = reducer[0](item, reducer[1])
-        destination = self.destinations[item % self.divisor == 0]
+            item = self.items.popleft()
+            item = self.operation[0](item, self.operation[1] or item)
+            item = reducer[0](item, reducer[1])
+            destination = self.destinations[item % self.divisor == 0]
 
-        return item, destination
+            yield item, destination
 
     def add(self, item: int) -> None:
         self.items.append(item)
-
-    def has_items(self) -> bool:
-        return len(self.items) > 0
 
 
 def solve() -> None:
@@ -68,8 +66,7 @@ def play(monkeys: List[Monkey], rounds: int, reducer: Operation) -> int:
 
     for _ in range(rounds):
         for monkey in monkeys:
-            while monkey.has_items():
-                item, destination = monkey.inspect(reducer)
+            for item, destination in monkey.inspect(reducer):
                 monkeys[destination].add(item)
 
     return prod(sorted(monkey.inspections for monkey in monkeys)[-2:])

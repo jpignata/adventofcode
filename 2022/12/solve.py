@@ -9,23 +9,29 @@ def solve():
         if "E" in row:
             end = (row.index("E"), y)
 
-    print("Part 1:", bfs(grid, end, "S"))
-    print("Part 2:", bfs(grid, end, "a"))
+    costs = find(grid, end, "Sa")
+
+    print("Part 1:", costs["S"])
+    print("Part 2:", costs["a"])
 
 
-def bfs(grid, start, target):
+def find(grid, start, targets):
     def index(letter):
         return ord("a" if letter == "S" else "z" if letter == "E" else letter)
 
     maxx, maxy = len(grid[0]), len(grid)
     queue = deque([(0, start)])
     visited = set()
+    answers = {}
 
     while queue:
         cost, (x, y) = queue.popleft()
 
-        if grid[y][x] == target:
-            return cost
+        if grid[y][x] in targets and grid[y][x] not in answers:
+            answers[grid[y][x]] = cost
+
+            if len(answers) == 2:
+                return answers
 
         for dx, dy in ((0, -1), (-1, 0), (0, 1), (1, 0)):
             nx, ny = x + dx, y + dy

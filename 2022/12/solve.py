@@ -1,7 +1,5 @@
 import sys
-from math import inf
-from heapq import heappop, heappush
-from string import ascii_lowercase
+from collections import deque
 
 
 def solve():
@@ -10,20 +8,21 @@ def solve():
     for y, row in enumerate(grid):
         if "E" in row:
             end = (row.index("E"), y)
-            break
 
-    print("Part 1:", dijkstra(grid, end, "S"))
-    print("Part 2:", dijkstra(grid, end, "a"))
+    print("Part 1:", bfs(grid, end, "S"))
+    print("Part 2:", bfs(grid, end, "a"))
 
 
-def dijkstra(grid, start, target):
+def bfs(grid, start, target):
+    def index(letter):
+        return ord("a" if letter == "S" else "z" if letter == "E" else letter)
+
     maxx, maxy = len(grid[0]), len(grid)
-    costs = {(x, y): inf for y in range(maxy) for x in range(maxx)}
-    costs[start] = 0
-    queue = [(0, start)]
+    queue = deque([(0, start)])
+    visited = set()
 
     while queue:
-        cost, (x, y) = heappop(queue)
+        cost, (x, y) = queue.popleft()
 
         if grid[y][x] == target:
             return cost
@@ -31,20 +30,10 @@ def dijkstra(grid, start, target):
         for dx, dy in ((0, -1), (-1, 0), (0, 1), (1, 0)):
             nx, ny = x + dx, y + dy
 
-            if 0 <= nx < maxx and 0 <= ny < maxy:
+            if 0 <= nx < maxx and 0 <= ny < maxy and (nx, ny) not in visited:
                 if index(grid[ny][nx]) >= index(grid[y][x]) - 1:
-                    new_cost = cost + 1
-
-                    if new_cost < costs[(nx, ny)]:
-                        costs[(nx, ny)] = new_cost
-                        heappush(queue, (new_cost, (nx, ny)))
-
-
-def index(letter):
-    if letter in "SE":
-        return ascii_lowercase.index("z")
-
-    return ascii_lowercase.index(letter)
+                    queue.append((cost + 1, (nx, ny)))
+                    visited.add((nx, ny))
 
 
 if __name__ == "__main__":

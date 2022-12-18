@@ -1,177 +1,69 @@
 import sys
+from collections import deque, namedtuple
 from re import findall
-from heapq import heappop, heappush
-from collections import namedtuple, defaultdict
-from math import inf
 
 
 def solve():
-    Valve = namedtuple("Valve", ["pressure", "tunnels"])
+    def calculate(valve1, valve2):
+        q = deque([(valve1, 0)])
+        visited = set()
 
+        while q:
+            valve, dist = q.popleft()
+
+            if valve == valve2:
+                return dist
+
+            for tunnel in valves[valve].tunnels:
+                if tunnel not in visited:
+                    q.append((tunnel, dist + 1))
+
+            visited.add(valve)
+
+    Valve = namedtuple("Valve", ["pressure", "tunnels", "edges"])
     valves = {
-        match[0]: Valve(int(match[1]), tuple(match[2:]))
+        match[0]: Valve(int(match[1]), tuple(match[2:]), {})
         for line in sys.stdin
         if (match := findall(r"([A-Z]{2}|[0-9]+)", line))
     }
 
-    print("Part 1:", search(valves))
-    print("Part 2:", search2(valves))
+    for valve1 in valves:
+        for valve2 in valves:
+            if valve1 != valve2 and valves[valve2].pressure:
+                valves[valve1].edges[valve2] = calculate(valve1, valve2)
+
+    solo, _ = find(valves)
+    player1, visited = find(valves, maximum=26)
+    player2, _ = find(valves, visited=visited, maximum=26)
+
+    print("Part 1:", solo)
+    print("Part 2:", player1 + player2)
 
 
-def search2(valves):
-    queue = [((0, 0), 0, 0, set(), ("AA", "AA"))]
-    highest = 0
-    visited = defaultdict(lambda: -inf)
-    max_flow = sum(valve.pressure for valve in valves.values())
+def find(valves, *, current="AA", visited=None, minute=0, maximum=30):
+    score = 0
 
-    while queue:
-        _, minute, flow, flowing, current = heappop(queue)
+    if not visited:
+        visited = []
 
-        if visited[(minute, current)] >= flow:
-            continue
+    if minute >= maximum:
+        return score, []
 
-        visited[(minute, current)] = flow
-
-        if minute == 26:
-            highest = max(highest, flow)
-            continue
-
-        gain = sum(valves[valve].pressure for valve in flowing)
-
-        if gain >= max_flow:
-            highest = max(highest, flow + gain * (26 - minute))
-            continue
-
-        flow += gain
-        minute += 1
-        score = gain * -1, minute
-
-        heappush(
-            queue,
-            (score, minute, flow, flowing.copy(), current),
+    valve = valves[current]
+    score += valve.pressure * (maximum - minute)
+    scores = max(
+        find(
+            valves,
+            current=edge,
+            visited=visited + [current],
+            minute=minute + valve.edges[edge] + 1,
+            maximum=maximum,
         )
+        for edge in valve.edges
+        if edge not in visited
+    )
 
-        for valve1 in set(valves[current[0]].tunnels):
-            for valve2 in set(valves[current[1]].tunnels):
-                if valve1 == valve2:
-                    continue
-
-                heappush(
-                    queue,
-                    (score, minute, flow, flowing.copy(), (valve1, valve2)),
-                )
-
-                if current[0] not in flowing and valves[current[0]].pressure > 0:
-                    heappush(
-                        queue,
-                        (
-                            score,
-                            minute,
-                            flow,
-                            flowing.union({current[0]}),
-                            (current[0], valve2),
-                        ),
-                    )
-                if current[1] not in flowing and valves[current[1]].pressure > 0:
-                    heappush(
-                        queue,
-                        (
-                            score,
-                            minute,
-                            flow,
-                            flowing.union({current[1]}),
-                            (valve1, current[1]),
-                        ),
-                    )
-
-        for valve in current:
-            if valve not in flowing and valves[valve].pressure > 0:
-                heappush(
-                    queue,
-                    (
-                        score,
-                        minute,
-                        flow,
-                        flowing.union({valve}),
-                        current,
-                    ),
-                )
-
-        if all(
-            valve not in flowing and valves[valve].pressure > 0 for valve in current
-        ):
-            heappush(
-                queue,
-                (
-                    score,
-                    minute,
-                    flow,
-                    flowing.union(set(current)),
-                    current,
-                ),
-            )
-
-    return highest
-
-
-def search(valves):
-    queue = [((0, 0), 0, 0, set(), "AA")]
-    highest = 0
-    visited = defaultdict(lambda: -inf)
-    max_flow = sum(valve.pressure for valve in valves.values())
-
-    while queue:
-        _, minute, flow, flowing, valve = heappop(queue)
-
-        if visited[(minute, frozenset(flowing), valve)] >= flow:
-            continue
-
-        visited[(minute, frozenset(flowing), valve)] = flow
-
-        if minute == 30:
-            highest = max(highest, flow)
-            continue
-
-        gain = sum(valves[valve].pressure for valve in flowing)
-
-        if gain >= max_flow:
-            highest = max(highest, flow + gain * (30 - minute))
-            continue
-
-        flow += gain
-        minute += 1
-        score = gain * -1, len(flowing) * -1, minute
-
-        heappush(
-            queue,
-            (score, minute, flow, flowing.copy(), valve),
-        )
-
-        for tunnel in valves[valve].tunnels:
-            heappush(
-                queue,
-                (
-                    score,
-                    minute,
-                    flow,
-                    flowing.copy(),
-                    tunnel,
-                ),
-            )
-
-        if valve not in flowing and valves[valve].pressure > 0:
-            heappush(
-                queue,
-                (
-                    score,
-                    minute,
-                    flow,
-                    flowing.union({valve}),
-                    valve,
-                ),
-            )
-
-    return highest
+    return score + scores[0], [current] + scores[1]
 
 
 if __name__ == "__main__":

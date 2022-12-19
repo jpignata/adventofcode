@@ -28,15 +28,15 @@ def simulate(jets, rocks, drops):
 
         return next_rock
 
-    grid = {}
-    seen = {}
     jets = cycle(enumerate(jets))
     rocks = cycle(enumerate(rocks))
+    grid = {}
+    seen = {}
+    height = -1
 
-    for drop in range(drops + 1):
-        height = max((y for _, y in grid), default=-1)
+    for drop in range(drops):
         rock_index, rock = next(rocks)
-        rock = tuple((x + 2, y + height + 4) for x, y in rock)
+        rock = move(rock, 2, height + 4)
 
         while True:
             jet_index, jet = next(jets)
@@ -44,16 +44,17 @@ def simulate(jets, rocks, drops):
             next_rock = move(rock, 0, -1)
 
             if next_rock == rock:
-                for x, y in rock:
-                    grid[x, y] = 1
-
                 break
 
             rock = next_rock
 
+        for x, y in rock:
+            grid[x, y] = 1
+            height = max(height, y)
+
         if (rock_index, jet_index) in seen:
             prev_drop, prev_height = seen[rock_index, jet_index]
-            remaining = drops - drop
+            remaining = drops - drop - 1
             period = drop - prev_drop
             offset = height - prev_height
 

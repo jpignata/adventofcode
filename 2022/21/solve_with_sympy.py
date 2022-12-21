@@ -18,17 +18,14 @@ def solve():
 
     def build(monkey):
         match monkey:
-            case "x":
-                return x
-            case int(monkey):
-                return monkey
             case [operator, *names]:
                 left, right = [build(monkeys[name]) for name in names]
-
                 return f"({left} {operator} {right})"
+            case _:
+                return monkey
 
     def find():
-        monkeys["humn"] = "x"
+        monkeys["humn"] = x
         left, right = [build(monkeys[name]) for name in monkeys["root"][1:]]
 
         return sympy_solve(f"Eq({left}, {right})", x)[0]

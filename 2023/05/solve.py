@@ -1,45 +1,81 @@
 import sys
-from itertools import count
 
-maps = []
-seeds = [
-    int(number)
-    for number in sys.stdin.readline().strip().split(": ")[-1].split()
-]
 
-for line in sys.stdin:
-    if line == "\n":
-        maps.append([])
-    elif line[0].isdigit():
-        dest, src, r = [int(number) for number in line.strip().split()]
-        maps[-1].append(((dest, dest + r), (src, src + r)))
-        maps[-1].sort()
+def parse():
+    seeds = [
+        int(number)
+        for number in sys.stdin.readline().strip().split(": ")[-1].split()
+    ]
+    maps = []
 
-lowest = float("inf")
+    for line in sys.stdin:
+        if not line.strip():
+            maps.append([])
+        elif line[0].isdigit():
+            maps[-1].append([int(number) for number in line.strip().split()])
 
-for seed in seeds:
-    node = seed
-    for map in maps:
-        for (dest_start, dest_end), (src_start, src_end) in map:
-            if src_start <= node <= src_end:
-                node = (node - src_start) + dest_start
-                break
+    return seeds, maps
 
-    lowest = min(lowest, node)
 
-print("Part 1:", lowest)
+def part1(seeds, maps):
+    lowest = sys.maxsize
 
-sources = [(start, start + r) for start, r in zip(seeds[0::2], seeds[1::2])]
+    for seed in seeds:
+        for map in maps:
+            for dest_start, src_start, jump in map:
+                src_end = src_start + jump
 
-for node in count():
-    orig = node
-    for map in maps[::-1]:
-        for (dest_start, dest_end), (src_start, src_end) in map:
-            if dest_start <= node <= dest_end:
-                node = (node - dest_start) + src_start
-                break
+                if src_start <= seed <= src_end:
+                    seed = (seed - src_start) + dest_start
+                    break
 
-    for start, end in sources:
-        if node in range(start, end):
-            print("Part 2:", orig)
-            exit()
+        lowest = min(lowest, seed)
+
+    return lowest
+
+
+def part2(seeds, maps):
+    seed_ranges = [
+        (start, start + jump) for start, jump in zip(seeds[::2], seeds[1::2])
+    ]
+    candidates = [[] for _ in range(len(maps))]
+
+    for range_start, range_end in seed_ranges:
+        ranges = [(range_start, range_end)]
+
+        for i, map in enumerate(maps):
+            while ranges:
+                range_start, range_end = ranges.pop()
+
+                for dest_start, src_start, jump in map:
+                    src_end = src_start + jump
+                    offset = dest_start - src_start
+
+                    if src_end <= range_start or range_end <= src_start:
+                        continue
+
+                    if range_start < src_start:
+                        ranges.append((range_start, src_start))
+                        range_start = src_start
+
+                    if src_end < range_end:
+                        ranges.append((src_end, range_end))
+                        range_end = src_end
+
+                    range_start += offset
+                    range_end += offset
+
+                    break
+
+                candidates[i].append((range_start, range_end))
+
+            ranges = candidates[i]
+
+    return min(candidates[-1])[0]
+
+
+if __name__ == "__main__":
+    seeds, maps = parse()
+
+    print("Part 1:", part1(seeds, maps))
+    print("Part 2:", part2(seeds, maps))

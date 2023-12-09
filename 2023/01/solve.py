@@ -24,7 +24,6 @@ for line in sys.stdin:
         for match in finditer(word, line)
     ]
     values = sorted(digit_values + word_values)
-
     part1 += digit_values[0][1] * 10 + digit_values[-1][1]
     part2 += values[0][1] * 10 + values[-1][1]
 

@@ -2,16 +2,14 @@ import sys
 
 
 def extrapolate(nums):
-    tails = []
-
-    while any(nums):
-        tails.append(nums[-1])
-        nums = [num2 - num1 for num1, num2 in zip(nums, nums[1:])]
-
-    return sum(tails)
+    if nums:
+        yield nums[-1]
+        yield from extrapolate(
+            [num2 - num1 for num1, num2 in zip(nums, nums[1:])]
+        )
 
 
-sequences = [[int(num) for num in line.split()] for line in sys.stdin]
+histories = [[int(num) for num in line.split()] for line in sys.stdin]
 
-print("Part 1:", sum(extrapolate(nums) for nums in sequences))
-print("Part 2:", sum(extrapolate(nums[::-1]) for nums in sequences))
+print("Part 1:", sum(sum(extrapolate(nums)) for nums in histories))
+print("Part 2:", sum(sum(extrapolate(nums[::-1])) for nums in histories))

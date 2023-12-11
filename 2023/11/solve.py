@@ -1,52 +1,37 @@
 import sys
 
 
-def find(empty, a, b, scale):
-    distance = abs(a[0] - b[0]) + abs(a[1] - b[1])
+def total(galaxies, empties, scale):
+    def find(galaxy, other):
+        distance = abs(galaxy[0] - other[0]) + abs(galaxy[1] - other[1])
+        distance += sum(
+            scale - 1
+            for i in range(2)
+            for coord in range(*sorted((galaxy[i], other[i])))
+            for _coord in empties[i]
+            if coord == _coord
+        )
+        return distance
 
-    for x, y in empty:
-        if x:
-            for _x in range(*sorted([a[0], b[0]])):
-                if _x == x:
-                    distance += scale - 1
-
-        if y:
-            for _y in range(*sorted([a[1], b[1]])):
-                if _y == y:
-                    distance += scale - 1
-
-    return distance
+    return sum(
+        find(galaxy, other)
+        for i, galaxy in enumerate(galaxies)
+        for other in galaxies[i:]
+    )
 
 
-grid = [[char for char in line.strip()] for line in sys.stdin]
-empty = []
-
-for i, row in enumerate(grid):
-    if all(char == "." for char in row):
-        empty.append((0, i))
-
-for i, col in enumerate(zip(*grid[::-1])):
-    if all(char == "." for char in col):
-        empty.append((i, 0))
-
+rows = [[char for char in line.strip()] for line in sys.stdin]
+cols = list(zip(*rows[::-1]))
 galaxies = [
     (x, y)
-    for y, row in enumerate(grid)
-    for x in range(len(row))
-    if row[x] == "#"
+    for y in range(len(rows))
+    for x in range(len(cols))
+    if rows[y][x] == "#"
 ]
-part1 = sum(
-    find(empty, galaxy, other, 2)
-    for i, galaxy in enumerate(galaxies)
-    for other in galaxies[i:]
-    if galaxy != other
-)
-part2 = sum(
-    find(empty, galaxy, other, 1000000)
-    for i, galaxy in enumerate(galaxies)
-    for other in galaxies[i:]
-    if galaxy != other
-)
+empties = [
+    [i for i, col in enumerate(cols) if not any(char == "#" for char in col)],
+    [i for i, row in enumerate(rows) if not any(char == "#" for char in row)],
+]
 
-print("Part 1:", part1)
-print("Part 2:", part2)
+print("Part 1:", total(galaxies, empties, 2))
+print("Part 2:", total(galaxies, empties, 1000000))

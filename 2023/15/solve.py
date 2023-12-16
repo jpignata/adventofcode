@@ -32,9 +32,9 @@ for seq in sequences:
         buckets[bucket_id] = [slot for slot in bucket if slot[0] != key]
 
 power = sum(
-    (i + 1) * (j + 1) * int(value)
-    for i, bucket in enumerate(buckets)
-    for j, (_, value) in enumerate(bucket)
+    i * j * int(value)
+    for i, bucket in enumerate(buckets, 1)
+    for j, (_, value) in enumerate(bucket, 1)
 )
 
 print("Part 1:", sum(_hash(seq) for seq in sequences))

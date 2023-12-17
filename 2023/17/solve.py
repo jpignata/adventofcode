@@ -1,5 +1,3 @@
-# Guess 1: 889 (too low)
-
 import sys
 from heapq import heappush, heappop
 from collections import defaultdict

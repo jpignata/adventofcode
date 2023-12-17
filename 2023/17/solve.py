@@ -8,10 +8,8 @@ def find(grid, min_count, max_count):
     h = [(0, 0, 0, 1, 0, 0)]
     dists = defaultdict(lambda: sys.maxsize)
 
-    def enqueue(x, y, dx, dy, dir_count):
-        nx, ny = x + dx, y + dy
-
-        if 0 <= nx < maxx and 0 <= ny < maxy:
+    def enqueue(x, y, dx, dy, dir_count=0):
+        if 0 <= (nx := x + dx) < maxx and 0 <= (ny := y + dy) < maxy:
             alt = loss + grid[ny][nx]
 
             if dists[(nx, ny, dx, dy, dir_count + 1)] > alt:
@@ -21,15 +19,15 @@ def find(grid, min_count, max_count):
     while h:
         loss, x, y, dirx, diry, dir_count = heappop(h)
 
-        if (x, y) == (maxx - 1, maxy - 1) and dir_count >= min_count:
-            return loss
+        if dir_count >= min_count:
+            if x == maxx - 1 and y == maxy - 1:
+                return loss
+
+            for next_dirx, next_diry in ((-diry, dirx), (diry, -dirx)):
+                enqueue(x, y, next_dirx, next_diry)
 
         if dir_count < max_count:
             enqueue(x, y, dirx, diry, dir_count)
-
-        if dir_count >= min_count:
-            for dx, dy in ((-diry, dirx), (diry, -dirx)):
-                enqueue(x, y, dx, dy, 0)
 
 
 grid = [[int(cell) for cell in line.strip()] for line in sys.stdin]

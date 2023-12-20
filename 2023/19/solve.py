@@ -24,37 +24,28 @@ def run(ratings):
     return total
 
 
-def find_in(_range):
-    total = 0
-    s = [("in", {letter: _range for letter in "xmas"})]
+def find(current, ranges):
+    if current == "A":
+        return prod(end - start + 1 for start, end in ranges.values())
 
-    while s:
-        current, ranges = s.pop()
+    if current == "R":
+        return 0
 
-        if current == "A":
-            total += prod(c[1] - c[0] + 1 for c in ranges.values())
-            continue
+    for var, op, value, dest in workflows[current]:
+        s = []
+        start, end = ranges[var]
 
-        if current == "R":
-            continue
+        if op == "<" and start < value:
+            s.append((dest, (start, min(end, value) - 1)))
+            s.append((current, (max(start, value), end)))
+        elif op == ">" and end > value:
+            s.append((dest, (max(start, value) + 1, end)))
+            s.append((current, (start, min(end, value))))
 
-        for var, op, value, dest in workflows[current]:
-            start, end = ranges[var]
-
-            if op is None:
-                s.append((dest, ranges))
-            elif op == "<" and start < value:
-                s.append((dest, {**ranges, var: (start, min(end, value) - 1)}))
-                s.append((current, {**ranges, var: (max(start, value), end)}))
-            elif op == ">" and end > value:
-                s.append((dest, {**ranges, var: (max(start, value) + 1, end)}))
-                s.append((current, {**ranges, var: (start, min(end, value))}))
-            else:
-                continue
-
-            break
-
-    return total
+        if not op:
+            return find(dest, ranges)
+        elif s:
+            return sum(find(state, {**ranges, var: r}) for state, r in s)
 
 
 workflows = defaultdict(list)
@@ -62,12 +53,10 @@ ratings = []
 
 for line in sys.stdin:
     if line.startswith("{"):
-        ratings.append(
-            {var: int(num) for var, num in zip("xmas", findall(r"\d+", line))}
-        )
+        nums = findall(r"\d+", line)
+        ratings.append({var: int(num) for var, num in zip("xmas", nums)})
     elif line.strip():
         name, rules = line[:-2].split("{")
-        workflows[name] = []
 
         for rule in rules.split(","):
             if ":" in rule:
@@ -78,4 +67,4 @@ for line in sys.stdin:
                 workflows[name].append(("x", None, 0, rule))
 
 print("Part 1:", run(ratings))
-print("Part 2:", find_in((1, 4000)))
+print("Part 2:", find("in", {var: (1, 4000) for var in "xmas"}))

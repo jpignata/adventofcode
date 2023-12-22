@@ -3,9 +3,8 @@ from re import findall
 
 
 def fall(bricks):
-    grid = set()
     next_bricks = []
-    total = 0
+    grid = set()
 
     def add(sx, sy, sz, ex, ey, ez):
         for x in range(sx, ex + 1):
@@ -35,7 +34,7 @@ def fall(bricks):
     for brick in bricks:
         add(*brick)
 
-    for i, (sx, sy, sz, ex, ey, ez) in enumerate(bricks):
+    for sx, sy, sz, ex, ey, ez in bricks:
         while not supported(sx, sy, sz, ex, ey, ez):
             remove(sx, sy, sz, ex, ey, ez)
             add(sx, sy, sz - 1, ex, ey, ez - 1)
@@ -43,23 +42,18 @@ def fall(bricks):
             ez -= 1
 
         next_bricks.append((sx, sy, sz, ex, ey, ez))
-        total += bricks[i] != next_bricks[i]
 
-    return next_bricks, total
+    return next_bricks
 
 
-bricks, _ = fall(
-    [[int(num) for num in findall(r"\d+", line)] for line in sys.stdin]
-)
+bricks = fall([[int(n) for n in findall(r"\d+", line)] for line in sys.stdin])
 disintegratable = total = 0
 
 for i in range(len(bricks)):
-    variant = bricks.copy()
-    del variant[i]
-
-    result, fell = fall(variant)
-    disintegratable += result == variant
-    total += fell
+    variant = [bricks[j] for j in range(len(bricks)) if j != i]
+    result = fall(variant)
+    disintegratable += variant == result
+    total += sum(brick1 != brick2 for brick1, brick2 in zip(variant, result))
 
 print("Part 1:", disintegratable)
 print("Part 2:", total)

@@ -1,5 +1,4 @@
 import sys
-from itertools import count
 
 
 def run(grid, active, generations=64):
@@ -25,58 +24,48 @@ def run(grid, active, generations=64):
     return len(active)
 
 
-def run2(grid, active):
-    current = list(active)[0]
-    minx, miny = current
-    maxx, maxy = current
+def extrapolate(grid, start):
+    dists = {start: 0}
+    steps = 0
+    s = [start]
 
-    smaxx, smaxy = max(grid)[0] + 1, max(grid, key=lambda a: a[1])[1] + 1
+    while s:
+        next_s = []
 
-    for i in count():
-        next_active = set()
+        for x, y in s:
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nx, ny = x + dx, y + dy
 
-        for y in range(miny - 5, maxy + 5):
-            for x in range(minx - 5, maxx + 5):
-                if (x % smaxx, y % smaxy) in grid:
-                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nx, ny = x + dx, y + dy
+                if (nx, ny) in grid and (nx, ny) not in dists:
+                    dists[(nx, ny)] = steps + 1
+                    next_s.append((nx, ny))
+        s = next_s
+        steps += 1
 
-                        if (nx % smaxx, ny % smaxy) in grid and (nx, ny) in active:
-                            next_active.add((x, y))
-                            minx, maxx = min(x, minx), max(x, maxx)
-                            miny, maxy = min(y, miny), max(y, maxy)
+    tiles = 26501365 // (start[0] * 2 + 1)
+    odds = sum(dist % 2 for dist in dists.values())
+    evens = sum(not dist % 2 for dist in dists.values())
+    odds_angle = sum(dist % 2 for dist in dists.values() if dist > 65)
+    evens_angle = sum(not dist % 2 for dist in dists.values() if dist > 65)
 
-                            break
+    total = (tiles + 1) * (tiles + 1) * odds
+    total += tiles * tiles * evens
+    total += tiles * evens_angle - tiles
+    total -= (tiles + 1) * odds_angle
 
-        active = next_active
-
-        for y in range(miny - 5, maxy + 5):
-            for x in range(minx - 5, maxx + 5):
-                if (x % smaxx, y % smaxy) in grid:
-                    if (x, y) in active:
-                        print("O", end="")
-                    else:
-                        print(".", end="")
-                else:
-                    print("#", end="")
-            print()
-
-        # if i + 1 in (6, 10, 50, 100, 500, 1000, 5000):
-        #    print("score", i, len(active))
-
-    return len(active)
+    return total
 
 
-start = set()
-active = set()
+grid = set()
 
 for y, line in enumerate(sys.stdin):
     for x, char in enumerate(line.strip()):
         if char == "S":
-            active.add((x, y))
+            start = (x, y)
 
         if char != "#":
-            start.add((x, y))
+            grid.add((x, y))
 
-print("Part 1:", run(start, active))
-# print("Part 2:", run2(start, active))
+
+print("Part 1:", run(grid, {start}))
+print("Part 2:", extrapolate(grid, start))

@@ -1,7 +1,7 @@
 import sys
 
 
-def run(grid, active, generations=64):
+def generate(grid, active, generations):
     maxx, maxy = list(active)[0]
 
     for _ in range(generations):
@@ -42,21 +42,23 @@ def extrapolate(grid, start):
         s = next_s
         steps += 1
 
-    tiles = 26501365 // (start[0] * 2 + 1)
+    tiles = 26501365 // steps
     odds = sum(dist % 2 for dist in dists.values())
     evens = sum(not dist % 2 for dist in dists.values())
-    odds_angle = sum(dist % 2 for dist in dists.values() if dist > 65)
-    evens_angle = sum(not dist % 2 for dist in dists.values() if dist > 65)
+    odds_angle = sum(dist % 2 for dist in dists.values() if dist > steps // 2)
+    evens_angle = sum(not dist % 2 for dist in dists.values() if dist > steps // 2)
 
-    total = (tiles + 1) * (tiles + 1) * odds
-    total += tiles * tiles * evens
-    total += tiles * evens_angle - tiles
+    total = (tiles + 1) ** 2 * odds
+    total += tiles**2 * evens
+    total += tiles * evens_angle
     total -= (tiles + 1) * odds_angle
+    total -= tiles  # account for the halves of the origin tile
 
     return total
 
 
 grid = set()
+start = (None, None)
 
 for y, line in enumerate(sys.stdin):
     for x, char in enumerate(line.strip()):
@@ -67,5 +69,5 @@ for y, line in enumerate(sys.stdin):
             grid.add((x, y))
 
 
-print("Part 1:", run(grid, {start}))
+print("Part 1:", generate(grid, {start}, 64))
 print("Part 2:", extrapolate(grid, start))

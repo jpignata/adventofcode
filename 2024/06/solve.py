@@ -13,17 +13,14 @@ def traverse(x, y, obstructions, edge):
         visited[(x, y)].add((dx, dy))
 
         while True:
-            nx, ny = x + dx, y + dy
-
-            if nx < 0 or nx > edge or ny < 0 or ny > edge:
+            if (nx := x + dx) < 0 or nx > edge or (ny := y + dy) < 0 or ny > edge:
                 return visited, False
 
-            if (nx, ny) not in obstructions:
+            if (nx, ny) in obstructions:
+                dx, dy = dy * -1, dx
+            else:
+                x, y = nx, ny
                 break
-
-            dx, dy = dy * -1, dx
-
-        x, y = nx, ny
 
 
 def main():

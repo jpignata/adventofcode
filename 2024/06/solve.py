@@ -11,7 +11,7 @@ def find(x, y, obstacles, boundary):
 
     while True:
         if visited[(x, y, dir_)]:
-            return path, True
+            return set(), True
 
         visited[(x, y, dir_)] += 1
         path.add((x, y))
@@ -28,6 +28,15 @@ def find(x, y, obstacles, boundary):
             dir_ = next(dirs)
 
         x, y = nx, ny
+
+
+def search(sx, sy, path, obstacles, boundary):
+    return sum(
+        has_cycle
+        for _, has_cycle in (
+            find(sx, sy, obstacles | {(x, y)}, boundary) for x, y in path
+        )
+    )
 
 
 def main():
@@ -47,16 +56,7 @@ def main():
     path, _ = find(sx, sy, obstacles, boundary)
 
     print("Part 1:", len(path))
-    print(
-        "Part 2:",
-        sum(
-            has_cycle
-            for _, has_cycle in (
-                find(sx, sy, obstacles | {(x, y)}, boundary)
-                for x, y in path - {(sx, sy)}
-            )
-        ),
-    )
+    print("Part 2:", search(sx, sy, path, obstacles, boundary))
 
 
 if __name__ == "__main__":

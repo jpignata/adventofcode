@@ -1,12 +1,10 @@
 import sys
 from collections import defaultdict
-from itertools import cycle
 
 
 def traverse(x, y, obstructions, edge):
     visited = defaultdict(set)
-    dirs = cycle([(0, -1), (1, 0), (0, 1), (-1, 0)])
-    dx, dy = next(dirs)
+    dx, dy = 0, -1
 
     while True:
         if (dx, dy) in visited[(x, y)]:
@@ -23,7 +21,7 @@ def traverse(x, y, obstructions, edge):
             if (nx, ny) not in obstructions:
                 break
 
-            dx, dy = next(dirs)
+            dx, dy = dy * -1, dx
 
         x, y = nx, ny
 

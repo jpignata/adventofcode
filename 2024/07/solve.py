@@ -3,6 +3,9 @@ from operator import add, mul
 
 
 def evaluate(current, numbers, value, *, ops):
+    if current > value:
+        return False
+
     if not numbers:
         return value == current
 

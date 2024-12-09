@@ -1,12 +1,12 @@
 import sys
+from itertools import groupby
 
 
 def defrag_blocks(blocks):
-    blocks = blocks[:]
     lo, hi = 0, len(blocks) - 1
 
     while lo != hi:
-        if blocks[lo].isdigit():
+        if blocks[lo] != ".":
             lo += 1
         elif blocks[hi] == ".":
             hi -= 1
@@ -17,29 +17,28 @@ def defrag_blocks(blocks):
 
 
 def defrag_files(blocks):
-    blocks = blocks[:]
-    groups = []
-    pointer = 0
+    files = []
+    free = []
+    start = 0
 
-    while pointer < len(blocks):
-        current = blocks[pointer]
-        start = pointer
-        length = 0
+    for current, group in groupby(blocks):
+        length = len(list(group))
 
-        while pointer < len(blocks) and blocks[pointer] == current:
-            pointer += 1
-            length += 1
+        if current == ".":
+            free.append((current, start, length))
+        else:
+            files.append((current, start, length))
 
-        groups.append((current, start, length))
-
-    files = [group for group in groups if group[0] != "."]
-    free = [group for group in groups if group[0] == "."]
+        start += length
 
     while files:
         file_id, file_start, file_length = files.pop()
 
         for i, (_, free_start, free_length) in enumerate(free):
-            if file_start > free_start and file_length <= free_length:
+            if file_start < free_start:
+                break
+
+            if file_length <= free_length:
                 for j in range(file_start, file_start + file_length):
                     blocks[j] = "."
 
@@ -57,26 +56,22 @@ def defrag_files(blocks):
 
 
 def checksum(blocks):
-    return sum(pos * int(block) for pos, block in enumerate(blocks) if block != ".")
+    return sum(pos * block for pos, block in enumerate(blocks) if block != ".")
 
 
 def main():
-    diskmap = sys.stdin.read().strip()
-    file_id = 0
     blocks = []
+    file_id = 0
 
-    for i, char in enumerate(diskmap):
-        if i % 2:
-            for _ in range(int(char)):
-                blocks.append(str("."))
-        else:
-            for _ in range(int(char)):
-                blocks.append(str(file_id))
-
+    for i, char in enumerate(sys.stdin.read().strip()):
+        if not i % 2:
+            blocks.extend([file_id] * int(char))
             file_id += 1
+        else:
+            blocks.extend(["."] * int(char))
 
-    print("Part 1:", checksum(defrag_blocks(blocks)))
-    print("Part 2:", checksum(defrag_files(blocks)))
+    print("Part 1:", checksum(defrag_blocks(blocks[:])))
+    print("Part 2:", checksum(defrag_files(blocks[:])))
 
 
 if __name__ == "__main__":

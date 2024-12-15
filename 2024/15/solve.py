@@ -50,7 +50,7 @@ def part2(grid, moves, sx, sy):
     grid = expand(grid)
     sx *= 2
 
-    def move(x, y, dx, dy):
+    def find(x, y, dx, dy):
         s = [(x, y)]
         seen = set()
 
@@ -58,26 +58,21 @@ def part2(grid, moves, sx, sy):
             x, y = s.pop()
 
             if grid[y][x] == "#":
-                return []
-
-            if grid[y][x] == "@":
-                s.append((x + dx, y + dy))
-            elif grid[y][x] == "[":
-                if dy and (x + 1, y) not in seen:
-                    s.append((x + 1, y))
-                s.append((x + dx, y + dy))
-            elif grid[y][x] == "]":
-                if dy and (x - 1, y) not in seen:
-                    s.append((x - 1, y))
-                s.append((x + dx, y + dy))
+                return set()
 
             if grid[y][x] != ".":
+                s.append((x + dx, y + dy))
                 seen.add((x, y))
+
+            if grid[y][x] == "[" and dy and (x + 1, y) not in seen:
+                s.append((x + 1, y))
+            elif grid[y][x] == "]" and dy and (x - 1, y) not in seen:
+                s.append((x - 1, y))
 
         return seen
 
     for dx, dy in moves:
-        if edges := move(sx, sy, dx, dy):
+        if edges := find(sx, sy, dx, dy):
             changes = {}
 
             for x, y in sorted(edges):

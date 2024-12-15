@@ -1,5 +1,4 @@
 import sys
-from copy import deepcopy
 
 
 def score(grid):
@@ -12,7 +11,7 @@ def score(grid):
 
 
 def part1(grid, moves, cx, cy):
-    grid = deepcopy(grid)
+    grid = [line[:] for line in grid]
 
     def move(x, y, dx, dy):
         nx, ny = x + dx, y + dy
@@ -42,27 +41,25 @@ def part2(grid, moves, cx, cy):
 
     def find(x, y, dx, dy):
         s = [(x, y)]
-        seen = set()
+        found = set()
 
         while s:
             x, y = s.pop()
 
-            if (x, y) in seen:
-                continue
-
             if grid[y][x] == "#":
                 return set()
 
-            if grid[y][x] != ".":
-                s.append((x + dx, y + dy))
-                seen.add((x, y))
+            if (x, y) not in found:
+                if grid[y][x] != ".":
+                    s.append((x + dx, y + dy))
+                    found.add((x, y))
 
-            if grid[y][x] == "[":
-                s.append((x + 1, y))
-            elif grid[y][x] == "]":
-                s.append((x - 1, y))
+                if grid[y][x] == "[":
+                    s.append((x + 1, y))
+                elif grid[y][x] == "]":
+                    s.append((x - 1, y))
 
-        return seen
+        return found
 
     for dx, dy in moves:
         changes = {}

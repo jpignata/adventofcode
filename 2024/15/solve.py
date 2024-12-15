@@ -2,12 +2,12 @@ import sys
 from copy import deepcopy
 
 
-def score(grid, target):
+def score(grid):
     return sum(
         100 * y + x
         for y, line in enumerate(grid)
         for x, cell in enumerate(line)
-        if cell == target
+        if cell in "[O"
     )
 
 
@@ -32,7 +32,7 @@ def part1(grid, moves, cx, cy):
         if move(cx, cy, dx, dy):
             cx, cy = cx + dx, cy + dy
 
-    return score(grid, "O")
+    return score(grid)
 
 
 def part2(grid, moves, cx, cy):
@@ -66,8 +66,7 @@ def part2(grid, moves, cx, cy):
             changes = {}
 
             for x, y in sorted(edges):
-                nx, ny = x + dx, y + dy
-                changes[(nx, ny)] = grid[y][x]
+                changes[(x + dx, y + dy)] = grid[y][x]
                 grid[y][x] = "."
 
             for x, y in changes:
@@ -75,7 +74,7 @@ def part2(grid, moves, cx, cy):
 
             cx, cy = cx + dx, cy + dy
 
-    return score(grid, "[")
+    return score(grid)
 
 
 def main():

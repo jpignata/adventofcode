@@ -2,17 +2,6 @@ import sys
 from copy import deepcopy
 
 
-def expand(grid):
-    return [
-        [
-            char
-            for cell in line
-            for char in {"#": "##", "O": "[]", "@": "@.", ".": ".."}[cell]
-        ]
-        for line in grid
-    ]
-
-
 def score(grid, target):
     return sum(
         100 * y + x
@@ -47,7 +36,8 @@ def part1(grid, moves, cx, cy):
 
 
 def part2(grid, moves, cx, cy):
-    grid = expand(grid)
+    expansions = {"#": "##", "O": "[]", "@": "@.", ".": ".."}
+    grid = [[char for cell in line for char in expansions[cell]] for line in grid]
     cx *= 2
 
     def find(x, y, dx, dy):

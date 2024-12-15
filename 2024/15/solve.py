@@ -3,27 +3,23 @@ from copy import deepcopy
 
 
 def expand(grid):
-    next_grid = []
+    return [
+        [
+            char
+            for cell in line
+            for char in {"#": "##", "O": "[]", "@": "@.", ".": ".."}[cell]
+        ]
+        for line in grid
+    ]
 
-    for line in grid:
-        next_line = []
 
-        for char in line:
-            match char:
-                case "#":
-                    next_chars = "##"
-                case "O":
-                    next_chars = "[]"
-                case "@":
-                    next_chars = "@."
-                case _:
-                    next_chars = ".."
-
-            next_line.extend(next_chars)
-
-        next_grid.append(next_line)
-
-    return next_grid
+def score(grid, target):
+    return sum(
+        100 * y + x
+        for y, line in enumerate(grid)
+        for x, cell in enumerate(line)
+        if cell == target
+    )
 
 
 def part1(grid, moves, sx, sy):
@@ -47,16 +43,12 @@ def part1(grid, moves, sx, sy):
         if move(sx, sy, dx, dy):
             sx, sy = sx + dx, sy + dy
 
-    return sum(
-        100 * y + x
-        for y, line in enumerate(grid)
-        for x, cell in enumerate(line)
-        if cell == "O"
-    )
+    return score(grid, "O")
 
 
 def part2(grid, moves, sx, sy):
     grid = expand(grid)
+    sx *= 2
 
     def move(x, y, dx, dy):
         s = [(x, y)]
@@ -91,21 +83,14 @@ def part2(grid, moves, sx, sy):
             for x, y in sorted(edges):
                 nx, ny = x + dx, y + dy
                 changes[(nx, ny)] = grid[y][x]
+                grid[y][x] = "."
 
             for x, y in changes:
                 grid[y][x] = changes[(x, y)]
 
-            for x, y in set(edges) - set(changes):
-                grid[y][x] = "."
-
             sx, sy = sx + dx, sy + dy
 
-    return sum(
-        100 * y + x
-        for y, line in enumerate(grid)
-        for x, cell in enumerate(line)
-        if cell == "["
-    )
+    return score(grid, "[")
 
 
 def main():
@@ -125,7 +110,7 @@ def main():
                 moves.extend([dirs[move] for move in line.strip()])
 
     print("Part 1:", part1(grid, moves, sx, sy))
-    print("Part 2:", part2(grid, moves, sx * 2, sy))
+    print("Part 2:", part2(grid, moves, sx, sy))
 
 
 if __name__ == "__main__":

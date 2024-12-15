@@ -47,6 +47,9 @@ def part2(grid, moves, cx, cy):
         while s:
             x, y = s.pop()
 
+            if (x, y) in seen:
+                continue
+
             if grid[y][x] == "#":
                 return set()
 
@@ -54,24 +57,24 @@ def part2(grid, moves, cx, cy):
                 s.append((x + dx, y + dy))
                 seen.add((x, y))
 
-            if grid[y][x] == "[" and dy and (x + 1, y) not in seen:
+            if grid[y][x] == "[":
                 s.append((x + 1, y))
-            elif grid[y][x] == "]" and dy and (x - 1, y) not in seen:
+            elif grid[y][x] == "]":
                 s.append((x - 1, y))
 
         return seen
 
     for dx, dy in moves:
-        if edges := find(cx, cy, dx, dy):
-            changes = {}
+        changes = {}
 
-            for x, y in sorted(edges):
-                changes[(x + dx, y + dy)] = grid[y][x]
-                grid[y][x] = "."
+        for x, y in sorted(find(cx, cy, dx, dy)):
+            changes[(x + dx, y + dy)] = grid[y][x]
+            grid[y][x] = "."
 
-            for x, y in changes:
-                grid[y][x] = changes[(x, y)]
+        for x, y in changes:
+            grid[y][x] = changes[(x, y)]
 
+        if changes:
             cx, cy = cx + dx, cy + dy
 
     return score(grid)

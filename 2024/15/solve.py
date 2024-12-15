@@ -22,7 +22,7 @@ def score(grid, target):
     )
 
 
-def part1(grid, moves, sx, sy):
+def part1(grid, moves, cx, cy):
     grid = deepcopy(grid)
 
     def move(x, y, dx, dy):
@@ -40,15 +40,15 @@ def part1(grid, moves, sx, sy):
         return False
 
     for dx, dy in moves:
-        if move(sx, sy, dx, dy):
-            sx, sy = sx + dx, sy + dy
+        if move(cx, cy, dx, dy):
+            cx, cy = cx + dx, cy + dy
 
     return score(grid, "O")
 
 
-def part2(grid, moves, sx, sy):
+def part2(grid, moves, cx, cy):
     grid = expand(grid)
-    sx *= 2
+    cx *= 2
 
     def find(x, y, dx, dy):
         s = [(x, y)]
@@ -72,7 +72,7 @@ def part2(grid, moves, sx, sy):
         return seen
 
     for dx, dy in moves:
-        if edges := find(sx, sy, dx, dy):
+        if edges := find(cx, cy, dx, dy):
             changes = {}
 
             for x, y in sorted(edges):
@@ -83,16 +83,16 @@ def part2(grid, moves, sx, sy):
             for x, y in changes:
                 grid[y][x] = changes[(x, y)]
 
-            sx, sy = sx + dx, sy + dy
+            cx, cy = cx + dx, cy + dy
 
     return score(grid, "[")
 
 
 def main():
     dirs = {"^": (0, -1), "v": (0, 1), "<": (-1, 0), ">": (1, 0)}
+    sx, sy = -1, -1
     grid = []
     moves = []
-    sx, sy = 0, 0
 
     for y, line in enumerate(sys.stdin):
         if line := line.strip():

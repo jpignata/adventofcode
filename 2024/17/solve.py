@@ -67,6 +67,34 @@ class Computer:
         return self.output
 
 
+def search(program):
+    target = list(reversed(program))
+    candidates = []
+
+    def step(A):
+        B = A & 7
+        B ^= 1
+        C = A // (2**B)
+        A //= 2**3
+        B ^= 4
+        B ^= C
+
+        return B & 7
+
+    def find(A, column=0):
+        if step(A) == target[column]:
+            if column == len(target) - 1:
+                yield A
+            else:
+                for i in range(8):
+                    yield from find(A * 8 + i, column + 1)
+
+    for A in range(8):
+        candidates.extend(list(find(A)))
+
+    return min(candidates)
+
+
 def main():
     registers = {}
     program = []
@@ -81,6 +109,7 @@ def main():
     output = computer.run(program)
 
     print("Part 1:", ",".join(map(str, output)))
+    print("Part 2:", search(program))
 
 
 if __name__ == "__main__":

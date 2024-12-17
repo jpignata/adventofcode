@@ -1,0 +1,22 @@
+Program: 2,4,1,1,7,5,0,3,1,4,4,0,5,5,3,0
+
+Instructions:
+
+BST 4 (2, 4)
+BXL 1 (1, 1)
+CDV 5 (7, 5)
+ADV 3 (0, 3)
+BXL 4 (1, 4)
+BXC 0 (4, 0)
+OUT 5 (5, 5)
+JMP 0 (3, 0)
+
+Loop (JMP 0):
+  B = A & 7
+  B = B ^ 1
+  C = A // (2**B)
+  A = A // (2**3)
+  B = B ^ 4
+  B = B ^ C
+  
+  OUT -> B & 7

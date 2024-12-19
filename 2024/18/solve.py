@@ -1,13 +1,13 @@
 import sys
-from heapq import heappop, heappush
+from collections import deque
 from re import findall
 
 
 def find(visited):
-    h = [(0, 0, 0)]
+    q = deque([(0, 0, 0)])
 
-    while h:
-        t, x, y = heappop(h)
+    while q:
+        t, x, y = q.popleft()
 
         if (x, y) == (maxx, maxy):
             return t
@@ -17,16 +17,16 @@ def find(visited):
 
         for dx, dy in ((0, 1), (1, 0), (0, -1), (-1, 0)):
             if 0 <= (nx := x + dx) <= maxx and 0 <= (ny := y + dy) <= maxy:
-                heappush(h, (t + 1, nx, ny))
+                q.append((t + 1, nx, ny))
 
         visited.add((x, y))
 
     return -1
 
 
-dropped = 1024
 bytes_ = [tuple(map(int, findall(r"\d+", line))) for line in sys.stdin]
-maxx, maxy = max(x for x, y in bytes_), max(y for x, y in bytes_)
+dropped = 1024 if len(bytes_) > 1024 else 12
+maxx, maxy = max(x for x, _ in bytes_), max(y for _, y in bytes_)
 lo, hi = dropped, len(bytes_)
 
 while lo < hi:

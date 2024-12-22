@@ -1,49 +1,27 @@
 import sys
 from collections import defaultdict
-from itertools import pairwise
 
+totals = defaultdict(int)
+part1 = 0
 
-def evolve(number, times=1):
-    for _ in range(times):
-        number ^= number * 64
-        number %= 16777216
+for number in list(map(int, sys.stdin.read().split())):
+    sequence = []
+    seen = set()
+
+    for _ in range(2000):
+        prev = number % 10
+        number ^= number * 64 % 16777216
         number ^= number // 32
-        number %= 16777216
-        number ^= number * 2048
-        number %= 16777216
+        number ^= number * 2048 % 16777216
+        current = number % 10
 
-        yield number
+        sequence.append(current - prev)
 
+        if (subsequence := tuple(sequence[-4:])) not in seen:
+            totals[subsequence] += current
+            seen.add(subsequence)
 
-def main():
-    numbers = list(map(int, sys.stdin.read().split()))
-    sequences = []
-    totals = defaultdict(int)
+    part1 += number
 
-    for number in numbers:
-        sequences.append([])
-
-        for previous, current in pairwise(evolve(number, 2000)):
-            current_price, previous_price = current % 10, previous % 10
-
-            sequences[-1].append(
-                (current, current_price, current_price - previous_price)
-            )
-
-    for sequence in sequences:
-        seen = set()
-
-        for i in range(3, len(sequence)):
-            price = sequence[i][1]
-            subsequence = tuple(sequence[j][2] for j in range(i - 3, i + 1))
-
-            if subsequence not in seen:
-                totals[subsequence] += price
-                seen.add(subsequence)
-
-    print("Part 1:", sum(sequence[-1][0] for sequence in sequences))
-    print("Part 2:", max(totals.values()))
-
-
-if __name__ == "__main__":
-    main()
+print("Part 1:", part1)
+print("Part 2:", max(totals.values()))

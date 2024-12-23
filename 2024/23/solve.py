@@ -2,21 +2,10 @@ import sys
 
 import networkx as nx
 
-graph = nx.Graph()
-cliques = 0
-largest = ""
+graph = nx.Graph(line.strip().split("-") for line in sys.stdin)
+cliques = list(nx.enumerate_all_cliques(graph))
+found = sum(len(nodes) == 3 and any(n[0] == "t" for n in nodes) for nodes in cliques)
+password = ",".join(sorted(cliques[-1]))
 
-for line in sys.stdin:
-    graph.add_edge(*line.strip().split("-"))
-
-for clique in nx.enumerate_all_cliques(graph):
-    password = ",".join(sorted(clique))
-
-    if len(clique) == 3 and any(node.startswith("t") for node in clique):
-        cliques += 1
-
-    if len(password) > len(largest):
-        largest = password
-
-print("Part 1:", cliques)
-print("Part 2:", largest)
+print("Part 1:", found)
+print("Part 2:", password)

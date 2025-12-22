@@ -15,11 +15,9 @@ def search(node, required=tuple(), visited=frozenset()):
         return all(req in visited for req in required)
 
     if node in required:
-        visited = visited | {node}
+        visited = frozenset(visited | {node})
 
-    return sum(
-        search(neighbor, required, frozenset(visited)) for neighbor in edges[node]
-    )
+    return sum(search(neighbor, required, visited) for neighbor in edges[node])
 
 
 print("Part 1:", search("you"))

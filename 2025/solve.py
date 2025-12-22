@@ -1,5 +1,6 @@
 import sys
 from collections import defaultdict
+from functools import cache
 
 edges = defaultdict(list)
 
@@ -7,14 +8,19 @@ for line in sys.stdin:
     device, outputs = line.split(": ")
     edges[device].extend(outputs.split())
 
-exits = 0
 
+@cache
+def search(node, required=tuple(), visited=frozenset()):
+    if node == "out":
+        return all(req in visited for req in required)
 
-def search(device):
-    if device == "out":
-        return 1
+    if node in required:
+        visited = visited | {node}
 
-    return sum(search(neighbor) for neighbor in edges[device])
+    return sum(
+        search(neighbor, required, frozenset(visited)) for neighbor in edges[node]
+    )
 
 
 print("Part 1:", search("you"))
+print("Part 2:", search("svr", ("fft", "dac")))
